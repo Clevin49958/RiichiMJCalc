@@ -4,7 +4,7 @@ import { IPlayerTable, IPlayer } from "./util/IPlayer";
 import { getWind, WindNumber } from "./util/Wind";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { GameStatus } from "./util/GameStatus";
-import { getDealer } from "./util/Score";
+import { applyScoreChange, getDealer, getDeltaWithWinner } from "./util/Score";
 
 const STARTING_POINT = 25000;
 const STARTING_WIND = 0;
@@ -94,6 +94,22 @@ export default function Calculator() {
 
   const gameReady = namesReady;
 
+  const saveEntry = () => {
+    if (endingType == "Win")  {
+      const deltas = getDeltaWithWinner(
+        fan!,
+        fu!,
+        winner === dealIn,
+        winner!,
+        gameStatus,
+        dealIn!
+      );
+      // TODO save delta to entries
+      applyScoreChange(players, deltas);
+    }
+    setPlayers([...players])
+  }
+
   const Page = () => {
     if (gameReady) {
       const fans = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
@@ -149,8 +165,6 @@ export default function Calculator() {
                 setter={(v) => setDealIn(v as WindNumber)}
                 cast={parseInt}
               />
-
-
             </div>
           </div>
           <div className="tab-pane fade" id="nav-draw" role="tabpanel" aria-labelledby="nav-draw-tab">
@@ -160,7 +174,7 @@ export default function Calculator() {
           <button
             className="btn btn-primary"
             type="button"
-            onClick={/** TODO */() => {}}
+            onClick={() => {saveEntry()}}
             disabled={!isReady}
           >
             Save entry

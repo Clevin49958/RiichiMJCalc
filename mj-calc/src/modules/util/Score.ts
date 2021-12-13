@@ -15,7 +15,19 @@ export function getDealer(wind: WindNumber, round: WindNumber) {
 }
 
 function getBasePoint(fan:number, fu:number) {
-  return 2 ^ (fan + 2) * fu;
+  let base = 2 ^ (fan + 2) * fu;
+  if (fan >= 13) {
+    base = 8000;
+  } else if (fan >= 11) {
+    base = 6000;
+  } else if (fan >= 8) {
+    base = 4000;
+  } else if (fan >= 6) {
+    base = 3000;
+  } else if (fan >= 5 || fan == 4 && fu >= 40 || fan == 3 && fu >= 70) {
+    base = 2000;
+  }
+  return base;
 }
 
 function getDeltaForTsumo(basePoint: number, dealer: WindNumber, seating: WindNumber, honba: number) {
@@ -109,6 +121,13 @@ export function getDeltaWithoutWinner(isTenPai: boolean[]) {
 export function applyScoreChangeWihoutWinner(isTenPai: boolean[], players: IPlayerTable) {
 
   const deltas = getDeltaWithoutWinner(isTenPai);
+  deltas.forEach((delta, index) => {
+    updatePlayerScore(players[index], players[index].score + delta);
+  })
+}
+
+export function applyScoreChange(players:IPlayerTable, deltas: number[]) {
+  console.log(deltas)
   deltas.forEach((delta, index) => {
     updatePlayerScore(players[index], players[index].score + delta);
   })
