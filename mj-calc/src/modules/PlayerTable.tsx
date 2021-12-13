@@ -1,13 +1,4 @@
-import { WindNumber } from "./util/Wind";
-
-export interface IPlayer {
-    name: string,
-    seating:WindNumber,
-    score: number,
-    lastScore?: number,
-}
-
-export type IPlayerTable = [IPlayer, IPlayer, IPlayer, IPlayer];
+import { IPlayerTable, IPlayer } from "./util/IPlayer";
 
 export default function PlayerTable({
     playerTable,

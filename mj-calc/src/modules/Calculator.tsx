@@ -1,18 +1,15 @@
 import React, { useState } from "react";
-import PlayerTable, { IPlayerTable, IPlayer } from "./PlayerTable";
-import { getWind, Wind, WindNumber } from "./util/Wind";
+import PlayerTable from "./PlayerTable";
+import { IPlayerTable, IPlayer } from "./util/IPlayer";
+import { getWind, WindNumber } from "./util/Wind";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { GameStatus } from "./util/GameStatus";
 
 const STARTING_POINT = 25000;
 const STARTING_WIND = 0;
 const STARTING_HONBA = 0;
 
 type setPlayersTable = (players: IPlayerTable) => void
-
-interface GameStatus {
-    wind: WindNumber,
-    honba: number,
-}
 
 function PlayerInfoCell(
     player: IPlayer
@@ -31,13 +28,12 @@ function GameStatusCenterCell(gameStatus: GameStatus) {
   </div>
 }
 
-function StartGame(setPlayers: setPlayersTable) {
-
-}
 export default function Calculator() {
   const [gameStatus, GameStatus] = useState<GameStatus>({
     wind: STARTING_WIND,
+    round: 1,
     honba: STARTING_HONBA,
+    richiiStick: 0,
   });
   const [players, setPlayers] = useState<IPlayerTable>(
     ([0, 1, 2, 3] as WindNumber[]).map((seating) => ({
@@ -85,6 +81,7 @@ export default function Calculator() {
         >Go</button>
     }
     return <React.Fragment>
+      <h1>Please enter players' names</h1>
       <PlayerTable
         playerTable={players}
         playerCell={(player: IPlayer) =>
