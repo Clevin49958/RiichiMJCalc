@@ -29,7 +29,7 @@ function GameStatusCenterCell(gameStatus: GameStatus) {
 }
 
 export default function Calculator() {
-  const [gameStatus, GameStatus] = useState<GameStatus>({
+  const [gameStatus, setGameStatus] = useState<GameStatus>({
     wind: STARTING_WIND,
     round: 1,
     honba: STARTING_HONBA,
@@ -42,52 +42,79 @@ export default function Calculator() {
       score: STARTING_POINT,
     })) as IPlayerTable
   );
+
+  const GameContext = React.createContext({
+    gameStatus,
+    players,
+    setGameStatus,
+    setPlayers,
+  })
+
   const [namesReady, setNamesReady] = useState(false);
 
   const gameReady = namesReady;
-  if (gameReady) {
-    return <React.Fragment>
-      <PlayerTable
-        playerTable={players}
-        playerCell={PlayerInfoCell}
-        centerCell={() => GameStatusCenterCell(gameStatus)}
-        />
-    </React.Fragment>
-  } else {
-    const PlayerInputCell = (seating: WindNumber, players: IPlayerTable, setPlayers: setPlayersTable) => {
-      return <input
-        aria-label="Player Name"
-        className="form-control table-item-player-number"
-        placeholder={getWind(seating)}
-        onChange={(event) => {
-          const newPlayerTable = [...players] as IPlayerTable;
-          newPlayerTable[seating] = {
-            ...newPlayerTable[seating],
-            name: event.target.value,
-          }
-          setPlayers(newPlayerTable);
-        }}
-        value={players[seating].name}
-      />
-    }
 
-    const PlayerInputCenterCell = () => {
-      return <button
-        type="button"
-        className="btn btn-primary"
-        onClick={() => {
-          setNamesReady(true);
-        }}
-        >Go</button>
+  const Page = () => {
+    if (gameReady) {
+      return <React.Fragment>
+        <PlayerTable
+          playerTable={players}
+          playerCell={PlayerInfoCell}
+          centerCell={() => GameStatusCenterCell(gameStatus)}
+          />
+      </React.Fragment>
+    } else {
+      const PlayerInputCell = (seating: WindNumber, players: IPlayerTable, setPlayers: setPlayersTable) => {
+        return <input
+          aria-label="Player Name"
+          className="form-control table-item-player-number"
+          placeholder={getWind(seating)}
+          onChange={(event) => {
+            const newPlayerTable = [...players] as IPlayerTable;
+            newPlayerTable[seating] = {
+              ...newPlayerTable[seating],
+              name: event.target.value,
+            }
+            setPlayers(newPlayerTable);
+          }}
+          value={players[seating].name}
+        />
+      }
+
+      const PlayerInputCenterCell = () => {
+        return <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => {
+            setNamesReady(true);
+          }}
+          >Go</button>
+      }
+      return <React.Fragment>
+        <h1>Please enter players' names</h1>
+        <PlayerTable
+          playerTable={players}
+          playerCell={(player: IPlayer) =>
+            PlayerInputCell(player.seating, players, setPlayers)
+          }
+          centerCell={() => PlayerInputCenterCell()}/>
+      </React.Fragment>
     }
-    return <React.Fragment>
-      <h1>Please enter players' names</h1>
-      <PlayerTable
-        playerTable={players}
-        playerCell={(player: IPlayer) =>
-          PlayerInputCell(player.seating, players, setPlayers)
-        }
-        centerCell={() => PlayerInputCenterCell()}/>
-    </React.Fragment>
   }
+
+  return <GameContext.Provider value={{
+    gameStatus,
+    players,
+    setGameStatus,
+    setPlayers,
+  }}>
+    <Page />
+  </GameContext.Provider>
+}
+
+export function newGameStatus(winner: null | WindNumber, gameStatus: GameStatus) {
+  if (winner === null) {
+    // TODO
+  }
+  return gameStatus;
 }
