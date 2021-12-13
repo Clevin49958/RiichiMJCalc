@@ -21,14 +21,7 @@ function PlayerInfoCell(
     </>;
 }
 
-function PlayerInputCell(seating: WindNumber, players: IPlayerTable, setPlayers: setPlayersTable) {
-  return <input
-    aria-label="Player Name"
-    className="form-control table-item-player-number"
-    placeholder={getWind(seating)}
-    value={players[seating].name}
-  />
-}
+
 
 function StartGame(setPlayers: setPlayersTable) {
 
@@ -45,11 +38,33 @@ export default function Calculator() {
     if (gameReady) {
       return <></>
     } else {
-      return <></>
-      // return <React.Fragment>
-      //   <PlayerTable playerTable={players} playerCell={(seating: WindNumber) => PlayerInputCell(seating, players, setPlayers)} centerCell={function (): Element {
-      //     throw new Error("Function not implemented.");
-      //   } }/>
-      // </React.Fragment>
+      const PlayerInputCell = (seating: WindNumber, players: IPlayerTable, setPlayers: setPlayersTable) => {
+        return <input
+          aria-label="Player Name"
+          className="form-control table-item-player-number"
+          placeholder={getWind(seating)}
+          value={players[seating].name}
+        />
+      }
+
+      const PlayerInputCenterCell = () => {
+        return <button
+          type="button"
+          onClick={
+            // TODO
+            // setPlayers()
+            () => {}
+          }
+          >Go</button>
+      }
+      // return <></>
+      return <React.Fragment>
+        <PlayerTable
+          playerTable={players}
+          playerCell={(player: IPlayer) =>
+            PlayerInputCell(player.seating, players, setPlayers)
+          }
+          centerCell={() => PlayerInputCenterCell()}/>
+      </React.Fragment>
     }
 }

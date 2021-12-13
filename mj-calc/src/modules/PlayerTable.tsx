@@ -1,22 +1,21 @@
 import { WindNumber } from "./util/Wind";
 
-export interface Player {
+export interface IPlayer {
     name: string,
-    // 0: East, 1:South, 2: West, 3: North
     seating:WindNumber,
     score: number,
     lastScore?: number,
 }
 
-export type PlayerTable = [Player, Player, Player, Player];
+export type IPlayerTable = [IPlayer, IPlayer, IPlayer, IPlayer];
 
 export default function PlayerTable({
     playerTable,
     playerCell,
     centerCell,
 } : {
-    playerTable: PlayerTable,
-    playerCell: (player: Player) =>  JSX.Element,
+    playerTable: IPlayerTable,
+    playerCell: (player: IPlayer) =>  JSX.Element,
     centerCell: () => JSX.Element,
 }) {
     return <>
