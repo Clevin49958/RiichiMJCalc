@@ -1,5 +1,5 @@
 import { assert } from "console";
-import { GameStatus } from "./GameStatus";
+import { GameStatus, RoundNumber } from "./GameStatus";
 import { IPlayerTable, updatePlayerScore } from "./IPlayer";
 import { WindNumber } from "./Wind";
 
@@ -10,7 +10,7 @@ export function roundPoints(pts: number) {
   return Math.ceil(pts/100)*100;
 }
 
-export function getDealer(wind: WindNumber, round: WindNumber) {
+export function getDealer(wind: WindNumber, round: RoundNumber) {
   return (wind + round - 1) % 4 as WindNumber;
 }
 

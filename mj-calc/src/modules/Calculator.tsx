@@ -3,7 +3,7 @@ import PlayerTable from "./PlayerTable";
 import { IPlayerTable, IPlayer } from "./util/IPlayer";
 import { getWind, WindNumber } from "./util/Wind";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { GameStatus } from "./util/GameStatus";
+import { GameStatus, incrementRound, RoundNumber } from "./util/GameStatus";
 import { applyScoreChange, getDealer, getDeltaWithWinner } from "./util/Score";
 
 const STARTING_POINT = 25000;
@@ -25,7 +25,8 @@ function PlayerInfoCell(
 function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
   return <div style={{textAlign: "center"}}>
-    {`${getWind(gameStatus.wind)} ${gameStatus.honba}`}
+    {`${getWind(gameStatus.wind)} ${gameStatus.round}, ${gameStatus.honba} honba`} <br />
+    {`${gameStatus.richiiStick} sticks`}
   </div>
 }
 
@@ -108,6 +109,7 @@ export default function Calculator() {
       applyScoreChange(players, deltas);
     }
     setPlayers([...players])
+    setGameStatus(newGameStatus(winner, false, gameStatus))
   }
 
   const Page = () => {
@@ -235,13 +237,14 @@ export function newGameStatus(winner: null | WindNumber, isDealerTenpai: boolean
   if (winner === null) {
     gameStatus.honba += 1;
     if (!isDealerTenpai) {
-      gameStatus.wind = (gameStatus.wind + 1) % 4 as WindNumber;
+      incrementRound(gameStatus);
     }
   } else {
     if (winner === getDealer(gameStatus.wind, gameStatus.round)) {
       gameStatus.honba += 1;
     } else {
-      gameStatus.wind = (gameStatus.wind + 1) % 4 as WindNumber;
+      incrementRound(gameStatus);
+      gameStatus.honba = 0;
     }
   }
   return {...gameStatus};
