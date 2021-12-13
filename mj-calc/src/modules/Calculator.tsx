@@ -4,6 +4,7 @@ import { IPlayerTable, IPlayer } from "./util/IPlayer";
 import { getWind, WindNumber } from "./util/Wind";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { GameStatus } from "./util/GameStatus";
+import { getDealer } from "./util/Score";
 
 const STARTING_POINT = 25000;
 const STARTING_WIND = 0;
@@ -112,9 +113,18 @@ export default function Calculator() {
   </GameContext.Provider>
 }
 
-export function newGameStatus(winner: null | WindNumber, gameStatus: GameStatus) {
+export function newGameStatus(winner: null | WindNumber, isDealerTenpai: boolean, gameStatus: GameStatus) {
   if (winner === null) {
-    // TODO
+    gameStatus.honba += 1;
+    if (!isDealerTenpai) {
+      gameStatus.wind = (gameStatus.wind + 1) % 4 as WindNumber;
+    }
+  } else {
+    if (winner == getDealer(gameStatus.wind, gameStatus.round)) {
+      gameStatus.honba += 1;
+    } else {
+      gameStatus.wind = (gameStatus.wind + 1) % 4 as WindNumber;
+    }
   }
-  return gameStatus;
+  return {...gameStatus};
 }
