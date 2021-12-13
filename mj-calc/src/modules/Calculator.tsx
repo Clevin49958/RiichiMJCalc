@@ -29,6 +29,36 @@ function GameStatusCenterCell(gameStatus: GameStatus) {
   </div>
 }
 
+function DropdownEntry<T extends string | number>({
+  label,
+  keys,
+  values,
+  setter,
+  value,
+  cast,
+} : {
+  label: string,
+  keys: string[] | number[],
+  values: T[],
+  value: T | null,
+  setter: (t: T) => void,
+  cast: (value: string) => T,
+}) {
+  return <div>
+    <span>{label}: </span>
+    <select
+      className="form-select"
+      aria-label={`Select ${label}`}
+      onChange={e => setter(cast(e.target.value))}>
+    <option selected={value === null}>{label}</option>
+    {keys.map((key, index) => {
+      const v = values[index];
+      return <option selected={value == v} value={v}>{key}</option>
+    })}
+  </select>
+  </div>
+}
+
 export default function Calculator() {
   const [gameStatus, setGameStatus] = useState<GameStatus>({
     wind: STARTING_WIND,
@@ -44,6 +74,15 @@ export default function Calculator() {
     })) as IPlayerTable
   );
 
+  const [fan, setFan] = useState<number | null>(null);
+  const [fu, setFu] = useState<number | null>(null);
+  const [winner, setWinner] = useState<WindNumber | null>(null);
+  const [dealIn, setDealIn] = useState<WindNumber | null>(null);
+  const [tempai, setTenpai] = useState([false, false, false, false]);
+  const [endingType, setEndingType] = useState<"Win" | "Draw">("Win");
+
+  const isReady = true // TODO (fan !== null && fu !== null &&
+
   const GameContext = React.createContext({
     gameStatus,
     players,
@@ -57,12 +96,76 @@ export default function Calculator() {
 
   const Page = () => {
     if (gameReady) {
+      const fans = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+      const fus = [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110];
       return <React.Fragment>
         <PlayerTable
           playerTable={players}
           playerCell={PlayerInfoCell}
           centerCell={() => GameStatusCenterCell(gameStatus)}
-          />
+        />
+        <nav>
+          <div className="nav nav-tabs" id="nav-tab" role="tablist">
+            <button className="nav-link active" id="nav-win-tab" data-bs-toggle="tab" data-bs-target="#nav-win" type="button" role="tab" aria-controls="nav-win" aria-selected="true" onClick={() => setEndingType("Win")}>Win</button>
+            <button className="nav-link" id="nav-draw-tab" data-bs-toggle="tab" data-bs-target="#nav-draw" type="button" role="tab" aria-controls="nav-draw" aria-selected="false" onClick={() => setEndingType("Draw")}>Draw</button>
+            {/* <button className="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button> */}
+          </div>
+        </nav>
+        <div className="tab-content" id="nav-tabContent">
+          <div className="tab-pane fade show active" id="nav-win" role="tabpanel" aria-labelledby="nav-win-tab">
+            <div className="d-flex flex-row flex-wrap">
+              <DropdownEntry
+                label="Fan"
+                keys={fans}
+                values={fans}
+                value={fan}
+                setter={(v) => setFan(v)}
+                cast={parseInt}
+              />
+
+              <DropdownEntry
+                label="Fu"
+                keys={fus}
+                values={fus}
+                value={fu}
+                setter={(v) => setFu(v)}
+                cast={parseInt}
+              />
+
+              <DropdownEntry
+                label="Winner"
+                keys={players.map(p => p.name)}
+                values={players.map(p => p.seating)}
+                value={winner}
+                setter={(v) => setWinner(v as WindNumber)}
+                cast={parseInt}
+              />
+
+              <DropdownEntry
+                label="Deal in"
+                keys={players.map(p => p.seating == winner ? "Tsumo" : p.name)}
+                values={players.map(p => p.seating)}
+                value={dealIn}
+                setter={(v) => setDealIn(v as WindNumber)}
+                cast={parseInt}
+              />
+
+
+            </div>
+          </div>
+          <div className="tab-pane fade" id="nav-draw" role="tabpanel" aria-labelledby="nav-draw-tab">
+            Draw tab
+          </div>
+          {/* <div className="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div> */}
+          <button
+            className="btn btn-primary"
+            type="button"
+            onClick={/** TODO */() => {}}
+            disabled={!isReady}
+          >
+            Save entry
+          </button>
+        </div>
       </React.Fragment>
     } else {
       const PlayerInputCell = (seating: WindNumber, players: IPlayerTable, setPlayers: setPlayersTable) => {
@@ -98,7 +201,8 @@ export default function Calculator() {
           playerCell={(player: IPlayer) =>
             PlayerInputCell(player.seating, players, setPlayers)
           }
-          centerCell={() => PlayerInputCenterCell()}/>
+          centerCell={() => PlayerInputCenterCell()}
+        />
       </React.Fragment>
     }
   }
@@ -120,7 +224,7 @@ export function newGameStatus(winner: null | WindNumber, isDealerTenpai: boolean
       gameStatus.wind = (gameStatus.wind + 1) % 4 as WindNumber;
     }
   } else {
-    if (winner == getDealer(gameStatus.wind, gameStatus.round)) {
+    if (winner === getDealer(gameStatus.wind, gameStatus.round)) {
       gameStatus.honba += 1;
     } else {
       gameStatus.wind = (gameStatus.wind + 1) % 4 as WindNumber;
