@@ -1,6 +1,9 @@
+import { assert } from "console";
 import { GameStatus } from "./GameStatus";
 import { IPlayerTable, updatePlayerScore } from "./IPlayer";
 import { WindNumber } from "./Wind";
+
+const NOTEN_BAPPU = [1000, 1500, 3000];
 
 export function roundPoints(pts: number) {
   // ceil to the hundreadth
@@ -82,6 +85,30 @@ export function applyScoreChangeWithWinner(
     gameStatus,
     winFrom,
   );
+  deltas.forEach((delta, index) => {
+    updatePlayerScore(players[index], players[index].score + delta);
+  })
+}
+
+export function getDeltaWithoutWinner(isTenPai: boolean[]) {
+  if (isTenPai.length !== 4) {
+    throw new Error("Invalid number of people for tenpai boolean array");
+  }
+  // numOfPeopleTenpai
+  const nTenpai = isTenPai.reduce((prev, curr) => (prev + (curr ? 1 : 0)), 0);
+
+  if (nTenpai === 0 || nTenpai === 4) {
+    return [0, 0, 0, 0];
+  }
+
+  return isTenPai.map((value) => {
+    return value ? NOTEN_BAPPU[3 - nTenpai] : -NOTEN_BAPPU[nTenpai - 1];
+  })
+}
+
+export function applyScoreChangeWihoutWinner(isTenPai: boolean[], players: IPlayerTable) {
+
+  const deltas = getDeltaWithoutWinner(isTenPai);
   deltas.forEach((delta, index) => {
     updatePlayerScore(players[index], players[index].score + delta);
   })
