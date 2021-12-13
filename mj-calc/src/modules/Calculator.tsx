@@ -1,22 +1,18 @@
+import React, { useState } from "react";
+import PlayerTable, { IPlayerTable, IPlayer } from "./PlayerTable";
+import { getWind, WindNumber } from "./util/Wind";
 
-interface Player {
-    name: string,
-    // 0: East, 1:South, 2: West, 3: North
-    seating:number,
-    score: number,
-    lastScore?: number,
-}
+const STARTING_POINT = 25000;
 
-type PlayerTable = [Player, Player, Player, Player];
+type setPlayersTable = (players: IPlayerTable) => void
 
 interface GameStatus {
-    wind: number,
+    wind: WindNumber,
     honba: number,
-    players: PlayerTable,
 }
 
 function PlayerInfoCell(
-    player: Player
+    player: IPlayer
 ) {
     return <>
         <span>{player.name}</span>
@@ -25,44 +21,35 @@ function PlayerInfoCell(
     </>;
 }
 
-function PlayerTable({
-    playerTable,
-    playerCell,
-    centerCell,
-} : {
-    playerTable: PlayerTable,
-    playerCell: (player: Player) =>  JSX.Element,
-    centerCell: () => JSX.Element,
-}) {
-    return <>
-        <div className="player-table container">
-            <div className="row">
-                <div className="col-4 align-self-center">
-                    {/* North */}
-                    {playerCell(playerTable[3])}
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-4">
-                    {/* West */}
-                    {playerCell(playerTable[2])}
-                </div>
-                <div className="col-4">
-                    {/* Center */}
-                </div>
-                <div className="col-4">
-                    {/* East */}
-                    {playerCell(playerTable[0])}
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-4 align-self-center">
-                    {/* South */}
-                    {playerCell(playerTable[1])}
-                </div>
-            </div>
-        </div>
-    </>;
+function PlayerInputCell(seating: WindNumber, players: IPlayerTable, setPlayers: setPlayersTable) {
+  return <input
+    aria-label="Player Name"
+    className="form-control table-item-player-number"
+    placeholder={getWind(seating)}
+    value={players[seating].name}
+  />
 }
 
-export {}
+function StartGame(setPlayers: setPlayersTable) {
+
+}
+export default function Calculator() {
+    const [players, setPlayers] = useState<IPlayerTable>(
+      ([0, 1, 2, 3] as WindNumber[]).map((seating) => ({
+        name: getWind(seating),
+        seating: seating,
+        score: STARTING_POINT,
+      })) as IPlayerTable
+    );
+    const [gameReady, setGameReady] = useState(false);
+    if (gameReady) {
+      return <></>
+    } else {
+      return <></>
+      // return <React.Fragment>
+      //   <PlayerTable playerTable={players} playerCell={(seating: WindNumber) => PlayerInputCell(seating, players, setPlayers)} centerCell={function (): Element {
+      //     throw new Error("Function not implemented.");
+      //   } }/>
+      // </React.Fragment>
+    }
+}
