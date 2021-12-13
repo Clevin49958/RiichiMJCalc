@@ -12,6 +12,36 @@ const STARTING_HONBA = 0;
 
 type setPlayersTable = (players: IPlayerTable) => void
 
+function PlayerInputCell({
+  seating,
+  players,
+  setPlayers,
+} : {
+  seating: WindNumber,
+  players: IPlayerTable,
+  setPlayers: setPlayersTable
+}) {
+  const [playerNameInput, setPlayerNameInput] = useState(players[seating].name);
+  return <input
+    aria-label="Player Name"
+    className="form-control table-item-player-number m-2"
+    placeholder={getWind(seating)}
+    key={seating}
+    onChange={(event) => {
+      setPlayerNameInput(event.target.value);
+    }}
+    onBlur={(_event) => {
+      const newPlayerTable = [...players] as IPlayerTable;
+      newPlayerTable[seating] = {
+        ...newPlayerTable[seating],
+        name: playerNameInput,
+      }
+      setPlayers(newPlayerTable);
+    }}
+    value={playerNameInput}
+  />
+}
+
 function PlayerInfoCell(
     player: IPlayer
 ) {
@@ -54,7 +84,7 @@ function DropdownEntry<T extends string | number>({
     <option selected={value === null}>{label}</option>
     {keys.map((key, index) => {
       const v = values[index];
-      return <option selected={value == v} value={v}>{key}</option>
+      return <option key={key} selected={value === v} value={v}>{key}</option>
     })}
   </select>
   </div>
@@ -79,10 +109,12 @@ export default function Calculator() {
   const [fu, setFu] = useState<number | null>(null);
   const [winner, setWinner] = useState<WindNumber | null>(null);
   const [dealIn, setDealIn] = useState<WindNumber | null>(null);
-  const [tempai, setTenpai] = useState([false, false, false, false]);
+  const [tenpai, setTenpai] = useState([false, false, false, false]);
   const [endingType, setEndingType] = useState<"Win" | "Draw">("Win");
 
-  const isReady = true // TODO (fan !== null && fu !== null &&
+  const isReady = endingType === "Draw" || (
+    fan !== null && fu !== null && winner !== null && dealIn !== null
+  )
 
   const GameContext = React.createContext({
     gameStatus,
@@ -96,7 +128,7 @@ export default function Calculator() {
   const gameReady = namesReady;
 
   const saveEntry = () => {
-    if (endingType == "Win")  {
+    if (endingType === "Win")  {
       const deltas = getDeltaWithWinner(
         fan!,
         fu!,
@@ -161,7 +193,7 @@ export default function Calculator() {
 
               <DropdownEntry
                 label="Deal in"
-                keys={players.map(p => p.seating == winner ? "Tsumo" : p.name)}
+                keys={players.map(p => p.seating === winner ? "Tsumo" : p.name)}
                 values={players.map(p => p.seating)}
                 value={dealIn}
                 setter={(v) => setDealIn(v as WindNumber)}
@@ -184,38 +216,21 @@ export default function Calculator() {
         </div>
       </React.Fragment>
     } else {
-      const PlayerInputCell = (seating: WindNumber, players: IPlayerTable, setPlayers: setPlayersTable) => {
-        return <input
-          aria-label="Player Name"
-          className="form-control table-item-player-number"
-          placeholder={getWind(seating)}
-          onChange={(event) => {
-            const newPlayerTable = [...players] as IPlayerTable;
-            newPlayerTable[seating] = {
-              ...newPlayerTable[seating],
-              name: event.target.value,
-            }
-            setPlayers(newPlayerTable);
-          }}
-          value={players[seating].name}
-        />
-      }
-
       const PlayerInputCenterCell = () => {
         return <button
           type="button"
-          className="btn btn-primary"
+          className="btn btn-primary m-2"
           onClick={() => {
             setNamesReady(true);
           }}
-          >Go</button>
+          >Game start!</button>
       }
       return <React.Fragment>
         <h1>Please enter players' names</h1>
         <PlayerTable
           playerTable={players}
           playerCell={(player: IPlayer) =>
-            PlayerInputCell(player.seating, players, setPlayers)
+            PlayerInputCell({seating: player.seating, players, setPlayers})
           }
           centerCell={() => PlayerInputCenterCell()}
         />

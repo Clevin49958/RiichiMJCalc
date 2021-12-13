@@ -1,4 +1,3 @@
-import { assert } from "console";
 import { GameStatus, RoundNumber } from "./GameStatus";
 import { IPlayerTable, updatePlayerScore } from "./IPlayer";
 import { WindNumber } from "./Wind";
@@ -15,7 +14,7 @@ export function getDealer(wind: WindNumber, round: RoundNumber) {
 }
 
 function getBasePoint(fan:number, fu:number) {
-  let base = 2 ^ (fan + 2) * fu;
+  let base = Math.pow(2, (fan + 2)) * fu;
   if (fan >= 13) {
     base = 8000;
   } else if (fan >= 11) {
@@ -24,16 +23,17 @@ function getBasePoint(fan:number, fu:number) {
     base = 4000;
   } else if (fan >= 6) {
     base = 3000;
-  } else if (fan >= 5 || fan == 4 && fu >= 40 || fan == 3 && fu >= 70) {
+  } else if ((fan >= 5) || (fan === 4 && fu >= 40) || (fan === 3 && fu >= 70)) {
     base = 2000;
   }
+  console.log(`Fan: ${fan} Fu: ${fu} BasePts: ${base}`)
   return base;
 }
 
 function getDeltaForTsumo(basePoint: number, dealer: WindNumber, seating: WindNumber, honba: number) {
   const deltas = [0, 0, 0, 0];
   const honbaPts = 100 * honba;
-  if (dealer == seating) {
+  if (dealer === seating) {
     const delta = roundPoints(basePoint * 2 + honbaPts);
     for (let index = 0; index < deltas.length; index++) {
       deltas[index] -= delta;
@@ -41,7 +41,7 @@ function getDeltaForTsumo(basePoint: number, dealer: WindNumber, seating: WindNu
     deltas[seating] += delta * 4;
   } else {
     for (let index = 0; index < deltas.length; index++) {
-      deltas[index] -= roundPoints((index == dealer ? 2 : 1) * basePoint + honbaPts);
+      deltas[index] -= roundPoints((index === dealer ? 2 : 1) * basePoint + honbaPts);
     }
     deltas[seating] += -deltas.reduce((a, b) => {return a + b}, 0);
   }
@@ -50,7 +50,7 @@ function getDeltaForTsumo(basePoint: number, dealer: WindNumber, seating: WindNu
 
 function getDeltaForRon(basePoint: number, dealer: WindNumber, seating: WindNumber, winFrom: WindNumber, honba: number) {
   const deltas = [0, 0, 0, 0];
-  const multiplier = dealer == seating ? 6 : 4;
+  const multiplier = dealer === seating ? 6 : 4;
   const score = roundPoints(multiplier * basePoint + 300 * honba);
   deltas[seating] += score;
   deltas[winFrom] -= score;
