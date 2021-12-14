@@ -1,3 +1,13 @@
 .player-table {
   text-align: center;
+  background-color: transparent;
+  border-width: 2rem;
+}
+
+.player-table > .row > .player-cell {
+  background-color: lightskyblue;
+}
+
+.player-table > .row > .center-cell {
+  background-color: lightgrey;
 }

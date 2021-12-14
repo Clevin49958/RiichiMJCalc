@@ -151,6 +151,7 @@ export default function Calculator() {
       const fans = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
       const fus = [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110];
       return <React.Fragment>
+        <img src="/Header.jpg" style={{maxHeight: "100%", maxWidth: "100%",}} className="mb-2"/>
         <PlayerTable
           playerTable={players}
           playerCell={PlayerInfoCell}
@@ -254,7 +255,7 @@ export default function Calculator() {
           >Game start!</button>
       }
       return <React.Fragment>
-        <img src="/Header.jpg" style={{maxHeight: "100%", maxWidth: "100%",}}/>
+        <img src="/Header.jpg" style={{maxHeight: "100%", maxWidth: "100%",}} mb-2/>
         <h1 style={{textAlign: "center"}}>Please enter players' names</h1>
         <PlayerTable
           playerTable={players}
