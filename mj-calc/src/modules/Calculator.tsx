@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import PlayerTable from "./PlayerTable";
 import { IPlayerTable, IPlayer } from "./util/IPlayer";
 import { getWind, WindNumber } from "./util/Wind";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { GameStatus, incrementRound, RoundNumber } from "./util/GameStatus";
-import { applyScoreChange, getDealer, getDeltaWithWinner } from "./util/Score";
+import { applyScoreChange, getDealer, getDeltaWithoutWinner, getDeltaWithWinner } from "./util/Score";
 
 const STARTING_POINT = 25000;
 const STARTING_WIND = 0;
@@ -24,7 +23,7 @@ function PlayerInputCell({
   const [playerNameInput, setPlayerNameInput] = useState(players[seating].name);
   return <input
     aria-label="Player Name"
-    className="form-control table-item-player-number m-2"
+    className="form-control table-item-player-number"
     placeholder={getWind(seating)}
     key={seating}
     onChange={(event) => {
@@ -139,6 +138,9 @@ export default function Calculator() {
       );
       // TODO save delta to entries
       applyScoreChange(players, deltas);
+    } else {
+      const deltas = getDeltaWithoutWinner(tenpai);
+      applyScoreChange(players, deltas);
     }
     setPlayers([...players])
     setGameStatus(newGameStatus(winner, false, gameStatus))
@@ -156,13 +158,13 @@ export default function Calculator() {
         />
         <nav>
           <div className="nav nav-tabs" id="nav-tab" role="tablist">
-            <button className="nav-link active" id="nav-win-tab" data-bs-toggle="tab" data-bs-target="#nav-win" type="button" role="tab" aria-controls="nav-win" aria-selected="true" onClick={() => setEndingType("Win")}>Win</button>
-            <button className="nav-link" id="nav-draw-tab" data-bs-toggle="tab" data-bs-target="#nav-draw" type="button" role="tab" aria-controls="nav-draw" aria-selected="false" onClick={() => setEndingType("Draw")}>Draw</button>
+            <button className={`nav-link ${endingType === "Win" ? "active" : ""}`} id="nav-win-tab" data-bs-toggle="tab" data-bs-target="#nav-win" type="button" role="tab" aria-controls="nav-win" aria-selected="true" onClick={() => setEndingType("Win")}>Win</button>
+            <button className={`nav-link ${endingType === "Draw" ? "active" : ""}`} id="nav-draw-tab" data-bs-toggle="tab" data-bs-target="#nav-draw" type="button" role="tab" aria-controls="nav-draw" aria-selected="false" onClick={() => setEndingType("Draw")}>Draw</button>
             {/* <button className="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button> */}
           </div>
         </nav>
-        <div className="tab-content" id="nav-tabContent">
-          <div className="tab-pane fade show active" id="nav-win" role="tabpanel" aria-labelledby="nav-win-tab">
+        <div className="tab-content mt-1" id="nav-tabContent">
+          <div className={`tab-pane fade ${endingType === "Win" ? "show active" : ""}`} id="nav-win" role="tabpanel" aria-labelledby="nav-win-tab">
             <div className="d-flex flex-row flex-wrap">
               <DropdownEntry
                 label="Fan"
@@ -201,12 +203,38 @@ export default function Calculator() {
               />
             </div>
           </div>
-          <div className="tab-pane fade" id="nav-draw" role="tabpanel" aria-labelledby="nav-draw-tab">
-            Draw tab
+
+          <div className={`tab-pane fade ${endingType === "Draw" ? "show active" : ""}`} id="nav-draw" role="tabpanel" aria-labelledby="nav-draw-tab">
+            <PlayerTable
+              playerTable={players}
+              playerCell={function (player: IPlayer): JSX.Element {
+                const id=`tenpai-check-${player.seating}`;
+                return <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id={id}
+                    checked={tenpai[player.seating]}
+                    onChange={(_) => {
+                      const newTenpai = [...tenpai];
+                      newTenpai[player.seating] = !newTenpai[player.seating];
+                      setTenpai(newTenpai);
+                    }}
+                  />
+                  <label className="form-check-label" htmlFor={id}>
+                    {player.name}
+                  </label>
+                </div>
+              }}
+              centerCell={function (): JSX.Element {
+                return <>
+                  <span>Check all players that were tenpai.</span>
+                </>
+              }}
+            />
           </div>
-          {/* <div className="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div> */}
           <button
-            className="btn btn-primary"
+            className="btn btn-primary mt-3"
             type="button"
             onClick={() => {saveEntry()}}
             disabled={!isReady}
@@ -219,14 +247,15 @@ export default function Calculator() {
       const PlayerInputCenterCell = () => {
         return <button
           type="button"
-          className="btn btn-primary m-2"
+          className="btn btn-primary"
           onClick={() => {
             setNamesReady(true);
           }}
           >Game start!</button>
       }
       return <React.Fragment>
-        <h1>Please enter players' names</h1>
+        <img src="/Header.jpg" style={{maxHeight: "100%", maxWidth: "100%",}}/>
+        <h1 style={{textAlign: "center"}}>Please enter players' names</h1>
         <PlayerTable
           playerTable={players}
           playerCell={(player: IPlayer) =>
@@ -244,7 +273,9 @@ export default function Calculator() {
     setGameStatus,
     setPlayers,
   }}>
-    <Page />
+    <div className="container">
+      <Page />
+    </div>
   </GameContext.Provider>
 }
 
