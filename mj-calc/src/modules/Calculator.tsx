@@ -129,9 +129,19 @@ export default function Calculator() {
 
   const gameReady = namesReady;
 
+  const resetWinState = () => {
+    setFan(null);
+    setFu(null);
+    setWinner(null);
+    setDealIn(null);
+    setTenpai([false, false, false, false]);
+    setEndingType("Win");
+  }
+
   const saveEntry = () => {
+    let deltas: number[];
     if (endingType === "Win")  {
-      const deltas = getDeltaWithWinner(
+      deltas = getDeltaWithWinner(
         fan!,
         fu!,
         winner === dealIn,
@@ -139,20 +149,23 @@ export default function Calculator() {
         gameStatus,
         dealIn!
       );
-      // TODO save delta to entries
-      applyScoreChange(players, deltas);
     } else {
-      const deltas = getDeltaWithoutWinner(tenpai);
-      applyScoreChange(players, deltas);
+      deltas = getDeltaWithoutWinner(tenpai);
     }
+    applyScoreChange(players, deltas);
     setPlayers([...players])
     setGameStatus(nextGameStatus(winner, false, gameStatus))
+    resetWinState();
   }
 
   function flipPlayerRichii(seating: WindNumber) {
     const newRichiiList = [...gameStatus.richii] as IRichii;
+
     newRichiiList[seating] = !newRichiiList[seating]
     gameStatus.richiiStick += newRichiiList[seating] ? 1 : -1;
+    
+    const newPlayers = [...players] as IPlayerTable;
+    newPlayers[seating].score += newRichiiList[seating] ? 1000 : -1000;
     setGameStatus({
       ...gameStatus,
       richii: newRichiiList,
@@ -326,6 +339,7 @@ export default function Calculator() {
 }
 
 export function nextGameStatus(winner: null | WindNumber, isDealerTenpai: boolean, gameStatus: GameStatus) {
+  // update honba
   if (winner === null) {
     gameStatus.honba += 1;
     if (!isDealerTenpai) {
@@ -338,6 +352,11 @@ export function nextGameStatus(winner: null | WindNumber, isDealerTenpai: boolea
       incrementRound(gameStatus);
       gameStatus.honba = 0;
     }
+    gameStatus.richiiStick = 0;
+    console.log("%s %d", winner, gameStatus.richiiStick)
   }
+  // update richii state
+  gameStatus.richii = [false, false, false, false];
+
   return {...gameStatus};
 }
