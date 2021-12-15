@@ -180,7 +180,7 @@ export default function Calculator() {
     return <div
       className="container"
     >
-      <div className="row">
+      <div className="row mb-2">
         <div
           className="col"
           onMouseDown={() => setDisplayDelta(player.seating)}
@@ -208,12 +208,12 @@ export default function Calculator() {
             aria-label="Richii"
             type="button"
             style={{backgroundColor: hasRichii ? "transparent" : ""}}
-            className={`btn ${hasRichii ? "" : "btn-primary"} p-0 border-0`}
+            className={`btn ${hasRichii ? "p-0" : "btn-primary"}  border-0`}
             onClick={() => flipPlayerRichii(player.seating)}
           >
             {hasRichii ? 
               RichiiStick(StickIconSize) :
-              <span className="p-2">Richii!</span>
+              <span>Richii!</span>
             }
           </button>
         </div>
@@ -226,97 +226,105 @@ export default function Calculator() {
       const fans = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
       const fus = [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110];
       return <React.Fragment>
-        <img alt="" src="/Header.jpg" style={{maxHeight: "100%", maxWidth: "100%",}} className="mb-2"/>
-        <PlayerTable
-          playerTable={playersScoreView}
-          playerCell={PlayerInfoCell}
-          centerCell={() => GameStatusCenterCell(gameStatus)}
-        />
-        <nav>
-          <div className="nav nav-tabs" id="nav-tab" role="tablist">
-            <button className={`nav-link ${endingType === "Win" ? "active" : ""}`} id="nav-win-tab" data-bs-toggle="tab" data-bs-target="#nav-win" type="button" role="tab" aria-controls="nav-win" aria-selected="true" onClick={() => setEndingType("Win")}>Win</button>
-            <button className={`nav-link ${endingType === "Draw" ? "active" : ""}`} id="nav-draw-tab" data-bs-toggle="tab" data-bs-target="#nav-draw" type="button" role="tab" aria-controls="nav-draw" aria-selected="false" onClick={() => setEndingType("Draw")}>Draw</button>
-            {/* <button className="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button> */}
-          </div>
-        </nav>
-        <div className="tab-content mt-1" id="nav-tabContent">
-          <div className={`tab-pane fade ${endingType === "Win" ? "show active" : ""}`} id="nav-win" role="tabpanel" aria-labelledby="nav-win-tab">
-            <div className="d-flex flex-row flex-wrap">
-              <DropdownEntry
-                label="Fan"
-                keys={fans}
-                values={fans}
-                value={fan}
-                setter={(v) => setFan(v)}
-                cast={parseInt}
-              />
+        <div className="row">
+          <img alt="" src="/Header.jpg" style={{maxHeight: "100%", maxWidth: "100%",}} className="mb-2"/>
+        </div>
+        <div className="row">
+          <PlayerTable
+            playerTable={playersScoreView}
+            playerCell={PlayerInfoCell}
+            centerCell={() => GameStatusCenterCell(gameStatus)}
+          />
+        </div>
+        <div className="row">
+          <div className="col col-12">
+            <nav>
+              <div className="nav nav-tabs" id="nav-tab" role="tablist">
+                <button className={`nav-link ${endingType === "Win" ? "active" : ""}`} id="nav-win-tab" data-bs-toggle="tab" data-bs-target="#nav-win" type="button" role="tab" aria-controls="nav-win" aria-selected="true" onClick={() => setEndingType("Win")}>Win</button>
+                <button className={`nav-link ${endingType === "Draw" ? "active" : ""}`} id="nav-draw-tab" data-bs-toggle="tab" data-bs-target="#nav-draw" type="button" role="tab" aria-controls="nav-draw" aria-selected="false" onClick={() => setEndingType("Draw")}>Draw</button>
+                {/* <button className="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button> */}
+              </div>
+            </nav>
+            <div className="tab-content mt-1" id="nav-tabContent">
+              <div className={`tab-pane fade ${endingType === "Win" ? "show active" : ""}`} id="nav-win" role="tabpanel" aria-labelledby="nav-win-tab">
+                <div className="d-flex flex-row flex-wrap">
+                  <DropdownEntry
+                    label="Fan"
+                    keys={fans}
+                    values={fans}
+                    value={fan}
+                    setter={(v) => setFan(v)}
+                    cast={parseInt}
+                  />
 
-              <DropdownEntry
-                label="Fu"
-                keys={fus}
-                values={fus}
-                value={fu}
-                setter={(v) => setFu(v)}
-                cast={parseInt}
-              />
+                  <DropdownEntry
+                    label="Fu"
+                    keys={fus}
+                    values={fus}
+                    value={fu}
+                    setter={(v) => setFu(v)}
+                    cast={parseInt}
+                  />
 
-              <DropdownEntry
-                label="Winner"
-                keys={players.map(p => p.name)}
-                values={players.map(p => p.seating)}
-                value={winner}
-                setter={(v) => setWinner(v as WindNumber)}
-                cast={parseInt}
-              />
+                  <DropdownEntry
+                    label="Winner"
+                    keys={players.map(p => p.name)}
+                    values={players.map(p => p.seating)}
+                    value={winner}
+                    setter={(v) => setWinner(v as WindNumber)}
+                    cast={parseInt}
+                  />
 
-              <DropdownEntry
-                label="Deal in"
-                keys={players.map(p => p.seating === winner ? "Tsumo" : p.name)}
-                values={players.map(p => p.seating)}
-                value={dealIn}
-                setter={(v) => setDealIn(v as WindNumber)}
-                cast={parseInt}
-              />
+                  <DropdownEntry
+                    label="Deal in"
+                    keys={players.map(p => p.seating === winner ? "Tsumo" : p.name)}
+                    values={players.map(p => p.seating)}
+                    value={dealIn}
+                    setter={(v) => setDealIn(v as WindNumber)}
+                    cast={parseInt}
+                  />
+                </div>
+              </div>
+
+              <div className={`tab-pane fade ${endingType === "Draw" ? "show active" : ""}`} id="nav-draw" role="tabpanel" aria-labelledby="nav-draw-tab">
+                <PlayerTable
+                  playerTable={players}
+                  playerCell={function (player: IPlayer): JSX.Element {
+                    const id=`tenpai-check-${player.seating}`;
+                    return <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id={id}
+                        checked={tenpai[player.seating]}
+                        onChange={(_) => {
+                          const newTenpai = [...tenpai];
+                          newTenpai[player.seating] = !newTenpai[player.seating];
+                          setTenpai(newTenpai);
+                        }}
+                      />
+                      <label className="form-check-label" htmlFor={id}>
+                        {player.name}
+                      </label>
+                    </div>
+                  }}
+                  centerCell={function (): JSX.Element {
+                    return <>
+                      <span>Check all players that were tenpai.</span>
+                    </>
+                  }}
+                />
+              </div>
+              <button
+                className="btn btn-primary mt-3"
+                type="button"
+                onClick={() => {saveEntry()}}
+                disabled={!isReady}
+              >
+                Save entry
+              </button>
             </div>
           </div>
-
-          <div className={`tab-pane fade ${endingType === "Draw" ? "show active" : ""}`} id="nav-draw" role="tabpanel" aria-labelledby="nav-draw-tab">
-            <PlayerTable
-              playerTable={players}
-              playerCell={function (player: IPlayer): JSX.Element {
-                const id=`tenpai-check-${player.seating}`;
-                return <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id={id}
-                    checked={tenpai[player.seating]}
-                    onChange={(_) => {
-                      const newTenpai = [...tenpai];
-                      newTenpai[player.seating] = !newTenpai[player.seating];
-                      setTenpai(newTenpai);
-                    }}
-                  />
-                  <label className="form-check-label" htmlFor={id}>
-                    {player.name}
-                  </label>
-                </div>
-              }}
-              centerCell={function (): JSX.Element {
-                return <>
-                  <span>Check all players that were tenpai.</span>
-                </>
-              }}
-            />
-          </div>
-          <button
-            className="btn btn-primary mt-3"
-            type="button"
-            onClick={() => {saveEntry()}}
-            disabled={!isReady}
-          >
-            Save entry
-          </button>
         </div>
       </React.Fragment>
     } else {

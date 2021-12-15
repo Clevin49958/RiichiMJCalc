@@ -10,7 +10,7 @@ export default function PlayerTable({
     centerCell: () => JSX.Element,
 }) {
     return <>
-        <div className="player-table container">
+        <div className="player-table container" style={{maxWidth: "380px"}}>
             <div className="row">
                 <div className="col col-4 p-2 player-table-cell"></div>
                 <div className="col col-4 p-2 player-table-cell player-cell">
