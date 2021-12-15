@@ -41,16 +41,6 @@ function PlayerInputCell({
   />
 }
 
-function PlayerInfoCell(
-    player: IPlayer
-) {
-    return <>
-        <span>{player.name}</span>
-        <br />
-        <span>{player.score}</span>
-    </>;
-}
-
 function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
   return <div style={{textAlign: "center"}}>
@@ -109,7 +99,19 @@ export default function Calculator() {
   const [winner, setWinner] = useState<WindNumber | null>(null);
   const [dealIn, setDealIn] = useState<WindNumber | null>(null);
   const [tenpai, setTenpai] = useState([false, false, false, false]);
+  const [richii, setRichii] = useState([false, false, false, false]);
   const [endingType, setEndingType] = useState<"Win" | "Draw">("Win");
+
+  const [displayDelta, setDisplayDelta] = useState(-1);
+
+  const playersScoreView = players.map(player => ({...player})) as IPlayerTable;
+  if (displayDelta >= 0) {
+    playersScoreView.forEach((player, wind) => {
+      if (wind != displayDelta) {
+        player.score -= players[displayDelta].score;
+      }
+    })
+  }
 
   const isReady = endingType === "Draw" || (
     fan !== null && fu !== null && winner !== null && dealIn !== null
@@ -146,6 +148,36 @@ export default function Calculator() {
     setGameStatus(newGameStatus(winner, false, gameStatus))
   }
 
+  function PlayerInfoCell(
+      player: IPlayer
+  ) {
+    return <div
+      className="container"
+    >
+      <div className="row">
+        <div
+          className="col-6 col"
+          onMouseDown={() => setDisplayDelta(player.seating)}
+          onMouseUp={() => setDisplayDelta(-1)}
+        >
+          <span>{player.name}</span>
+          <br />
+          <span>{player.score}</span>
+        </div>
+        <div className="col col-6">
+          <button
+            aria-label="Richii"
+            type="button"
+            className="btn btn-primary"
+            // TODO
+          >
+            Richii
+          </button>
+        </div>
+      </div>
+    </div>;
+  }
+
   const Page = () => {
     if (gameReady) {
       const fans = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
@@ -153,7 +185,7 @@ export default function Calculator() {
       return <React.Fragment>
         <img src="/Header.jpg" style={{maxHeight: "100%", maxWidth: "100%",}} className="mb-2"/>
         <PlayerTable
-          playerTable={players}
+          playerTable={playersScoreView}
           playerCell={PlayerInfoCell}
           centerCell={() => GameStatusCenterCell(gameStatus)}
         />
