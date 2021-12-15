@@ -13,6 +13,12 @@ const STARTING_WIND = 0;
 const STARTING_HONBA = 0;
 const StickIconSize = {width: 56, height: 18}
 
+const DEFAULT_FAN = 3;
+const DEFAULT_FU = 30;
+const DEFAULT_PLAYER = (gameStatus: GameStatus) => {
+  return getDealer(gameStatus.wind, gameStatus.round);
+};
+
 type setPlayersTable = (players: IPlayerTable) => void
 
 function PlayerInputCell({
@@ -61,6 +67,7 @@ function DropdownEntry<T extends string | number>({
   setter,
   value,
   cast,
+  defaultValue,
 } : {
   label: string,
   keys: string[] | number[],
@@ -68,19 +75,34 @@ function DropdownEntry<T extends string | number>({
   value: T | null,
   setter: (t: T) => void,
   cast: (value: string) => T,
+  defaultValue: T,
 }) {
   return <div>
     <span>{label}: </span>
     <select
       className="form-select"
       aria-label={`Select ${label}`}
-      onChange={e => setter(cast(e.target.value))}>
-    <option selected={value === null}>{label}</option>
-    {keys.map((key, index) => {
-      const v = values[index];
-      return <option key={key} selected={value === v} value={v}>{key}</option>
-    })}
-  </select>
+      onChange={e => setter(cast(e.target.value))}
+    >
+      {/* <option selected={value === null}>{label}</option> */}
+      {keys.map((key, index) => {
+        const currValue = values[index];
+        let isSelected: boolean; 
+        if (value === null) {
+          isSelected = currValue === defaultValue;
+        } else {
+          isSelected = value === currValue;
+        };
+
+        return <option 
+          key={key} 
+          selected={isSelected} 
+          value={currValue}
+        >
+          {key}
+        </option>;
+      })}
+    </select>
   </div>
 }
 
@@ -100,10 +122,10 @@ export default function Calculator() {
     })) as IPlayerTable
   );
 
-  const [fan, setFan] = useState<number | null>(null);
-  const [fu, setFu] = useState<number | null>(null);
-  const [winner, setWinner] = useState<WindNumber | null>(null);
-  const [dealIn, setDealIn] = useState<WindNumber | null>(null);
+  const [fan, setFan] = useState<number | null>(DEFAULT_FAN);
+  const [fu, setFu] = useState<number | null>(DEFAULT_FU);
+  const [winner, setWinner] = useState<WindNumber | null>(DEFAULT_PLAYER(gameStatus));
+  const [dealIn, setDealIn] = useState<WindNumber | null>(DEFAULT_PLAYER(gameStatus));
   const [tenpai, setTenpai] = useState([false, false, false, false]);
   const [endingType, setEndingType] = useState<"Win" | "Draw">("Win");
   const [gameRecord, setGameRecord] = useState<IRecord[]>([]);
@@ -122,10 +144,10 @@ export default function Calculator() {
       }
     })
   }
-
-  const isReady = endingType === "Draw" || (
-    fan !== null && fu !== null && winner !== null && dealIn !== null
-  )
+  const isReady = true;
+  // const isReady = endingType === "Draw" || (
+  //   fan !== null && fu !== null && winner !== null && dealIn !== null
+  // )
 
   const GameContext = React.createContext({
     gameStatus,
@@ -139,10 +161,10 @@ export default function Calculator() {
   const gameReady = namesReady;
 
   const resetWinState = () => {
-    setFan(null);
-    setFu(null);
-    setWinner(null);
-    setDealIn(null);
+    setFan(DEFAULT_FAN);
+    setFu(DEFAULT_FU);
+    setWinner(DEFAULT_PLAYER(gameStatus));
+    setDealIn(DEFAULT_PLAYER(gameStatus));
     setTenpai([false, false, false, false]);
     setEndingType("Win");
   }
@@ -275,6 +297,7 @@ export default function Calculator() {
                     value={fan}
                     setter={(v) => setFan(v)}
                     cast={parseInt}
+                    defaultValue={2}
                   />
 
                   <DropdownEntry
@@ -284,6 +307,7 @@ export default function Calculator() {
                     value={fu}
                     setter={(v) => setFu(v)}
                     cast={parseInt}
+                    defaultValue={30}
                   />
 
                   <DropdownEntry
@@ -293,6 +317,7 @@ export default function Calculator() {
                     value={winner}
                     setter={(v) => setWinner(v as WindNumber)}
                     cast={parseInt}
+                    defaultValue={getDealer(gameStatus.wind, gameStatus.round)}
                   />
 
                   <DropdownEntry
@@ -302,6 +327,7 @@ export default function Calculator() {
                     value={dealIn}
                     setter={(v) => setDealIn(v as WindNumber)}
                     cast={parseInt}
+                    defaultValue={getDealer(gameStatus.wind, gameStatus.round)}
                   />
                 </div>
               </div>
