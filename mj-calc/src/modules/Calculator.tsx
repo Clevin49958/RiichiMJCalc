@@ -7,6 +7,7 @@ import { applyScoreChange, getDealer, getDeltaWithoutWinner, getDeltaWithWinner 
 import { HonbaStick, RichiiStick } from "./Icons";
 import { DrawRecord, IRecord, WinRecord } from "./util/IRecord";
 import RoundHistory from "./RoundHistory";
+import Header from "./Header";
 
 const STARTING_POINT = 25000;
 const STARTING_WIND = 0;
@@ -269,9 +270,6 @@ export default function Calculator() {
       const fus = [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110];
       return <React.Fragment>
         <div className="row">
-          <img alt="" src="/Header.jpg" style={{maxHeight: "100%", maxWidth: "100%",}} className="mb-2"/>
-        </div>
-        <div className="row">
           <PlayerTable
             playerTable={playersScoreView}
             playerCell={PlayerInfoCell}
@@ -385,7 +383,6 @@ export default function Calculator() {
           >Game start!</button>
       }
       return <React.Fragment>
-        <img alt="" src="/Header.jpg" style={{maxHeight: "100%", maxWidth: "100%",}} mb-2/>
         <h1 style={{textAlign: "center"}}>Please enter players' names</h1>
         <PlayerTable
           playerTable={players}
@@ -405,6 +402,7 @@ export default function Calculator() {
     setPlayers,
   }}>
     <div className="container">
+      <Header />
       <Page />
     </div>
   </GameContext.Provider>

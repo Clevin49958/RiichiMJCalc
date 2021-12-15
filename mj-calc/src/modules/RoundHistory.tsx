@@ -14,7 +14,7 @@ export default function RoundHistory({
       let content: JSX.Element;
       if (record.type === "Win") {
         const info = record.info as WinRecord;
-        if (info.winner == info.dealIn) {
+        if (info.winner === info.dealIn) {
           content = <div className="row">
             <div className="col col-3 win-prompt">
               Tsumo
@@ -30,7 +30,7 @@ export default function RoundHistory({
           content = <>
             <div className="row">
               <div className="col col-3 win-prompt">
-                Winner:
+                Ron
               </div>
               <div className="col col-6">
                 {players[info.winner].name}
@@ -41,13 +41,13 @@ export default function RoundHistory({
             </div>
             <div className="row">
               <div className="col col-3 deal-in-prompt">
-                Deal in:
+                Deal in
               </div>
               <div className="col col-6">
                 {players[info.dealIn].name}
               </div>
               <div className="col col-3">
-                +{record.deltas[info.dealIn]}
+                {record.deltas[info.dealIn]}
               </div>
             </div>
           </>
@@ -78,7 +78,7 @@ export default function RoundHistory({
       return <div className="card">
         <div className="card-body">
           <h5 className="card-header">
-            {getWind(record.wind)} {record.round} &nbsp;&nbsp;{record.honba} honba
+            {getWind(record.wind)} {record.round} &nbsp;&nbsp;{record.honba} honba (Repeat Counter)
           </h5>
           <div className="container round-entry">
             {content}
