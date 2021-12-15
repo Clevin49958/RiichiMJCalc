@@ -4,10 +4,12 @@ import { IPlayerTable, IPlayer } from "./util/IPlayer";
 import { getWind, WindNumber } from "./util/Wind";
 import { GameStatus, incrementRound, IRichii } from "./util/GameStatus";
 import { applyScoreChange, getDealer, getDeltaWithoutWinner, getDeltaWithWinner } from "./util/Score";
+import { HonbaStick, RichiiStick } from "./Icons";
 
 const STARTING_POINT = 25000;
 const STARTING_WIND = 0;
 const STARTING_HONBA = 0;
+const StickIconSize = {width: 56, height: 18}
 
 type setPlayersTable = (players: IPlayerTable) => void
 
@@ -45,8 +47,8 @@ function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
   return <div style={{textAlign: "center"}}>
     {`${getWind(gameStatus.wind)} ${gameStatus.round}`} <br />
-    {`${gameStatus.honba} honba`} <br />
-    {`${gameStatus.richiiStick} sticks`}
+    {`${gameStatus.honba}`} {HonbaStick(StickIconSize)}<br />
+    {`${gameStatus.richiiStick}`} {RichiiStick(StickIconSize)}
   </div>
 }
 
@@ -165,7 +167,7 @@ export default function Calculator() {
     gameStatus.richiiStick += newRichiiList[seating] ? 1 : -1;
     
     const newPlayers = [...players] as IPlayerTable;
-    newPlayers[seating].score += newRichiiList[seating] ? 1000 : -1000;
+    newPlayers[seating].score -= newRichiiList[seating] ? 1000 : -1000;
     setGameStatus({
       ...gameStatus,
       richii: newRichiiList,
@@ -182,9 +184,20 @@ export default function Calculator() {
         <div
           className="col"
           onMouseDown={() => setDisplayDelta(player.seating)}
+          onTouchStart={() => setDisplayDelta(player.seating)}
           onMouseUp={() => setDisplayDelta(-1)}
+          onTouchEnd={() => setDisplayDelta(-1)}
         >
-          <span>{player.name}</span>
+          <span 
+            style={{
+              color: getDealer(
+                gameStatus.wind, gameStatus.round
+              ) === player.seating ? "red" : "",
+              fontSize: "20px", 
+            }}
+          >
+            {player.name}
+          </span>
           <br />
           <span>{player.score}</span>
         </div>
@@ -194,10 +207,14 @@ export default function Calculator() {
           <button
             aria-label="Richii"
             type="button"
-            className={`btn ${hasRichii ? "btn-primary" : "btn-secondary"}`}
+            style={{backgroundColor: hasRichii ? "transparent" : ""}}
+            className={`btn ${hasRichii ? "" : "btn-primary"} p-0 border-0`}
             onClick={() => flipPlayerRichii(player.seating)}
           >
-            {hasRichii ? "Richii!" : "Chicken"}
+            {hasRichii ? 
+              RichiiStick(StickIconSize) :
+              <span className="p-2">Richii!</span>
+            }
           </button>
         </div>
       </div>
@@ -206,7 +223,7 @@ export default function Calculator() {
 
   const Page = () => {
     if (gameReady) {
-      const fans = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+      const fans = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
       const fus = [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110];
       return <React.Fragment>
         <img alt="" src="/Header.jpg" style={{maxHeight: "100%", maxWidth: "100%",}} className="mb-2"/>
