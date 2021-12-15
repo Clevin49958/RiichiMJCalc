@@ -11,3 +11,18 @@
 .player-table > .row > .center-cell {
   background-color: lightgrey;
 }
+
+.win-prompt {
+  font-size: 20px;
+  color: deeppink;
+}
+
+.draw-prompt {
+  font-size: 20px;
+  color: darkgrey;
+}
+
+.deal-in-prompt {
+  font-size: 20px;
+  color: blue;
+}

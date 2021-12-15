@@ -1,18 +1,21 @@
+import { RoundNumber } from "./GameStatus";
 import { WindNumber } from "./Wind";
 
-interface WinType {
+export interface WinRecord {
   winner: WindNumber,
   dealIn: WindNumber,
-  fan: number,
-  fu: number,
   // self deal in == tsumo
 }
 
-interface DrawType {
+export interface DrawRecord {
   tenpai: boolean[],
 }
-interface IRecord {
-  type: WinType | DrawType,
-  deltas?: number[],
-  richii?: boolean[],
+
+export interface IRecord {
+  info: WinRecord | DrawRecord,
+  type: "Win" | "Draw", 
+  deltas: number[],
+  wind: WindNumber,
+  round: RoundNumber,
+  honba: number,
 }

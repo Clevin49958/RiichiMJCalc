@@ -5,6 +5,8 @@ import { getWind, WindNumber } from "./util/Wind";
 import { GameStatus, incrementRound, IRichii } from "./util/GameStatus";
 import { applyScoreChange, getDealer, getDeltaWithoutWinner, getDeltaWithWinner } from "./util/Score";
 import { HonbaStick, RichiiStick } from "./Icons";
+import { DrawRecord, IRecord, WinRecord } from "./util/IRecord";
+import RoundHistory from "./RoundHistory";
 
 const STARTING_POINT = 25000;
 const STARTING_WIND = 0;
@@ -104,6 +106,11 @@ export default function Calculator() {
   const [dealIn, setDealIn] = useState<WindNumber | null>(null);
   const [tenpai, setTenpai] = useState([false, false, false, false]);
   const [endingType, setEndingType] = useState<"Win" | "Draw">("Win");
+  const [gameRecord, setGameRecord] = useState<IRecord[]>([]);
+
+  const pushRecord = (record: IRecord) => {
+    setGameRecord([...gameRecord, record]);
+  }
 
   const [displayDelta, setDisplayDelta] = useState(-1);
 
@@ -156,6 +163,19 @@ export default function Calculator() {
     }
     applyScoreChange(players, deltas);
     setPlayers([...players])
+    pushRecord({
+      type: endingType,
+      deltas: deltas,
+      wind: gameStatus.wind,
+      round: gameStatus.round,
+      honba: gameStatus.honba,
+      info: endingType === "Win" ? {
+        winner: winner,
+        dealIn: dealIn,
+      } as WinRecord : {
+        tenpai: tenpai,
+      } as DrawRecord
+    })
     setGameStatus(nextGameStatus(winner, false, gameStatus))
     resetWinState();
   }
@@ -326,6 +346,7 @@ export default function Calculator() {
             </div>
           </div>
         </div>
+        <RoundHistory records={gameRecord} players={players} />
       </React.Fragment>
     } else {
       const PlayerInputCenterCell = () => {
