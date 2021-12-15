@@ -2,11 +2,14 @@ import { WindNumber } from "./Wind";
 
 export type RoundNumber = 1 | 2 | 3 | 4;
 
+export type IRichii = [boolean, boolean, boolean, boolean]
+
 export interface GameStatus {
   wind: WindNumber;
   round: RoundNumber;
   honba: number;
   richiiStick: number;
+  richii: IRichii;
 }
 
 export function incrementRound(gameStatus: GameStatus) {

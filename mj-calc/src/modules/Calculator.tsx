@@ -1,8 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import PlayerTable from "./PlayerTable";
 import { IPlayerTable, IPlayer } from "./util/IPlayer";
 import { getWind, WindNumber } from "./util/Wind";
-import { GameStatus, incrementRound, RoundNumber } from "./util/GameStatus";
+import { GameStatus, incrementRound, IRichii } from "./util/GameStatus";
 import { applyScoreChange, getDealer, getDeltaWithoutWinner, getDeltaWithWinner } from "./util/Score";
 
 const STARTING_POINT = 25000;
@@ -44,7 +44,8 @@ function PlayerInputCell({
 function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
   return <div style={{textAlign: "center"}}>
-    {`${getWind(gameStatus.wind)} ${gameStatus.round}, ${gameStatus.honba} honba`} <br />
+    {`${getWind(gameStatus.wind)} ${gameStatus.round}`} <br />
+    {`${gameStatus.honba} honba`} <br />
     {`${gameStatus.richiiStick} sticks`}
   </div>
 }
@@ -85,6 +86,7 @@ export default function Calculator() {
     round: 1,
     honba: STARTING_HONBA,
     richiiStick: 0,
+    richii: [false, false, false, false],
   });
   const [players, setPlayers] = useState<IPlayerTable>(
     ([0, 1, 2, 3] as WindNumber[]).map((seating) => ({
@@ -99,7 +101,6 @@ export default function Calculator() {
   const [winner, setWinner] = useState<WindNumber | null>(null);
   const [dealIn, setDealIn] = useState<WindNumber | null>(null);
   const [tenpai, setTenpai] = useState([false, false, false, false]);
-  const [richii, setRichii] = useState([false, false, false, false]);
   const [endingType, setEndingType] = useState<"Win" | "Draw">("Win");
 
   const [displayDelta, setDisplayDelta] = useState(-1);
@@ -107,7 +108,7 @@ export default function Calculator() {
   const playersScoreView = players.map(player => ({...player})) as IPlayerTable;
   if (displayDelta >= 0) {
     playersScoreView.forEach((player, wind) => {
-      if (wind != displayDelta) {
+      if (wind !== displayDelta) {
         player.score -= players[displayDelta].score;
       }
     })
@@ -145,18 +146,28 @@ export default function Calculator() {
       applyScoreChange(players, deltas);
     }
     setPlayers([...players])
-    setGameStatus(newGameStatus(winner, false, gameStatus))
+    setGameStatus(nextGameStatus(winner, false, gameStatus))
   }
 
-  function PlayerInfoCell(
-      player: IPlayer
-  ) {
+  function flipPlayerRichii(seating: WindNumber) {
+    const newRichiiList = [...gameStatus.richii] as IRichii;
+    newRichiiList[seating] = !newRichiiList[seating]
+    gameStatus.richiiStick += newRichiiList[seating] ? 1 : -1;
+    setGameStatus({
+      ...gameStatus,
+      richii: newRichiiList,
+    })
+  }
+
+  function PlayerInfoCell(player: IPlayer) {
+    const richii = gameStatus.richii;
+    const hasRichii = richii[player.seating];
     return <div
       className="container"
     >
       <div className="row">
         <div
-          className="col-6 col"
+          className="col"
           onMouseDown={() => setDisplayDelta(player.seating)}
           onMouseUp={() => setDisplayDelta(-1)}
         >
@@ -164,14 +175,16 @@ export default function Calculator() {
           <br />
           <span>{player.score}</span>
         </div>
-        <div className="col col-6">
+      </div>
+      <div className="row">
+        <div className="col">
           <button
             aria-label="Richii"
             type="button"
-            className="btn btn-primary"
-            // TODO
+            className={`btn ${hasRichii ? "btn-primary" : "btn-secondary"}`}
+            onClick={() => flipPlayerRichii(player.seating)}
           >
-            Richii
+            {hasRichii ? "Richii!" : "Chicken"}
           </button>
         </div>
       </div>
@@ -183,7 +196,7 @@ export default function Calculator() {
       const fans = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
       const fus = [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110];
       return <React.Fragment>
-        <img src="/Header.jpg" style={{maxHeight: "100%", maxWidth: "100%",}} className="mb-2"/>
+        <img alt="" src="/Header.jpg" style={{maxHeight: "100%", maxWidth: "100%",}} className="mb-2"/>
         <PlayerTable
           playerTable={playersScoreView}
           playerCell={PlayerInfoCell}
@@ -287,7 +300,7 @@ export default function Calculator() {
           >Game start!</button>
       }
       return <React.Fragment>
-        <img src="/Header.jpg" style={{maxHeight: "100%", maxWidth: "100%",}} mb-2/>
+        <img alt="" src="/Header.jpg" style={{maxHeight: "100%", maxWidth: "100%",}} mb-2/>
         <h1 style={{textAlign: "center"}}>Please enter players' names</h1>
         <PlayerTable
           playerTable={players}
@@ -312,7 +325,7 @@ export default function Calculator() {
   </GameContext.Provider>
 }
 
-export function newGameStatus(winner: null | WindNumber, isDealerTenpai: boolean, gameStatus: GameStatus) {
+export function nextGameStatus(winner: null | WindNumber, isDealerTenpai: boolean, gameStatus: GameStatus) {
   if (winner === null) {
     gameStatus.honba += 1;
     if (!isDealerTenpai) {
