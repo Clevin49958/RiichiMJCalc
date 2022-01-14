@@ -12,7 +12,7 @@ import Header from "./Header";
 const STARTING_POINT = 25000;
 const STARTING_WIND = 0;
 const STARTING_HONBA = 0;
-const StickIconSize = {width: 56, height: 18}
+const StickIconSize = { width: 56, height: 18 }
 
 const DEFAULT_FAN = 3;
 const DEFAULT_FU = 30;
@@ -26,7 +26,7 @@ function PlayerInputCell({
   seating,
   players,
   setPlayers,
-} : {
+}: {
   seating: WindNumber,
   players: IPlayerTable,
   setPlayers: setPlayersTable
@@ -54,7 +54,7 @@ function PlayerInputCell({
 
 function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
-  return <div style={{textAlign: "center"}}>
+  return <div style={{ textAlign: "center" }}>
     {`${getWind(gameStatus.wind)} ${gameStatus.round}`} <br />
     {`${gameStatus.honba}`} {HonbaStick(StickIconSize)}<br />
     {`${gameStatus.richiiStick}`} {RichiiStick(StickIconSize)}
@@ -69,7 +69,7 @@ function DropdownEntry<T extends string | number>({
   value,
   cast,
   defaultValue,
-} : {
+}: {
   label: string,
   keys: string[] | number[],
   values: T[],
@@ -88,16 +88,16 @@ function DropdownEntry<T extends string | number>({
       {/* <option selected={value === null}>{label}</option> */}
       {keys.map((key, index) => {
         const currValue = values[index];
-        let isSelected: boolean; 
+        let isSelected: boolean;
         if (value === null) {
           isSelected = currValue === defaultValue;
         } else {
           isSelected = value === currValue;
         };
 
-        return <option 
-          key={key} 
-          selected={isSelected} 
+        return <option
+          key={key}
+          selected={isSelected}
           value={currValue}
         >
           {key}
@@ -115,6 +115,10 @@ export default function Calculator() {
     richiiStick: 0,
     richii: [false, false, false, false],
   });
+
+  // 3 or 4 players
+  const [modePlayers, setModePlayers] = useState<3 | 4>(4);
+
   const [players, setPlayers] = useState<IPlayerTable>(
     ([0, 1, 2, 3] as WindNumber[]).map((seating) => ({
       name: getWind(seating),
@@ -137,7 +141,7 @@ export default function Calculator() {
 
   const [displayDelta, setDisplayDelta] = useState(-1);
 
-  const playersScoreView = players.map(player => ({...player})) as IPlayerTable;
+  const playersScoreView = players.map(player => ({ ...player })) as IPlayerTable;
   if (displayDelta >= 0) {
     playersScoreView.forEach((player, wind) => {
       if (wind !== displayDelta) {
@@ -172,7 +176,7 @@ export default function Calculator() {
 
   const saveEntry = () => {
     let deltas: number[];
-    if (endingType === "Win")  {
+    if (endingType === "Win") {
       deltas = getDeltaWithWinner(
         fan!,
         fu!,
@@ -208,7 +212,7 @@ export default function Calculator() {
 
     newRichiiList[seating] = !newRichiiList[seating]
     gameStatus.richiiStick += newRichiiList[seating] ? 1 : -1;
-    
+
     const newPlayers = [...players] as IPlayerTable;
     newPlayers[seating].score -= newRichiiList[seating] ? 1000 : -1000;
     setGameStatus({
@@ -231,12 +235,12 @@ export default function Calculator() {
           onMouseUp={() => setDisplayDelta(-1)}
           onTouchEnd={() => setDisplayDelta(-1)}
         >
-          <span 
+          <span
             style={{
               color: getDealer(
                 gameStatus.wind, gameStatus.round
               ) === player.seating ? "red" : "",
-              fontSize: "20px", 
+              fontSize: "20px",
             }}
           >
             {player.name}
@@ -250,11 +254,11 @@ export default function Calculator() {
           <button
             aria-label="Richii"
             type="button"
-            style={{backgroundColor: hasRichii ? "transparent" : ""}}
+            style={{ backgroundColor: hasRichii ? "transparent" : "" }}
             className={`btn ${hasRichii ? "p-0" : "btn-primary"}  border-0`}
             onClick={() => flipPlayerRichii(player.seating)}
           >
-            {hasRichii ? 
+            {hasRichii ?
               RichiiStick(StickIconSize) :
               <span>Richii!</span>
             }
@@ -334,7 +338,7 @@ export default function Calculator() {
                 <PlayerTable
                   playerTable={players}
                   playerCell={function (player: IPlayer): JSX.Element {
-                    const id=`tenpai-check-${player.seating}`;
+                    const id = `tenpai-check-${player.seating}`;
                     return <div className="form-check">
                       <input
                         className="form-check-input"
@@ -362,7 +366,7 @@ export default function Calculator() {
               <button
                 className="btn btn-primary mt-3"
                 type="button"
-                onClick={() => {saveEntry()}}
+                onClick={() => { saveEntry() }}
                 disabled={!isReady}
               >
                 Save entry
@@ -380,14 +384,14 @@ export default function Calculator() {
           onClick={() => {
             setNamesReady(true);
           }}
-          >Game start!</button>
+        >Game start!</button>
       }
       return <React.Fragment>
-        <h1 style={{textAlign: "center"}}>Please enter players' names</h1>
+        <h1 style={{ textAlign: "center" }}>Please enter players' names</h1>
         <PlayerTable
           playerTable={players}
           playerCell={(player: IPlayer) =>
-            PlayerInputCell({seating: player.seating, players, setPlayers})
+            PlayerInputCell({ seating: player.seating, players, setPlayers })
           }
           centerCell={() => PlayerInputCenterCell()}
         />
@@ -428,5 +432,5 @@ export function nextGameStatus(winner: null | WindNumber, isDealerTenpai: boolea
   // update richii state
   gameStatus.richii = [false, false, false, false];
 
-  return {...gameStatus};
+  return { ...gameStatus };
 }

@@ -8,7 +8,7 @@ export interface IPlayer {
     lastScore?: number;
 }
 
-export type IPlayerTable = [IPlayer, IPlayer, IPlayer, IPlayer];
+export type IPlayerTable = [IPlayer, IPlayer, IPlayer] | [IPlayer, IPlayer, IPlayer, IPlayer];
 
 export function updatePlayerScore(player:IPlayer, newScore: number) {
     player.lastScore = player.score;
