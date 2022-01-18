@@ -8,6 +8,7 @@ import { HonbaStick, RichiiStick } from "./Icons";
 import { DrawRecord, IRecord, WinRecord } from "./util/IRecord";
 import RoundHistory from "./RoundHistory";
 import Header from "./Header";
+import Select from "react-select/";
 
 const STARTING_POINT = 25000;
 const STARTING_WIND = 0;
@@ -20,7 +21,7 @@ const DEFAULT_PLAYER = (gameStatus: GameStatus) => {
   return getDealer(gameStatus.wind, gameStatus.round);
 };
 
-type setPlayersTable = (players: IPlayerTable) => void
+type setPlayersTable = React.Dispatch<React.SetStateAction<IPlayerTable>>;
 
 function PlayerInputCell({
   seating,
@@ -388,6 +389,29 @@ export default function Calculator() {
       }
       return <React.Fragment>
         <h1 style={{ textAlign: "center" }}>Please enter players' names</h1>
+        <label
+          style={{
+            display: "block",
+            width: "12rem",
+            marginLeft: "auto",
+            marginRight: "auto",
+            marginTop: "1rem",
+            marginBottom: "1rem",
+          }}
+        >
+          Number of players:
+          <Select
+            options={[3, 4].map(count => ({
+              value: count,
+              label: count
+            }) as { value: 3 | 4, label: 3 | 4 })}
+            value={{
+              value: modePlayers,
+              label: modePlayers,
+            }}
+            onChange={wrapper => setModePlayers(wrapper!.value)}
+          />
+        </label>
         <PlayerTable
           playerTable={players}
           playerCell={(player: IPlayer) =>
@@ -406,7 +430,7 @@ export default function Calculator() {
     setPlayers,
   }}>
     <div className="container">
-      <Header />
+      {/* <Header /> */}
       <Page />
     </div>
   </GameContext.Provider>
