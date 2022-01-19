@@ -1,6 +1,7 @@
 export type WindNumber = 0 | 1 | 2 | 3;
 
-export type Wind = "East" | "South" | "West" | "North"
+/**Number of Players */
+export type NP = 2 | 3 | 4;
 
 export function getWind(windNum: WindNumber) {
     /**
@@ -17,8 +18,9 @@ export function getWind(windNum: WindNumber) {
         case 2:
             return "West";
         case 3:
-            return "North";
-
-    }
-
+      return "North";
+    default:
+      const _exhaustiveCheck: never = windNum;
+      return _exhaustiveCheck;
+  }
 }
