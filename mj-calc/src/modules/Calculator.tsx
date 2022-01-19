@@ -1,460 +1,147 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useCallback, useState } from "react";
 import PlayerTable from "./PlayerTable";
-import { IPlayerTable, IPlayer } from "./util/IPlayer";
-import { getWind, WindNumber } from "./util/Wind";
-import { GameStatus, incrementRound, IRichii } from "./util/GameStatus";
-import { applyScoreChange, getDealer, getDeltaWithoutWinner, getDeltaWithWinner } from "./util/Score";
-import { HonbaStick, RichiiStick } from "./Icons";
-import { DrawRecord, IRecord, WinRecord } from "./util/IRecord";
-import RoundHistory from "./RoundHistory";
-import Header from "./Header";
+import { getWind, NP, WindNumber } from "./util/Wind";
 import Select from "react-select/";
-
-const STARTING_POINT = 25000;
-const STARTING_WIND = 0;
-const STARTING_HONBA = 0;
-const StickIconSize = { width: 56, height: 18 }
-
-const DEFAULT_FAN = 3;
-const DEFAULT_FU = 30;
-const DEFAULT_PLAYER = (gameStatus: GameStatus) => {
-  return getDealer(gameStatus.wind, gameStatus.round);
-};
-
-type setPlayersTable = React.Dispatch<React.SetStateAction<IPlayerTable>>;
+import { ArrayType } from "./util/CustomType";
 
 function PlayerInputCell({
   seating,
-  players,
+  player,
   setPlayers,
+  numPlayers,
 }: {
-  seating: WindNumber,
-  players: IPlayerTable,
-  setPlayers: setPlayersTable
+  seating: WindNumber;
+  player: string;
+  setPlayers: Dispatch<SetStateAction<string[]>>;
+  numPlayers: NP;
 }) {
-  const [playerNameInput, setPlayerNameInput] = useState(players[seating].name);
-  return <input
-    aria-label="Player Name"
-    className="form-control table-item-player-number"
-    placeholder={getWind(seating)}
-    key={seating}
-    onChange={(event) => {
-      setPlayerNameInput(event.target.value);
-    }}
-    onBlur={(_event) => {
-      const newPlayerTable = [...players] as IPlayerTable;
-      newPlayerTable[seating] = {
-        ...newPlayerTable[seating],
-        name: playerNameInput,
-      }
-      setPlayers(newPlayerTable);
-    }}
-    value={playerNameInput}
-  />
+  const [playerNameInput, setPlayerNameInput] = useState(player);
+  return (
+    <input
+      aria-label="Player Name"
+      className="form-control table-item-player-number"
+      placeholder={getWind(seating)}
+      key={seating}
+      onChange={(event) => {
+        setPlayerNameInput(event.target.value);
+      }}
+      disabled={numPlayers === 3 && seating === 3}
+      onBlur={(_event) => {
+        setPlayers((players) => {
+          const newPlayerTable = [...players] as ArrayType<4, string>;
+          newPlayerTable[seating] = playerNameInput;
+          return newPlayerTable;
+        });
+      }}
+      value={playerNameInput}
+    />
+  );
 }
 
-function GameStatusCenterCell(gameStatus: GameStatus) {
-  /** Display Current field wind and honba */
-  return <div style={{ textAlign: "center" }}>
-    {`${getWind(gameStatus.wind)} ${gameStatus.round}`} <br />
-    {`${gameStatus.honba}`} {HonbaStick(StickIconSize)}<br />
-    {`${gameStatus.richiiStick}`} {RichiiStick(StickIconSize)}
-  </div>
-}
-
-function DropdownEntry<T extends string | number>({
-  label,
-  keys,
-  values,
-  setter,
-  value,
-  cast,
-  defaultValue,
+function StartUp({
+  numPlayers,
+  playerNames,
+  setNumPlayers,
+  setPlayerNames,
+  setNamesReady,
 }: {
-  label: string,
-  keys: string[] | number[],
-  values: T[],
-  value: T | null,
-  setter: (t: T) => void,
-  cast: (value: string) => T,
-  defaultValue: T,
+  numPlayers: NP;
+  playerNames: string[];
+  setNumPlayers: Dispatch<SetStateAction<NP>>;
+  setPlayerNames: Dispatch<SetStateAction<string[]>>;
+  setNamesReady: Dispatch<SetStateAction<boolean>>;
 }) {
-  return <div>
-    <span>{label}: </span>
-    <select
-      className="form-select"
-      aria-label={`Select ${label}`}
-      onChange={e => setter(cast(e.target.value))}
-    >
-      {/* <option selected={value === null}>{label}</option> */}
-      {keys.map((key, index) => {
-        const currValue = values[index];
-        let isSelected: boolean;
-        if (value === null) {
-          isSelected = currValue === defaultValue;
-        } else {
-          isSelected = value === currValue;
-        };
+  const PlayerInputCenterCell = () => {
+    return (
+      <button
+        type="button"
+        className="btn btn-primary"
+        onClick={() => {
+          setNamesReady(true);
+        }}
+      >
+        Game start!
+      </button>
+    );
+  };
 
-        return <option
-          key={key}
-          selected={isSelected}
-          value={currValue}
-        >
-          {key}
-        </option>;
-      })}
-    </select>
-  </div>
-}
-
-export default function Calculator() {
-  const [gameStatus, setGameStatus] = useState<GameStatus>({
-    wind: STARTING_WIND,
-    round: 1,
-    honba: STARTING_HONBA,
-    richiiStick: 0,
-    richii: [false, false, false, false],
-  });
-
-  // 3 or 4 players
-  const [modePlayers, setModePlayers] = useState<3 | 4>(4);
-
-  const [players, setPlayers] = useState<IPlayerTable>(
-    ([0, 1, 2, 3] as WindNumber[]).map((seating) => ({
-      name: getWind(seating),
-      seating: seating,
-      score: STARTING_POINT,
-    })) as IPlayerTable
+  const PlayerCell = useCallback(
+    (player: string, seating: WindNumber) => (
+      <PlayerInputCell
+        seating={seating}
+        player={player}
+        setPlayers={setPlayerNames}
+        numPlayers={numPlayers}
+      />
+    ),
+    [numPlayers, setPlayerNames],
   );
 
-  const [fan, setFan] = useState<number | null>(DEFAULT_FAN);
-  const [fu, setFu] = useState<number | null>(DEFAULT_FU);
-  const [winner, setWinner] = useState<WindNumber | null>(DEFAULT_PLAYER(gameStatus));
-  const [dealIn, setDealIn] = useState<WindNumber | null>(DEFAULT_PLAYER(gameStatus));
-  const [tenpai, setTenpai] = useState([false, false, false, false]);
-  const [endingType, setEndingType] = useState<"Win" | "Draw">("Win");
-  const [gameRecord, setGameRecord] = useState<IRecord[]>([]);
+  const PlayerNumInputCell = useCallback(
+    () =>
+      (
+        <label
+          style={{
+            display: "block",
+            marginLeft: "auto",
+            marginRight: "auto",
+            backgroundColor: "lightgrey",
+          }}
+        >
+          Number of players:
+          <Select
+            options={[3, 4].map(
+              (count) =>
+                ({
+                  value: count,
+                  label: count,
+                } as { value: 3 | 4; label: 3 | 4 }),
+            )}
+            value={{
+              value: numPlayers,
+              label: numPlayers,
+            }}
+            onChange={(wrapper) => setNumPlayers(wrapper!.value)}
+          />
+        </label>
+      ) as JSX.Element,
+    [numPlayers, setNumPlayers],
+  );
 
-  const pushRecord = (record: IRecord) => {
-    setGameRecord([...gameRecord, record]);
-  }
+  return (
+    <React.Fragment>
+      <h1 style={{ textAlign: "center" }}>Please enter players' names</h1>
+      <PlayerTable<string>
+        playerTable={playerNames}
+        playerCell={PlayerCell}
+        centerCell={PlayerInputCenterCell}
+        LTCell={PlayerNumInputCell}
+      />
+    </React.Fragment>
+  );
+}
+export default function Calculator() {
+  // 3 or 4 players
+  const DEFAULT_N_PLAYERS = 4;
+  const [numPlayers, setNumPlayers] = useState<NP>(DEFAULT_N_PLAYERS);
 
-  const [displayDelta, setDisplayDelta] = useState(-1);
-
-  const playersScoreView = players.map(player => ({ ...player })) as IPlayerTable;
-  if (displayDelta >= 0) {
-    playersScoreView.forEach((player, wind) => {
-      if (wind !== displayDelta) {
-        player.score -= players[displayDelta].score;
-      }
-    })
-  }
-  const isReady = true;
-  // const isReady = endingType === "Draw" || (
-  //   fan !== null && fu !== null && winner !== null && dealIn !== null
-  // )
-
-  const GameContext = React.createContext({
-    gameStatus,
-    players,
-    setGameStatus,
-    setPlayers,
-  })
+  const [playerNames, setPlayerNames] = useState<string[]>(
+    (Array(DEFAULT_N_PLAYERS) as WindNumber[]).map(getWind),
+  );
 
   const [namesReady, setNamesReady] = useState(false);
 
   const gameReady = namesReady;
 
-  const resetWinState = () => {
-    setFan(DEFAULT_FAN);
-    setFu(DEFAULT_FU);
-    setWinner(DEFAULT_PLAYER(gameStatus));
-    setDealIn(DEFAULT_PLAYER(gameStatus));
-    setTenpai([false, false, false, false]);
-    setEndingType("Win");
-  }
-
-  const saveEntry = () => {
-    let deltas: number[];
-    if (endingType === "Win") {
-      deltas = getDeltaWithWinner(
-        fan!,
-        fu!,
-        winner === dealIn,
-        winner!,
-        gameStatus,
-        dealIn!
-      );
-    } else {
-      deltas = getDeltaWithoutWinner(tenpai);
-    }
-    applyScoreChange(players, deltas);
-    setPlayers([...players])
-    pushRecord({
-      type: endingType,
-      deltas: deltas,
-      wind: gameStatus.wind,
-      round: gameStatus.round,
-      honba: gameStatus.honba,
-      info: endingType === "Win" ? {
-        winner: winner,
-        dealIn: dealIn,
-      } as WinRecord : {
-        tenpai: tenpai,
-      } as DrawRecord
-    })
-    setGameStatus(nextGameStatus(winner, false, gameStatus))
-    resetWinState();
-  }
-
-  function flipPlayerRichii(seating: WindNumber) {
-    const newRichiiList = [...gameStatus.richii] as IRichii;
-
-    newRichiiList[seating] = !newRichiiList[seating]
-    gameStatus.richiiStick += newRichiiList[seating] ? 1 : -1;
-
-    const newPlayers = [...players] as IPlayerTable;
-    newPlayers[seating].score -= newRichiiList[seating] ? 1000 : -1000;
-    setGameStatus({
-      ...gameStatus,
-      richii: newRichiiList,
-    })
-  }
-
-  function PlayerInfoCell(player: IPlayer) {
-    const richii = gameStatus.richii;
-    const hasRichii = richii[player.seating];
-    return <div
-      className="container"
-    >
-      <div className="row mb-2">
-        <div
-          className="col"
-          onMouseDown={() => setDisplayDelta(player.seating)}
-          onTouchStart={() => setDisplayDelta(player.seating)}
-          onMouseUp={() => setDisplayDelta(-1)}
-          onTouchEnd={() => setDisplayDelta(-1)}
-        >
-          <span
-            style={{
-              color: getDealer(
-                gameStatus.wind, gameStatus.round
-              ) === player.seating ? "red" : "",
-              fontSize: "20px",
-            }}
-          >
-            {player.name}
-          </span>
-          <br />
-          <span>{player.score}</span>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col">
-          <button
-            aria-label="Richii"
-            type="button"
-            style={{ backgroundColor: hasRichii ? "transparent" : "" }}
-            className={`btn ${hasRichii ? "p-0" : "btn-primary"}  border-0`}
-            onClick={() => flipPlayerRichii(player.seating)}
-          >
-            {hasRichii ?
-              RichiiStick(StickIconSize) :
-              <span>Richii!</span>
-            }
-          </button>
-        </div>
-      </div>
-    </div>;
-  }
-
-  const Page = () => {
-    if (gameReady) {
-      const fans = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-      const fus = [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110];
-      return <React.Fragment>
-        <div className="row">
-          <PlayerTable
-            playerTable={playersScoreView}
-            playerCell={PlayerInfoCell}
-            centerCell={() => GameStatusCenterCell(gameStatus)}
-          />
-        </div>
-        <div className="row">
-          <div className="col col-12">
-            <nav>
-              <div className="nav nav-tabs" id="nav-tab" role="tablist">
-                <button className={`nav-link ${endingType === "Win" ? "active" : ""}`} id="nav-win-tab" data-bs-toggle="tab" data-bs-target="#nav-win" type="button" role="tab" aria-controls="nav-win" aria-selected="true" onClick={() => setEndingType("Win")}>Win</button>
-                <button className={`nav-link ${endingType === "Draw" ? "active" : ""}`} id="nav-draw-tab" data-bs-toggle="tab" data-bs-target="#nav-draw" type="button" role="tab" aria-controls="nav-draw" aria-selected="false" onClick={() => setEndingType("Draw")}>Draw</button>
-                {/* <button className="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button> */}
-              </div>
-            </nav>
-            <div className="tab-content mt-1" id="nav-tabContent">
-              <div className={`tab-pane fade ${endingType === "Win" ? "show active" : ""}`} id="nav-win" role="tabpanel" aria-labelledby="nav-win-tab">
-                <div className="d-flex flex-row flex-wrap">
-                  <DropdownEntry
-                    label="Fan"
-                    keys={fans}
-                    values={fans}
-                    value={fan}
-                    setter={(v) => setFan(v)}
-                    cast={parseInt}
-                    defaultValue={2}
-                  />
-
-                  <DropdownEntry
-                    label="Fu"
-                    keys={fus}
-                    values={fus}
-                    value={fu}
-                    setter={(v) => setFu(v)}
-                    cast={parseInt}
-                    defaultValue={30}
-                  />
-
-                  <DropdownEntry
-                    label="Winner"
-                    keys={players.map(p => p.name)}
-                    values={players.map(p => p.seating)}
-                    value={winner}
-                    setter={(v) => setWinner(v as WindNumber)}
-                    cast={parseInt}
-                    defaultValue={getDealer(gameStatus.wind, gameStatus.round)}
-                  />
-
-                  <DropdownEntry
-                    label="Deal in"
-                    keys={players.map(p => p.seating === winner ? "Tsumo" : p.name)}
-                    values={players.map(p => p.seating)}
-                    value={dealIn}
-                    setter={(v) => setDealIn(v as WindNumber)}
-                    cast={parseInt}
-                    defaultValue={getDealer(gameStatus.wind, gameStatus.round)}
-                  />
-                </div>
-              </div>
-
-              <div className={`tab-pane fade ${endingType === "Draw" ? "show active" : ""}`} id="nav-draw" role="tabpanel" aria-labelledby="nav-draw-tab">
-                <PlayerTable
-                  playerTable={players}
-                  playerCell={function (player: IPlayer): JSX.Element {
-                    const id = `tenpai-check-${player.seating}`;
-                    return <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id={id}
-                        checked={tenpai[player.seating]}
-                        onChange={(_) => {
-                          const newTenpai = [...tenpai];
-                          newTenpai[player.seating] = !newTenpai[player.seating];
-                          setTenpai(newTenpai);
-                        }}
-                      />
-                      <label className="form-check-label" htmlFor={id}>
-                        {player.name}
-                      </label>
-                    </div>
-                  }}
-                  centerCell={function (): JSX.Element {
-                    return <>
-                      <span>Check all players that were tenpai.</span>
-                    </>
-                  }}
-                />
-              </div>
-              <button
-                className="btn btn-primary mt-3"
-                type="button"
-                onClick={() => { saveEntry() }}
-                disabled={!isReady}
-              >
-                Save entry
-              </button>
-            </div>
-          </div>
-        </div>
-        <RoundHistory records={gameRecord} players={players} />
-      </React.Fragment>
-    } else {
-      const PlayerInputCenterCell = () => {
-        return <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => {
-            setNamesReady(true);
-          }}
-        >Game start!</button>
-      }
-      return <React.Fragment>
-        <h1 style={{ textAlign: "center" }}>Please enter players' names</h1>
-        <label
-          style={{
-            display: "block",
-            width: "12rem",
-            marginLeft: "auto",
-            marginRight: "auto",
-            marginTop: "1rem",
-            marginBottom: "1rem",
-          }}
-        >
-          Number of players:
-          <Select
-            options={[3, 4].map(count => ({
-              value: count,
-              label: count
-            }) as { value: 3 | 4, label: 3 | 4 })}
-            value={{
-              value: modePlayers,
-              label: modePlayers,
-            }}
-            onChange={wrapper => setModePlayers(wrapper!.value)}
-          />
-        </label>
-        <PlayerTable
-          playerTable={players}
-          playerCell={(player: IPlayer) =>
-            PlayerInputCell({ seating: player.seating, players, setPlayers })
-          }
-          centerCell={() => PlayerInputCenterCell()}
-        />
-      </React.Fragment>
-    }
-  }
-
-  return <GameContext.Provider value={{
-    gameStatus,
-    players,
-    setGameStatus,
-    setPlayers,
-  }}>
-    <div className="container">
-      {/* <Header /> */}
-      <Page />
-    </div>
-  </GameContext.Provider>
-}
-
-export function nextGameStatus(winner: null | WindNumber, isDealerTenpai: boolean, gameStatus: GameStatus) {
-  // update honba
-  if (winner === null) {
-    gameStatus.honba += 1;
-    if (!isDealerTenpai) {
-      incrementRound(gameStatus);
-    }
-  } else {
-    if (winner === getDealer(gameStatus.wind, gameStatus.round)) {
-      gameStatus.honba += 1;
-    } else {
-      incrementRound(gameStatus);
-      gameStatus.honba = 0;
-    }
-    gameStatus.richiiStick = 0;
-    console.log("%s %d", winner, gameStatus.richiiStick)
-  }
-  // update richii state
-  gameStatus.richii = [false, false, false, false];
-
-  return { ...gameStatus };
+  return gameReady ? (
+    <></>
+  ) : (
+    <StartUp
+      numPlayers={numPlayers}
+      playerNames={playerNames}
+      setNumPlayers={setNumPlayers}
+      setPlayerNames={setPlayerNames}
+      setNamesReady={setNamesReady}
+    />
+  );
 }
