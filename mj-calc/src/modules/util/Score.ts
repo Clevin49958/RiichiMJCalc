@@ -39,11 +39,11 @@ function getDeltaForTsumo(
   basePoint: number,
   dealer: WindNumber,
   seating: WindNumber,
-  gameStatus: GameStatus,
+  gameStatus: GameStatus
 ) {
   const honba = gameStatus.honba;
   const nP = gameStatus.numPlayers;
-  const deltas = Array(nP);
+  const deltas = Array(nP).fill(0);
   const honbaPts = 100 * honba;
   if (dealer === seating) {
     const delta = roundPoints(basePoint * 2 + honbaPts);
@@ -54,7 +54,7 @@ function getDeltaForTsumo(
   } else {
     for (let index = 0; index < deltas.length; index++) {
       deltas[index] -= roundPoints(
-        (index === dealer ? 2 : 1) * basePoint + honbaPts,
+        (index === dealer ? 2 : 1) * basePoint + honbaPts
       );
     }
     deltas[seating] += -deltas.reduce((a, b) => {
@@ -69,11 +69,11 @@ function getDeltaForRon(
   dealer: WindNumber,
   seating: WindNumber,
   winFrom: WindNumber,
-  gameStatus: GameStatus,
+  gameStatus: GameStatus
 ) {
   const honba = gameStatus.honba;
   const nP = gameStatus.numPlayers;
-  const deltas = Array(nP);
+  const deltas = Array(nP).fill(0);
   const multiplier = dealer === seating ? 6 : 4;
   const score = roundPoints(multiplier * basePoint + 300 * honba);
   deltas[seating] += score;
@@ -87,7 +87,7 @@ export function getDeltaWithWinner(
   isTsumo: boolean,
   winner: WindNumber,
   gameStatus: GameStatus,
-  winFrom?: WindNumber,
+  winFrom?: WindNumber
 ) {
   const dealer = getDealer(gameStatus);
   const basePoint = getBasePoint(fan, fu);
@@ -101,7 +101,7 @@ export function getDeltaWithWinner(
         dealer,
         winner,
         (1 - winner) as WindNumber,
-        gameStatus,
+        gameStatus
       );
     } else {
       deltas = getDeltaForTsumo(basePoint, dealer, winner, gameStatus);
@@ -123,7 +123,7 @@ export function applyScoreChangeWithWinner(
   winner: WindNumber,
   gameStatus: GameStatus,
   players: IPlayerTable,
-  winFrom?: WindNumber,
+  winFrom?: WindNumber
 ) {
   const deltas = getDeltaWithWinner(
     fan,
@@ -131,7 +131,7 @@ export function applyScoreChangeWithWinner(
     isTsumo,
     winner,
     gameStatus,
-    winFrom,
+    winFrom
   );
   deltas.forEach((delta, index) => {
     updatePlayerScore(players[index], players[index].score + delta);
@@ -144,7 +144,7 @@ export function getDeltaWithoutWinner(isTenPai: boolean[]) {
 
   if (nTenpai === 0 || nTenpai === isTenPai.length) {
     // array of 0s
-    return Array(isTenPai.length);
+    return Array(isTenPai.length).fill(0);
   }
 
   const bappu = NOTEN_BAPPU[isTenPai.length.toString(10) as "2" | "3" | "4"];
