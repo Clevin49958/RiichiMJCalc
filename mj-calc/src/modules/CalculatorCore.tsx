@@ -169,6 +169,7 @@ export function CalculatorCore({
     } else {
       deltas = getDeltaWithoutWinner(tenpai);
     }
+    console.log(deltas);
     applyScoreChange(players, deltas);
     setPlayers([...players]);
     pushRecord({

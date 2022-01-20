@@ -43,7 +43,7 @@ function getDeltaForTsumo(
 ) {
   const honba = gameStatus.honba;
   const nP = gameStatus.numPlayers;
-  const deltas = Array(nP);
+  const deltas = Array(nP).fill(0);
   const honbaPts = 100 * honba;
   if (dealer === seating) {
     const delta = roundPoints(basePoint * 2 + honbaPts);
@@ -73,7 +73,7 @@ function getDeltaForRon(
 ) {
   const honba = gameStatus.honba;
   const nP = gameStatus.numPlayers;
-  const deltas = Array(nP);
+  const deltas = Array(nP).fill(0);
   const multiplier = dealer === seating ? 6 : 4;
   const score = roundPoints(multiplier * basePoint + 300 * honba);
   deltas[seating] += score;
@@ -116,35 +116,13 @@ export function getDeltaWithWinner(
   return deltas;
 }
 
-export function applyScoreChangeWithWinner(
-  fan: number,
-  fu: number,
-  isTsumo: boolean,
-  winner: WindNumber,
-  gameStatus: GameStatus,
-  players: IPlayerTable,
-  winFrom?: WindNumber,
-) {
-  const deltas = getDeltaWithWinner(
-    fan,
-    fu,
-    isTsumo,
-    winner,
-    gameStatus,
-    winFrom,
-  );
-  deltas.forEach((delta, index) => {
-    updatePlayerScore(players[index], players[index].score + delta);
-  });
-}
-
 export function getDeltaWithoutWinner(isTenPai: boolean[]) {
   // numOfPeopleTenpai
   const nTenpai = isTenPai.reduce((prev, curr) => prev + (curr ? 1 : 0), 0);
 
   if (nTenpai === 0 || nTenpai === isTenPai.length) {
     // array of 0s
-    return Array(isTenPai.length);
+    return Array(isTenPai.length).fill(0);
   }
 
   const bappu = NOTEN_BAPPU[isTenPai.length.toString(10) as "2" | "3" | "4"];

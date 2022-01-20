@@ -43,15 +43,19 @@ export default function RoundHistory({
           }
         } else {
           const info = record.info as DrawRecord;
+          const tenpaied = players.filter((_player, idx) => info.tenpai[idx]);
+          console.log([tenpaied, record, record.round, record.honba]);
+          const displayTenpai =
+            tenpaied.length < players.length && tenpaied.length > 0;
           content = (
             <div className="row">
               <div className="col col-3 draw-prompt">Exhaustive draw</div>
               <div className="col col-9">
-                {Array.from(players.keys())
-                  .filter((idx) => info.tenpai[idx])
-                  .map((idx) => (
+                {displayTenpai &&
+                  players.map((player, idx) => (
                     <div className="row" key={idx}>
-                      <div className="col col-8">{players[idx].name}</div>
+                      <div className="col col-8">{player.name}</div>
+                      {/* TODO: format negative numbers */}
                       <div className="col col-4">+{record.deltas[idx]}</div>
                     </div>
                   ))}
