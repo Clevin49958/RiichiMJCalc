@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import PlayerTable from "./PlayerTable";
 import { IPlayerTable, IPlayer } from "./util/IPlayer";
 import { getWind, NP, WindNumber } from "./util/Wind";
@@ -22,7 +22,7 @@ export const StickIconSize = { width: 56, height: 18 };
 const DEFAULT_FAN = 3;
 const DEFAULT_FU = 30;
 const DEFAULT_PLAYER = (gameStatus: GameStatus) => {
-  return getDealer(gameStatus.wind, gameStatus.round);
+  return getDealer(gameStatus);
 };
 
 export function GameStatusCenterCell(gameStatus: GameStatus) {
@@ -95,12 +95,12 @@ export function CalculatorCore({
     round: 1,
     honba: STARTING_HONBA,
     richiiStick: 0,
-    richii: [false, false, false, false],
+    richii: Array(n).fill(false),
   });
 
   const [players, setPlayers] = useState<IPlayerTable>(
-    ([0, 1, 2, 3] as WindNumber[]).map((seating) => ({
-      name: getWind(seating),
+    (Array.from(Array(n).keys()) as WindNumber[]).map((seating) => ({
+      name: playerNames[seating],
       seating: seating,
       score: STARTING_POINT,
     })) as IPlayerTable,
@@ -114,7 +114,7 @@ export function CalculatorCore({
   const [dealIn, setDealIn] = useState<WindNumber | null>(
     DEFAULT_PLAYER(gameStatus),
   );
-  const [tenpai, setTenpai] = useState([false, false, false, false]);
+  const [tenpai, setTenpai] = useState(Array(n).fill(false));
   const [endingType, setEndingType] = useState<"Win" | "Draw">("Win");
   const [gameRecord, setGameRecord] = useState<IRecord[]>([]);
 
@@ -151,7 +151,7 @@ export function CalculatorCore({
     setFu(DEFAULT_FU);
     setWinner(DEFAULT_PLAYER(gameStatus));
     setDealIn(DEFAULT_PLAYER(gameStatus));
-    setTenpai([false, false, false, false]);
+    setTenpai(Array(n).fill(false));
     setEndingType("Win");
   };
 
@@ -220,11 +220,7 @@ export function CalculatorCore({
           >
             <span
               style={{
-                color:
-                  getDealer(gameStatus.wind, gameStatus.round) ===
-                  player.seating
-                    ? "red"
-                    : "",
+                color: getDealer(gameStatus) === player.seating ? "red" : "",
                 fontSize: "20px",
               }}
             >
@@ -337,7 +333,7 @@ export function CalculatorCore({
                     value={winner}
                     setter={(v) => setWinner(v as WindNumber)}
                     cast={parseInt}
-                    defaultValue={getDealer(gameStatus.wind, gameStatus.round)}
+                    defaultValue={getDealer(gameStatus)}
                   />
 
                   <DropdownEntry
@@ -349,7 +345,7 @@ export function CalculatorCore({
                     value={dealIn}
                     setter={(v) => setDealIn(v as WindNumber)}
                     cast={parseInt}
-                    defaultValue={getDealer(gameStatus.wind, gameStatus.round)}
+                    defaultValue={getDealer(gameStatus)}
                   />
                 </div>
               </div>
@@ -442,7 +438,7 @@ export function nextGameStatus(
       incrementRound(gameStatus);
     }
   } else {
-    if (winner === getDealer(gameStatus.wind, gameStatus.round)) {
+    if (winner === getDealer(gameStatus)) {
       gameStatus.honba += 1;
     } else {
       incrementRound(gameStatus);
@@ -452,7 +448,7 @@ export function nextGameStatus(
     console.log("%s %d", winner, gameStatus.richiiStick);
   }
   // update richii state
-  gameStatus.richii = [false, false, false, false];
+  gameStatus.richii = Array(gameStatus.numPlayers).fill(false);
 
   return { ...gameStatus };
 }

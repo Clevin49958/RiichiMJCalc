@@ -1,4 +1,4 @@
-import { GameStatus, RoundNumber } from "./GameStatus";
+import { GameStatus } from "./GameStatus";
 import { IPlayerTable, updatePlayerScore } from "./IPlayer";
 import { WindNumber } from "./Wind";
 
@@ -13,9 +13,10 @@ export function roundPoints(pts: number) {
   return Math.ceil(pts / 100) * 100;
 }
 
-export function getDealer(wind: WindNumber, round: RoundNumber) {
+export function getDealer(gameStatus: GameStatus) {
   // TODO: update for 3p
-  return ((wind + round - 1) % 4) as WindNumber;
+  return ((gameStatus.wind + gameStatus.round - 1) %
+    gameStatus.numPlayers) as WindNumber;
 }
 
 function getBasePoint(fan: number, fu: number) {
@@ -38,7 +39,7 @@ function getDeltaForTsumo(
   basePoint: number,
   dealer: WindNumber,
   seating: WindNumber,
-  gameStatus: GameStatus
+  gameStatus: GameStatus,
 ) {
   const honba = gameStatus.honba;
   const nP = gameStatus.numPlayers;
@@ -53,7 +54,7 @@ function getDeltaForTsumo(
   } else {
     for (let index = 0; index < deltas.length; index++) {
       deltas[index] -= roundPoints(
-        (index === dealer ? 2 : 1) * basePoint + honbaPts
+        (index === dealer ? 2 : 1) * basePoint + honbaPts,
       );
     }
     deltas[seating] += -deltas.reduce((a, b) => {
@@ -68,7 +69,7 @@ function getDeltaForRon(
   dealer: WindNumber,
   seating: WindNumber,
   winFrom: WindNumber,
-  gameStatus: GameStatus
+  gameStatus: GameStatus,
 ) {
   const honba = gameStatus.honba;
   const nP = gameStatus.numPlayers;
@@ -86,21 +87,21 @@ export function getDeltaWithWinner(
   isTsumo: boolean,
   winner: WindNumber,
   gameStatus: GameStatus,
-  winFrom?: WindNumber
+  winFrom?: WindNumber,
 ) {
-  const dealer = getDealer(gameStatus.wind, gameStatus.round);
+  const dealer = getDealer(gameStatus);
   const basePoint = getBasePoint(fan, fu);
   let deltas: number[];
   // 2 player Tsumo is treated as the other player deal in
   // because there's no Tsumo reduction as in 3p
   if (isTsumo) {
-    if (gameStatus.numPlayers == 2) {
+    if (gameStatus.numPlayers === 2) {
       deltas = getDeltaForRon(
         basePoint,
         dealer,
         winner,
         (1 - winner) as WindNumber,
-        gameStatus
+        gameStatus,
       );
     } else {
       deltas = getDeltaForTsumo(basePoint, dealer, winner, gameStatus);
@@ -122,7 +123,7 @@ export function applyScoreChangeWithWinner(
   winner: WindNumber,
   gameStatus: GameStatus,
   players: IPlayerTable,
-  winFrom?: WindNumber
+  winFrom?: WindNumber,
 ) {
   const deltas = getDeltaWithWinner(
     fan,
@@ -130,7 +131,7 @@ export function applyScoreChangeWithWinner(
     isTsumo,
     winner,
     gameStatus,
-    winFrom
+    winFrom,
   );
   deltas.forEach((delta, index) => {
     updatePlayerScore(players[index], players[index].score + delta);

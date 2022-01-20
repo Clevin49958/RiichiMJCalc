@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useCallback, useState } from "react";
 import PlayerTable from "./PlayerTable";
-import { getWind, NP, WindNumber } from "./util/Wind";
+import { NP, WindNumber } from "./util/Wind";
 import Select from "react-select/";
 import { ArrayType } from "./util/CustomType";
 
