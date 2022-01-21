@@ -15,6 +15,7 @@ import RoundHistory from "./RoundHistory";
 import Header from "./Header";
 import { GameEntrySelector } from "./GameEntrySelector";
 import Select from "react-select";
+import GameContext from "./util/Context";
 
 const STARTING_POINT = [25000, 35000, 50000];
 const STARTING_WIND = 0;
@@ -124,16 +125,6 @@ export function CalculatorCore({
     });
   }
   const isReady = true;
-  // const isReady = endingType === "Draw" || (
-  //   fan !== null && fu !== null && winner !== null && dealIn !== null
-  // )
-
-  const GameContext = React.createContext({
-    gameStatus,
-    players,
-    setGameStatus,
-    setPlayers,
-  });
 
   const resetWinState = () => {
     setFan(DEFAULT_FAN);
@@ -242,8 +233,17 @@ export function CalculatorCore({
     );
   }
 
-  const Page = () => {
     return (
+    <GameContext.Provider
+      value={{
+        gameStatus,
+        players,
+        setGameStatus,
+        setPlayers,
+      }}
+    >
+      <div className="container">
+        {/* <Header /> */}
       <React.Fragment>
         <div className="row">
           <PlayerTable
@@ -271,21 +271,6 @@ export function CalculatorCore({
         />
         <RoundHistory records={gameRecord} players={players} />
       </React.Fragment>
-    );
-  };
-
-  return (
-    <GameContext.Provider
-      value={{
-        gameStatus,
-        players,
-        setGameStatus,
-        setPlayers,
-      }}
-    >
-      <div className="container">
-        {/* <Header /> */}
-        <Page />
       </div>
     </GameContext.Provider>
   );
