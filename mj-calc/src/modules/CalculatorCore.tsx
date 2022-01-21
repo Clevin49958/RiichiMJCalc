@@ -114,7 +114,7 @@ export function CalculatorCore({
   const [dealIn, setDealIn] = useState<WindNumber | null>(
     DEFAULT_PLAYER(gameStatus),
   );
-  const [tenpai, setTenpai] = useState(Array(n).fill(false));
+  const [tenpai, setTenpai] = useState<boolean[]>(Array(n).fill(false));
   const [endingType, setEndingType] = useState<"Win" | "Draw">("Win");
   const [gameRecord, setGameRecord] = useState<IRecord[]>([]);
 
@@ -189,7 +189,11 @@ export function CalculatorCore({
             } as DrawRecord),
     });
     setGameStatus(
-      nextGameStatus(endingType === "Win" ? winner : null, false, gameStatus),
+      nextGameStatus(
+        endingType === "Win" ? winner : null,
+        tenpai[getDealer(gameStatus)],
+        gameStatus,
+      ),
     );
     resetWinState();
   };
