@@ -15,8 +15,7 @@ export function roundPoints(pts: number) {
 
 export function getDealer(gameStatus: GameStatus) {
   // TODO: update for 3p
-  return ((gameStatus.wind + gameStatus.round - 1) %
-    gameStatus.numPlayers) as WindNumber;
+  return ((gameStatus.round - 1) % gameStatus.numPlayers) as WindNumber;
 }
 
 function getBasePoint(fan: number, fu: number) {
@@ -114,28 +113,6 @@ export function getDeltaWithWinner(
   deltas[winner] += gameStatus.richiiStick * 1000;
 
   return deltas;
-}
-
-export function applyScoreChangeWithWinner(
-  fan: number,
-  fu: number,
-  isTsumo: boolean,
-  winner: WindNumber,
-  gameStatus: GameStatus,
-  players: IPlayerTable,
-  winFrom?: WindNumber
-) {
-  const deltas = getDeltaWithWinner(
-    fan,
-    fu,
-    isTsumo,
-    winner,
-    gameStatus,
-    winFrom
-  );
-  deltas.forEach((delta, index) => {
-    updatePlayerScore(players[index], players[index].score + delta);
-  });
 }
 
 export function getDeltaWithoutWinner(isTenPai: boolean[]) {
