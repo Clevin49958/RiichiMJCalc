@@ -29,9 +29,7 @@ export default function RoundHistory({
                 <div className="row">
                   <div className="col col-3 win-prompt">Ron</div>
                   <div className="col col-6">{players[info.winner].name}</div>
-                  <div className="col col-3">
-                    +{record.deltas[info.winner]}
-                  </div>
+                  <div className="col col-3">+{record.deltas[info.winner]}</div>
                 </div>
                 <div className="row">
                   <div className="col col-3 deal-in-prompt">Deal in</div>
@@ -44,7 +42,6 @@ export default function RoundHistory({
         } else {
           const info = record.info as DrawRecord;
           const tenpaied = players.filter((_player, idx) => info.tenpai[idx]);
-          console.log([tenpaied, record, record.round, record.honba]);
           const displayTenpai =
             tenpaied.length < players.length && tenpaied.length > 0;
           content = (
@@ -66,8 +63,9 @@ export default function RoundHistory({
             </div>
           );
         }
+        const key = `${record.round}.${record.wind}.${record.honba}`;
         return (
-          <div className="card">
+          <div className="card" key={key}>
             <div className="card-body">
               <h5 className="card-header">
                 {getWind(record.wind)} {record.round} &nbsp;&nbsp;

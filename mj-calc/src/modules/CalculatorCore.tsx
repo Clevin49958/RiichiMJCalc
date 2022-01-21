@@ -13,6 +13,8 @@ import { HonbaStick, RichiiStick } from "./Icons";
 import { DrawRecord, IRecord, WinRecord } from "./util/IRecord";
 import RoundHistory from "./RoundHistory";
 import Header from "./Header";
+import { GameEntrySelector } from "./GameEntrySelector";
+import Select from "react-select";
 
 const STARTING_POINT = [25000, 35000, 50000];
 const STARTING_WIND = 0;
@@ -42,43 +44,34 @@ export function DropdownEntry<T extends string | number>({
   values,
   setter,
   value,
-  cast,
-  defaultValue,
 }: {
   label: string;
   keys: string[] | number[];
   values: T[];
-  value: T | null;
+  value: T;
   setter: (t: T) => void;
-  cast: (value: string) => T;
-  defaultValue: T;
 }) {
+  const options = keys.map((key, index) => ({
+    value: values[index],
+    label: key.toString(),
+  }));
+  interface OptionType {
+    value: T;
+    label: string;
+  }
   return (
-    <div>
+    <label>
       <span>{label}: </span>
-      <select
-        className="form-select"
-        aria-label={`Select ${label}`}
-        onChange={(e) => setter(cast(e.target.value))}
-      >
-        {/* <option selected={value === null}>{label}</option> */}
-        {keys.map((key, index) => {
-          const currValue = values[index];
-          let isSelected: boolean;
-          if (value === null) {
-            isSelected = currValue === defaultValue;
-          } else {
-            isSelected = value === currValue;
-          }
-
-          return (
-            <option key={key} selected={isSelected} value={currValue}>
-              {key}
-            </option>
-          );
-        })}
-      </select>
-    </div>
+      <Select<OptionType>
+        defaultValue={options.find((obj) => obj.value === value)}
+        options={options}
+        isMulti={false}
+        isClearable={false}
+        onChange={(newValue) => {
+          setter(newValue!.value);
+        }}
+      />
+    </label>
   );
 }
 
@@ -102,18 +95,14 @@ export function CalculatorCore({
     (Array.from(Array(n).keys()) as WindNumber[]).map((seating) => ({
       name: playerNames[seating],
       seating: seating,
-      score: STARTING_POINT[n],
+      score: STARTING_POINT[4 - n],
     })) as IPlayerTable,
   );
 
-  const [fan, setFan] = useState<number | null>(DEFAULT_FAN);
-  const [fu, setFu] = useState<number | null>(DEFAULT_FU);
-  const [winner, setWinner] = useState<WindNumber | null>(
-    DEFAULT_PLAYER(gameStatus),
-  );
-  const [dealIn, setDealIn] = useState<WindNumber | null>(
-    DEFAULT_PLAYER(gameStatus),
-  );
+  const [fan, setFan] = useState<number>(DEFAULT_FAN);
+  const [fu, setFu] = useState<number>(DEFAULT_FU);
+  const [winner, setWinner] = useState<WindNumber>(DEFAULT_PLAYER(gameStatus));
+  const [dealIn, setDealIn] = useState<WindNumber>(DEFAULT_PLAYER(gameStatus));
   const [tenpai, setTenpai] = useState<boolean[]>(Array(n).fill(false));
   const [endingType, setEndingType] = useState<"Win" | "Draw">("Win");
   const [gameRecord, setGameRecord] = useState<IRecord[]>([]);
@@ -169,7 +158,6 @@ export function CalculatorCore({
     } else {
       deltas = getDeltaWithoutWinner(tenpai);
     }
-    console.log(deltas);
     applyScoreChange(players, deltas);
     setPlayers([...players]);
     pushRecord({
@@ -255,8 +243,6 @@ export function CalculatorCore({
   }
 
   const Page = () => {
-    const fans = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-    const fus = [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110];
     return (
       <React.Fragment>
         <div className="row">
@@ -266,151 +252,23 @@ export function CalculatorCore({
             centerCell={() => GameStatusCenterCell(gameStatus)}
           />
         </div>
-        <div className="row">
-          <div className="col col-12">
-            <nav>
-              <div className="nav nav-tabs" id="nav-tab" role="tablist">
-                <button
-                  className={`nav-link ${
-                    endingType === "Win" ? "active" : ""
-                  }`}
-                  id="nav-win-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#nav-win"
-                  type="button"
-                  role="tab"
-                  aria-controls="nav-win"
-                  aria-selected="true"
-                  onClick={() => setEndingType("Win")}
-                >
-                  Win
-                </button>
-                <button
-                  className={`nav-link ${
-                    endingType === "Draw" ? "active" : ""
-                  }`}
-                  id="nav-draw-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#nav-draw"
-                  type="button"
-                  role="tab"
-                  aria-controls="nav-draw"
-                  aria-selected="false"
-                  onClick={() => setEndingType("Draw")}
-                >
-                  Draw
-                </button>
-                {/* <button className="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button> */}
-              </div>
-            </nav>
-            <div className="tab-content mt-1" id="nav-tabContent">
-              <div
-                className={`tab-pane fade ${
-                  endingType === "Win" ? "show active" : ""
-                }`}
-                id="nav-win"
-                role="tabpanel"
-                aria-labelledby="nav-win-tab"
-              >
-                <div className="d-flex flex-row flex-wrap">
-                  <DropdownEntry
-                    label="Fan"
-                    keys={fans}
-                    values={fans}
-                    value={fan}
-                    setter={(v) => setFan(v)}
-                    cast={parseInt}
-                    defaultValue={2}
-                  />
-
-                  <DropdownEntry
-                    label="Fu"
-                    keys={fus}
-                    values={fus}
-                    value={fu}
-                    setter={(v) => setFu(v)}
-                    cast={parseInt}
-                    defaultValue={30}
-                  />
-
-                  <DropdownEntry
-                    label="Winner"
-                    keys={players.map((p) => p.name)}
-                    values={players.map((p) => p.seating)}
-                    value={winner}
-                    setter={(v) => setWinner(v as WindNumber)}
-                    cast={parseInt}
-                    defaultValue={getDealer(gameStatus)}
-                  />
-
-                  <DropdownEntry
-                    label="Deal in"
-                    keys={players.map((p) =>
-                      p.seating === winner ? "Tsumo" : p.name,
-                    )}
-                    values={players.map((p) => p.seating)}
-                    value={dealIn}
-                    setter={(v) => setDealIn(v as WindNumber)}
-                    cast={parseInt}
-                    defaultValue={getDealer(gameStatus)}
-                  />
-                </div>
-              </div>
-
-              <div
-                className={`tab-pane fade ${
-                  endingType === "Draw" ? "show active" : ""
-                }`}
-                id="nav-draw"
-                role="tabpanel"
-                aria-labelledby="nav-draw-tab"
-              >
-                <PlayerTable
-                  playerTable={players}
-                  playerCell={function (player: IPlayer): JSX.Element {
-                    const id = `tenpai-check-${player.seating}`;
-                    return (
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id={id}
-                          checked={tenpai[player.seating]}
-                          onChange={(_) => {
-                            const newTenpai = [...tenpai];
-                            newTenpai[player.seating] =
-                              !newTenpai[player.seating];
-                            setTenpai(newTenpai);
-                          }}
-                        />
-                        <label className="form-check-label" htmlFor={id}>
-                          {player.name}
-                        </label>
-                      </div>
-                    );
-                  }}
-                  centerCell={function (): JSX.Element {
-                    return (
-                      <>
-                        <span>Check all players that were tenpai.</span>
-                      </>
-                    );
-                  }}
-                />
-              </div>
-              <button
-                className="btn btn-primary mt-3"
-                type="button"
-                onClick={() => {
-                  saveEntry();
-                }}
-                disabled={!isReady}
-              >
-                Save entry
-              </button>
-            </div>
-          </div>
-        </div>
+        <GameEntrySelector
+          endingType={endingType}
+          setEndingType={setEndingType}
+          fan={fan}
+          setFan={setFan}
+          fu={fu}
+          setFu={setFu}
+          players={players}
+          winner={winner}
+          setWinner={setWinner}
+          dealIn={dealIn}
+          setDealIn={setDealIn}
+          tenpai={tenpai}
+          setTenpai={setTenpai}
+          saveEntry={saveEntry}
+          isReady={isReady}
+        />
         <RoundHistory records={gameRecord} players={players} />
       </React.Fragment>
     );
@@ -452,7 +310,6 @@ export function nextGameStatus(
       gameStatus.honba = 0;
     }
     gameStatus.richiiStick = 0;
-    console.log("%s %d", winner, gameStatus.richiiStick);
   }
   // update richii state
   gameStatus.richii = Array(gameStatus.numPlayers).fill(false);
