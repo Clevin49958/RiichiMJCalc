@@ -56,7 +56,10 @@ export default function RoundHistory({
                     <div className="row" key={idx}>
                       <div className="col col-8">{player.name}</div>
                       {/* TODO: format negative numbers */}
-                      <div className="col col-4">+{record.deltas[idx]}</div>
+                      <div className="col col-4">
+                        {record.deltas[idx] > 0 ? "+" : ""}
+                        {record.deltas[idx]}
+                      </div>
                     </div>
                   ))}
               </div>
