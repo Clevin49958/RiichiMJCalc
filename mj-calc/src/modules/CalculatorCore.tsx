@@ -252,24 +252,23 @@ export function CalculatorCore({
             centerCell={() => GameStatusCenterCell(gameStatus)}
           />
         </div>
-        {GameEntrySelector(
-          endingType,
-          setEndingType,
-          fan,
-          setFan,
-          fu,
-          setFu,
-          players,
-          winner,
-          setWinner,
-          gameStatus,
-          dealIn,
-          setDealIn,
-          tenpai,
-          setTenpai,
-          saveEntry,
-          isReady,
-        )}
+        <GameEntrySelector
+          endingType={endingType}
+          setEndingType={setEndingType}
+          fan={fan}
+          setFan={setFan}
+          fu={fu}
+          setFu={setFu}
+          players={players}
+          winner={winner}
+          setWinner={setWinner}
+          dealIn={dealIn}
+          setDealIn={setDealIn}
+          tenpai={tenpai}
+          setTenpai={setTenpai}
+          saveEntry={saveEntry}
+          isReady={isReady}
+        />
         <RoundHistory records={gameRecord} players={players} />
       </React.Fragment>
     );

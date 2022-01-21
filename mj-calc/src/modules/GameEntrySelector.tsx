@@ -5,24 +5,41 @@ import { WindNumber } from "./util/Wind";
 import { GameStatus } from "./util/GameStatus";
 import { DropdownEntry } from "./CalculatorCore";
 
-export function GameEntrySelector(
-  endingType: string,
-  setEndingType: React.Dispatch<React.SetStateAction<"Win" | "Draw">>,
-  fan: number,
-  setFan: React.Dispatch<React.SetStateAction<number>>,
-  fu: number,
-  setFu: React.Dispatch<React.SetStateAction<number>>,
-  players: IPlayerTable,
-  winner: number,
-  setWinner: React.Dispatch<React.SetStateAction<WindNumber>>,
-  gameStatus: GameStatus,
-  dealIn: number,
-  setDealIn: React.Dispatch<React.SetStateAction<WindNumber>>,
-  tenpai: boolean[],
-  setTenpai: React.Dispatch<React.SetStateAction<boolean[]>>,
-  saveEntry: () => void,
-  isReady: boolean,
-) {
+interface GameEntrySelectorProps {
+  endingType: string;
+  setEndingType: React.Dispatch<React.SetStateAction<"Win" | "Draw">>;
+  fan: number;
+  setFan: React.Dispatch<React.SetStateAction<number>>;
+  fu: number;
+  setFu: React.Dispatch<React.SetStateAction<number>>;
+  players: IPlayerTable;
+  winner: number;
+  setWinner: React.Dispatch<React.SetStateAction<WindNumber>>;
+  dealIn: number;
+  setDealIn: React.Dispatch<React.SetStateAction<WindNumber>>;
+  tenpai: boolean[];
+  setTenpai: React.Dispatch<React.SetStateAction<boolean[]>>;
+  saveEntry: () => void;
+  isReady: boolean;
+}
+
+export function GameEntrySelector({
+  endingType,
+  setEndingType,
+  fan,
+  setFan,
+  fu,
+  setFu,
+  players,
+  winner,
+  setWinner,
+  dealIn,
+  setDealIn,
+  tenpai,
+  setTenpai,
+  saveEntry,
+  isReady,
+}: GameEntrySelectorProps) {
   const fans = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
   const fus = [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110];
   return (
