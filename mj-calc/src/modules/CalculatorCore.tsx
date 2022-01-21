@@ -40,18 +40,18 @@ export function GameStatusCenterCell(gameStatus: GameStatus) {
 }
 export function DropdownEntry<T extends string | number>({
   label,
-  keys,
+  labels,
   values,
   setter,
   value,
 }: {
   label: string;
-  keys: string[] | number[];
+  labels: string[] | number[];
   values: T[];
   value: T;
   setter: (t: T) => void;
 }) {
-  const options = keys.map((key, index) => ({
+  const options = labels.map((key, index) => ({
     value: values[index],
     label: key.toString(),
   }));
