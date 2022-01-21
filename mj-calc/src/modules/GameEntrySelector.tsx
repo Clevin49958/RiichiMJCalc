@@ -3,7 +3,6 @@ import PlayerTable from "./PlayerTable";
 import { IPlayerTable, IPlayer } from "./util/IPlayer";
 import { WindNumber } from "./util/Wind";
 import { GameStatus } from "./util/GameStatus";
-import { getDealer } from "./util/Score";
 import { DropdownEntry } from "./CalculatorCore";
 
 export function GameEntrySelector(

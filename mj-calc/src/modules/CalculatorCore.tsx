@@ -95,7 +95,7 @@ export function CalculatorCore({
     (Array.from(Array(n).keys()) as WindNumber[]).map((seating) => ({
       name: playerNames[seating],
       seating: seating,
-      score: STARTING_POINT[n],
+      score: STARTING_POINT[4 - n],
     })) as IPlayerTable,
   );
 
@@ -158,7 +158,6 @@ export function CalculatorCore({
     } else {
       deltas = getDeltaWithoutWinner(tenpai);
     }
-    console.log(deltas);
     applyScoreChange(players, deltas);
     setPlayers([...players]);
     pushRecord({
