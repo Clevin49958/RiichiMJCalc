@@ -9,16 +9,16 @@ import { DropdownEntry } from "./CalculatorCore";
 export function GameEntrySelector(
   endingType: string,
   setEndingType: React.Dispatch<React.SetStateAction<"Win" | "Draw">>,
-  fan: number | null,
-  setFan: React.Dispatch<React.SetStateAction<number | null>>,
-  fu: number | null,
-  setFu: React.Dispatch<React.SetStateAction<number | null>>,
+  fan: number,
+  setFan: React.Dispatch<React.SetStateAction<number>>,
+  fu: number,
+  setFu: React.Dispatch<React.SetStateAction<number>>,
   players: IPlayerTable,
-  winner: number | null,
-  setWinner: React.Dispatch<React.SetStateAction<WindNumber | null>>,
+  winner: number,
+  setWinner: React.Dispatch<React.SetStateAction<WindNumber>>,
   gameStatus: GameStatus,
-  dealIn: number | null,
-  setDealIn: React.Dispatch<React.SetStateAction<WindNumber | null>>,
+  dealIn: number,
+  setDealIn: React.Dispatch<React.SetStateAction<WindNumber>>,
   tenpai: boolean[],
   setTenpai: React.Dispatch<React.SetStateAction<boolean[]>>,
   saveEntry: () => void,
@@ -75,8 +75,6 @@ export function GameEntrySelector(
                 values={fans}
                 value={fan}
                 setter={setFan}
-                cast={parseInt}
-                defaultValue={2}
               />
 
               <DropdownEntry
@@ -85,8 +83,6 @@ export function GameEntrySelector(
                 values={fus}
                 value={fu}
                 setter={setFu}
-                cast={parseInt}
-                defaultValue={30}
               />
 
               <DropdownEntry
@@ -95,8 +91,6 @@ export function GameEntrySelector(
                 values={players.map((p) => p.seating)}
                 value={winner}
                 setter={(v) => setWinner(v as WindNumber)}
-                cast={parseInt}
-                defaultValue={getDealer(gameStatus)}
               />
 
               <DropdownEntry
@@ -107,8 +101,6 @@ export function GameEntrySelector(
                 values={players.map((p) => p.seating)}
                 value={dealIn}
                 setter={(v) => setDealIn(v as WindNumber)}
-                cast={parseInt}
-                defaultValue={getDealer(gameStatus)}
               />
             </div>
           </div>

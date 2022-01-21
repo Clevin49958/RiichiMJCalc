@@ -53,40 +53,25 @@ export function DropdownEntry<T extends string | number>({
 }) {
   const options = keys.map((key, index) => ({
     value: values[index],
-    label: key,
+    label: key.toString(),
   }));
+  interface OptionType {
+    value: T;
+    label: string;
+  }
   return (
-    <>
-      <label>
-        <span>{label}: </span>
-        <Select<T> defaultInputValue={str(value)} />
-      </label>
-      <div>
-        <span>{label}: </span>
-        <select
-          className="form-select"
-          aria-label={`Select ${label}`}
-          onChange={(e) => setter(cast(e.target.value))}
-        >
-          {/* <option selected={value === null}>{label}</option> */}
-          {keys.map((key, index) => {
-            const currValue = values[index];
-            let isSelected: boolean;
-            if (value === null) {
-              isSelected = currValue === defaultValue;
-            } else {
-              isSelected = value === currValue;
-            }
-
-            return (
-              <option key={key} selected={isSelected} value={currValue}>
-                {key}
-              </option>
-            );
-          })}
-        </select>
-      </div>
-    </>
+    <label>
+      <span>{label}: </span>
+      <Select<OptionType>
+        defaultValue={options.find((obj) => obj.value === value)}
+        options={options}
+        isMulti={false}
+        isClearable={false}
+        onChange={(newValue) => {
+          setter(newValue!.value);
+        }}
+      />
+    </label>
   );
 }
 
