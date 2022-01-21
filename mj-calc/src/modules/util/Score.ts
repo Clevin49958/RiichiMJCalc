@@ -21,7 +21,7 @@ export function getDealer(gameStatus: GameStatus) {
 function getBasePoint(fan: number, fu: number) {
   let base = Math.pow(2, fan + 2) * fu;
   if (fan >= 13) {
-    base = 8000;
+    base = (fan / 13) * 8000;
   } else if (fan >= 11) {
     base = 6000;
   } else if (fan >= 8) {
@@ -38,7 +38,7 @@ function getDeltaForTsumo(
   basePoint: number,
   dealer: WindNumber,
   seating: WindNumber,
-  gameStatus: GameStatus
+  gameStatus: GameStatus,
 ) {
   const honba = gameStatus.honba;
   const nP = gameStatus.numPlayers;
@@ -53,7 +53,7 @@ function getDeltaForTsumo(
   } else {
     for (let index = 0; index < deltas.length; index++) {
       deltas[index] -= roundPoints(
-        (index === dealer ? 2 : 1) * basePoint + honbaPts
+        (index === dealer ? 2 : 1) * basePoint + honbaPts,
       );
     }
     deltas[seating] += -deltas.reduce((a, b) => {
@@ -68,7 +68,7 @@ function getDeltaForRon(
   dealer: WindNumber,
   seating: WindNumber,
   winFrom: WindNumber,
-  gameStatus: GameStatus
+  gameStatus: GameStatus,
 ) {
   const honba = gameStatus.honba;
   const nP = gameStatus.numPlayers;
@@ -86,7 +86,7 @@ export function getDeltaWithWinner(
   isTsumo: boolean,
   winner: WindNumber,
   gameStatus: GameStatus,
-  winFrom?: WindNumber
+  winFrom?: WindNumber,
 ) {
   const dealer = getDealer(gameStatus);
   const basePoint = getBasePoint(fan, fu);
@@ -100,7 +100,7 @@ export function getDeltaWithWinner(
         dealer,
         winner,
         (1 - winner) as WindNumber,
-        gameStatus
+        gameStatus,
       );
     } else {
       deltas = getDeltaForTsumo(basePoint, dealer, winner, gameStatus);

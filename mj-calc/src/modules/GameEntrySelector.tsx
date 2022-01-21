@@ -40,7 +40,7 @@ export function GameEntrySelector({
   saveEntry,
   isReady,
 }: GameEntrySelectorProps) {
-  const fans = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+  const fans = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 26, 39, 52, 65, 78];
   const fus = [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110];
   return (
     <div className="row">
@@ -87,7 +87,28 @@ export function GameEntrySelector({
             <div className="d-flex flex-row flex-wrap">
               <DropdownEntry
                 label="Fan"
-                keys={fans}
+                labels={fans.map((fan) => {
+                  if (fan % 13 === 0) {
+                    switch (fan / 13) {
+                      case 1:
+                        return "Yakuman";
+                      case 2:
+                        return "Double Yakuman";
+                      case 3:
+                        return "Triple Yakuman";
+                      case 4:
+                        return "Quadraple Yakuman";
+                      case 5:
+                        return "Quintuple Yakuman";
+                      case 6:
+                        return "Sextuple Yakuman";
+                      default:
+                        return "Yakuman takusan";
+                    }
+                  } else {
+                    return fan.toString();
+                  }
+                })}
                 values={fans}
                 value={fan}
                 setter={setFan}
@@ -95,7 +116,7 @@ export function GameEntrySelector({
 
               <DropdownEntry
                 label="Fu"
-                keys={fus}
+                labels={fus}
                 values={fus}
                 value={fu}
                 setter={setFu}
@@ -103,7 +124,7 @@ export function GameEntrySelector({
 
               <DropdownEntry
                 label="Winner"
-                keys={players.map((p) => p.name)}
+                labels={players.map((p) => p.name)}
                 values={players.map((p) => p.seating)}
                 value={winner}
                 setter={(v) => setWinner(v as WindNumber)}
@@ -111,7 +132,7 @@ export function GameEntrySelector({
 
               <DropdownEntry
                 label="Deal in"
-                keys={players.map((p) =>
+                labels={players.map((p) =>
                   p.seating === winner ? "Tsumo" : p.name,
                 )}
                 values={players.map((p) => p.seating)}
