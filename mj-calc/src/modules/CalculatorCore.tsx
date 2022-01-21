@@ -188,7 +188,9 @@ export function CalculatorCore({
               tenpai: tenpai,
             } as DrawRecord),
     });
-    setGameStatus(nextGameStatus(winner, false, gameStatus));
+    setGameStatus(
+      nextGameStatus(endingType === "Win" ? winner : null, false, gameStatus),
+    );
     resetWinState();
   };
 
