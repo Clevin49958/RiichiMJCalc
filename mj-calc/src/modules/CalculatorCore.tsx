@@ -14,7 +14,7 @@ import { DrawRecord, IRecord, WinRecord } from "./util/IRecord";
 import RoundHistory from "./RoundHistory";
 import Header from "./Header";
 
-const STARTING_POINT = 25000;
+const STARTING_POINT = [25000, 35000, 50000];
 const STARTING_WIND = 0;
 const STARTING_HONBA = 0;
 export const StickIconSize = { width: 56, height: 18 };
@@ -102,7 +102,7 @@ export function CalculatorCore({
     (Array.from(Array(n).keys()) as WindNumber[]).map((seating) => ({
       name: playerNames[seating],
       seating: seating,
-      score: STARTING_POINT,
+      score: STARTING_POINT[n],
     })) as IPlayerTable,
   );
 
