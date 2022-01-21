@@ -15,8 +15,7 @@ export function roundPoints(pts: number) {
 
 export function getDealer(gameStatus: GameStatus) {
   // TODO: update for 3p
-  return ((gameStatus.wind + gameStatus.round - 1) %
-    gameStatus.numPlayers) as WindNumber;
+  return ((gameStatus.round - 1) % gameStatus.numPlayers) as WindNumber;
 }
 
 function getBasePoint(fan: number, fu: number) {
