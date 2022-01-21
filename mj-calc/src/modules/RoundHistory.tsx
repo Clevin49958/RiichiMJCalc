@@ -63,8 +63,9 @@ export default function RoundHistory({
             </div>
           );
         }
+        const key = `${record.round}.${record.wind}.${record.honba}`;
         return (
-          <div className="card">
+          <div className="card" key={key}>
             <div className="card-body">
               <h5 className="card-header">
                 {getWind(record.wind)} {record.round} &nbsp;&nbsp;
