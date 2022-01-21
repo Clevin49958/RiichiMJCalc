@@ -310,7 +310,6 @@ export function nextGameStatus(
       gameStatus.honba = 0;
     }
     gameStatus.richiiStick = 0;
-    console.log("%s %d", winner, gameStatus.richiiStick);
   }
   // update richii state
   gameStatus.richii = Array(gameStatus.numPlayers).fill(false);
