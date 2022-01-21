@@ -246,12 +246,16 @@ export function CalculatorCore({
         {/* <Header /> */}
       <React.Fragment>
         <div className="row">
+            <div className="col col-12">
           <PlayerTable
             playerTable={playersScoreView}
             playerCell={PlayerInfoCell}
             centerCell={() => GameStatusCenterCell(gameStatus)}
           />
         </div>
+          </div>
+          <div className="row">
+            <div className="col col-12">
         <GameEntrySelector
           endingType={endingType}
           setEndingType={setEndingType}
@@ -269,7 +273,18 @@ export function CalculatorCore({
           saveEntry={saveEntry}
           isReady={isReady}
         />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col col-12">
         <RoundHistory records={gameRecord} players={players} />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col col-12">
+              <FinalPoints />
+            </div>
+          </div>
       </React.Fragment>
       </div>
     </GameContext.Provider>
