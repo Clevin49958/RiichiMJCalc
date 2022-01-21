@@ -16,6 +16,7 @@ import Header from "./Header";
 import { GameEntrySelector } from "./GameEntrySelector";
 import Select from "react-select";
 import GameContext from "./util/Context";
+import FinalPoints from "./FinalPoints";
 
 const STARTING_POINT = [25000, 35000, 50000];
 const STARTING_WIND = 0;
@@ -233,7 +234,7 @@ export function CalculatorCore({
     );
   }
 
-    return (
+  return (
     <GameContext.Provider
       value={{
         gameStatus,
@@ -244,40 +245,40 @@ export function CalculatorCore({
     >
       <div className="container">
         {/* <Header /> */}
-      <React.Fragment>
-        <div className="row">
-            <div className="col col-12">
-          <PlayerTable
-            playerTable={playersScoreView}
-            playerCell={PlayerInfoCell}
-            centerCell={() => GameStatusCenterCell(gameStatus)}
-          />
-        </div>
-          </div>
+        <React.Fragment>
           <div className="row">
             <div className="col col-12">
-        <GameEntrySelector
-          endingType={endingType}
-          setEndingType={setEndingType}
-          fan={fan}
-          setFan={setFan}
-          fu={fu}
-          setFu={setFu}
-          players={players}
-          winner={winner}
-          setWinner={setWinner}
-          dealIn={dealIn}
-          setDealIn={setDealIn}
-          tenpai={tenpai}
-          setTenpai={setTenpai}
-          saveEntry={saveEntry}
-          isReady={isReady}
-        />
+              <PlayerTable
+                playerTable={playersScoreView}
+                playerCell={PlayerInfoCell}
+                centerCell={() => GameStatusCenterCell(gameStatus)}
+              />
             </div>
           </div>
           <div className="row">
             <div className="col col-12">
-        <RoundHistory records={gameRecord} players={players} />
+              <GameEntrySelector
+                endingType={endingType}
+                setEndingType={setEndingType}
+                fan={fan}
+                setFan={setFan}
+                fu={fu}
+                setFu={setFu}
+                players={players}
+                winner={winner}
+                setWinner={setWinner}
+                dealIn={dealIn}
+                setDealIn={setDealIn}
+                tenpai={tenpai}
+                setTenpai={setTenpai}
+                saveEntry={saveEntry}
+                isReady={isReady}
+              />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col col-12">
+              <RoundHistory records={gameRecord} players={players} />
             </div>
           </div>
           <div className="row">
@@ -285,7 +286,7 @@ export function CalculatorCore({
               <FinalPoints />
             </div>
           </div>
-      </React.Fragment>
+        </React.Fragment>
       </div>
     </GameContext.Provider>
   );
