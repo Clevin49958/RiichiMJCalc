@@ -24,7 +24,7 @@ function PlayerInputCell({
       onChange={(event) => {
         setPlayerNameInput(event.target.value);
       }}
-      disabled={numPlayers === 3 && seating === 3}
+      disabled={seating >= numPlayers}
       onBlur={(_event) => {
         setPlayers((players) => {
           const newPlayerTable = [...players] as ArrayType<4, string>;
@@ -88,12 +88,12 @@ export function StartUp({
         >
           Number of players:
           <Select
-            options={[3, 4].map(
+            options={[2, 3, 4].map(
               (count) =>
                 ({
                   value: count,
                   label: count,
-                } as { value: 3 | 4; label: 3 | 4 }),
+                } as { value: NP; label: NP }),
             )}
             value={{
               value: numPlayers,
