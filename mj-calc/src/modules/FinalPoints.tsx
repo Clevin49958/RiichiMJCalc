@@ -7,6 +7,12 @@ interface Uma {
   label: string;
   uma: number[];
 }
+
+interface Oka {
+  label: string;
+  oka: number[];
+}
+
 const AllUmaPresets = {
   4: [
     // { label: "0", uma: [0, 0, 0, 0] },
@@ -26,6 +32,15 @@ const AllUmaPresets = {
   ],
 };
 
+const AllOkaPresets = {
+  4: [
+    { label: "0", oka: [0, 0, 0, 0] },
+    { label: "20", oka: [15, -5, -5, -5] },
+  ],
+  3: [{ label: "0", oka: [0, 0, 0] }],
+  2: [{ label: "0", oka: [0, 0] }],
+};
+
 export default function FinalPoints({
   startingPoint,
 }: {
@@ -33,12 +48,18 @@ export default function FinalPoints({
 }) {
   const { players, gameStatus } = useContext(GameContext);
   const umaPresets = AllUmaPresets[gameStatus.numPlayers];
+  const okaPresets = AllOkaPresets[gameStatus.numPlayers];
   const [umaOption, setUmaOption] = useState(umaPresets[0]);
+  const [okaOption, setOkaOption] = useState(okaPresets[0]);
+
   const sortedPlayers = [...players].sort(
     (playerA, playerB) => playerB.score - playerA.score,
   );
-  const finalPoints = sortedPlayers.map((player, idx) => {
-    return (player.score - startingPoint) / 1000 + umaOption.uma[idx];
+  const rawPoints = sortedPlayers.map((player, idx) => {
+    return (player.score - startingPoint) / 1000;
+  });
+  const finalPoints = rawPoints.map((pt, idx) => {
+    return pt + umaOption.uma[idx] + okaOption.oka[idx];
   });
   return (
     <div className="card">
@@ -56,7 +77,21 @@ export default function FinalPoints({
                 />
               </label>
             </div>
-            <div className="col col-12 col-lg-8">
+            {okaPresets.length > 1 && (
+              <div className="my-2 col col-6 col-lg-2">
+                <label>
+                  <div className="mb-1">Oka preset:</div>
+                  <Select<Oka>
+                    options={okaPresets}
+                    defaultValue={okaOption}
+                    onChange={(oka) => setOkaOption(oka!)}
+                  />
+                </label>
+              </div>
+            )}
+            <div
+              className={`col col-12 col-lg-${okaPresets.length > 1 ? 8 : 10}`}
+            >
               <table className="table table-striped table-bordered mx-3">
                 <thead className="table-primary">
                   <tr>
@@ -70,11 +105,17 @@ export default function FinalPoints({
                 </thead>
                 <tbody>
                   <tr>
-                    <th scope="row">Pts</th>
+                    <th scope="row">End Pts</th>
                     {sortedPlayers.map((player) => (
                       <th key={player.seating}>
                         {(player.score / 1000).toFixed(1)}
                       </th>
+                    ))}
+                  </tr>
+                  <tr>
+                    <th scope="row">Pts</th>
+                    {rawPoints.map((pt, idx) => (
+                      <th key={sortedPlayers[idx].seating}>{pt.toFixed(1)}</th>
                     ))}
                   </tr>
                   <tr>
