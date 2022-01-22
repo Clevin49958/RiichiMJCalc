@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import PlayerTable from "./PlayerTable";
 import { IPlayerTable, IPlayer } from "./util/IPlayer";
 import { getWind, NP, WindNumber } from "./util/Wind";
@@ -93,6 +93,8 @@ export function CalculatorCore({
     richii: Array(n).fill(false),
   });
 
+  const prevGameStatus = useRef<GameStatus | undefined>();
+
   const [players, setPlayers] = useState<IPlayerTable>(
     (Array.from(Array(n).keys()) as WindNumber[]).map((seating) => ({
       name: playerNames[seating],
@@ -137,6 +139,9 @@ export function CalculatorCore({
   };
 
   const saveEntry = () => {
+    prevGameStatus.current = {
+      ...gameStatus,
+    };
     let deltas: number[];
     if (endingType === "Win") {
       deltas = getDeltaWithWinner(
@@ -234,6 +239,39 @@ export function CalculatorCore({
     );
   }
 
+  const rewindButton = () => {
+    function rewind() {
+      if (!prevGameStatus.current) {
+        return;
+      }
+
+      // reset player score
+      players.forEach((player) => {
+        player.score = player.lastScore!;
+        player.lastScore = undefined;
+      });
+
+      setGameStatus({
+        ...prevGameStatus.current,
+      });
+      prevGameStatus.current = undefined;
+
+      setPlayers([...players]);
+      gameRecord.pop();
+    }
+    return (
+      <button
+        type="button"
+        aria-label="rewind"
+        className="btn btn-primary"
+        disabled={!prevGameStatus.current}
+        onClick={rewind}
+      >
+        Rewind
+      </button>
+    );
+  };
+
   return (
     <GameContext.Provider
       value={{
@@ -252,6 +290,7 @@ export function CalculatorCore({
                 playerTable={playersScoreView}
                 playerCell={PlayerInfoCell}
                 centerCell={() => GameStatusCenterCell(gameStatus)}
+                RBCell={rewindButton()}
               />
             </div>
           </div>
