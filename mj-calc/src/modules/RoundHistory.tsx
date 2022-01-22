@@ -10,7 +10,7 @@ export default function RoundHistory({
   players: IPlayerTable;
 }) {
   return (
-    <div className="card-column">
+    <div className="card-column my-2">
       {[...records].reverse().map((record) => {
         let content: JSX.Element;
         if (record.type === "Win") {

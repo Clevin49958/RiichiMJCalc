@@ -283,7 +283,7 @@ export function CalculatorCore({
           </div>
           <div className="row">
             <div className="col col-12">
-              <FinalPoints />
+              <FinalPoints startingPoint={STARTING_POINT[4 - n]} />
             </div>
           </div>
         </React.Fragment>
