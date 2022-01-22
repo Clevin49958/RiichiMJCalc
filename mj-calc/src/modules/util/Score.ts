@@ -14,7 +14,6 @@ export function roundPoints(pts: number) {
 }
 
 export function getDealer(gameStatus: GameStatus) {
-  // TODO: update for 3p
   return ((gameStatus.round - 1) % gameStatus.numPlayers) as WindNumber;
 }
 

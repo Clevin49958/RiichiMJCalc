@@ -10,7 +10,7 @@ export default function RoundHistory({
   players: IPlayerTable;
 }) {
   return (
-    <div className="card-column">
+    <div className="card-column my-2">
       {[...records].reverse().map((record) => {
         let content: JSX.Element;
         if (record.type === "Win") {
@@ -18,23 +18,23 @@ export default function RoundHistory({
           if (info.winner === info.dealIn) {
             content = (
               <div className="row">
-                <div className="col col-3 win-prompt">Tsumo</div>
-                <div className="col col-6">{players[info.winner].name}</div>
-                <div className="col col-3">+{record.deltas[info.winner]}</div>
+                <div className="col col-4 win-prompt">Tsumo</div>
+                <div className="col col-4">{players[info.winner].name}</div>
+                <div className="col col-4">+{record.deltas[info.winner]}</div>
               </div>
             );
           } else {
             content = (
               <>
                 <div className="row">
-                  <div className="col col-3 win-prompt">Ron</div>
-                  <div className="col col-6">{players[info.winner].name}</div>
-                  <div className="col col-3">+{record.deltas[info.winner]}</div>
+                  <div className="col col-4 win-prompt">Ron</div>
+                  <div className="col col-4">{players[info.winner].name}</div>
+                  <div className="col col-4">+{record.deltas[info.winner]}</div>
                 </div>
                 <div className="row">
-                  <div className="col col-3 deal-in-prompt">Deal in</div>
-                  <div className="col col-6">{players[info.dealIn].name}</div>
-                  <div className="col col-3">{record.deltas[info.dealIn]}</div>
+                  <div className="col col-4 deal-in-prompt">Deal in</div>
+                  <div className="col col-4">{players[info.dealIn].name}</div>
+                  <div className="col col-4">{record.deltas[info.dealIn]}</div>
                 </div>
               </>
             );

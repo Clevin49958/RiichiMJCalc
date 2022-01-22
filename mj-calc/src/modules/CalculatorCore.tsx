@@ -15,6 +15,8 @@ import RoundHistory from "./RoundHistory";
 import Header from "./Header";
 import { GameEntrySelector } from "./GameEntrySelector";
 import Select from "react-select";
+import GameContext from "./util/Context";
+import FinalPoints from "./FinalPoints";
 
 const STARTING_POINT = [25000, 35000, 50000];
 const STARTING_WIND = 0;
@@ -124,16 +126,6 @@ export function CalculatorCore({
     });
   }
   const isReady = true;
-  // const isReady = endingType === "Draw" || (
-  //   fan !== null && fu !== null && winner !== null && dealIn !== null
-  // )
-
-  const GameContext = React.createContext({
-    gameStatus,
-    players,
-    setGameStatus,
-    setPlayers,
-  });
 
   const resetWinState = () => {
     setFan(DEFAULT_FAN);
@@ -242,38 +234,6 @@ export function CalculatorCore({
     );
   }
 
-  const Page = () => {
-    return (
-      <React.Fragment>
-        <div className="row">
-          <PlayerTable
-            playerTable={playersScoreView}
-            playerCell={PlayerInfoCell}
-            centerCell={() => GameStatusCenterCell(gameStatus)}
-          />
-        </div>
-        <GameEntrySelector
-          endingType={endingType}
-          setEndingType={setEndingType}
-          fan={fan}
-          setFan={setFan}
-          fu={fu}
-          setFu={setFu}
-          players={players}
-          winner={winner}
-          setWinner={setWinner}
-          dealIn={dealIn}
-          setDealIn={setDealIn}
-          tenpai={tenpai}
-          setTenpai={setTenpai}
-          saveEntry={saveEntry}
-          isReady={isReady}
-        />
-        <RoundHistory records={gameRecord} players={players} />
-      </React.Fragment>
-    );
-  };
-
   return (
     <GameContext.Provider
       value={{
@@ -285,7 +245,48 @@ export function CalculatorCore({
     >
       <div className="container">
         {/* <Header /> */}
-        <Page />
+        <React.Fragment>
+          <div className="row">
+            <div className="col col-12">
+              <PlayerTable
+                playerTable={playersScoreView}
+                playerCell={PlayerInfoCell}
+                centerCell={() => GameStatusCenterCell(gameStatus)}
+              />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col col-12">
+              <GameEntrySelector
+                endingType={endingType}
+                setEndingType={setEndingType}
+                fan={fan}
+                setFan={setFan}
+                fu={fu}
+                setFu={setFu}
+                players={players}
+                winner={winner}
+                setWinner={setWinner}
+                dealIn={dealIn}
+                setDealIn={setDealIn}
+                tenpai={tenpai}
+                setTenpai={setTenpai}
+                saveEntry={saveEntry}
+                isReady={isReady}
+              />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col col-12">
+              <RoundHistory records={gameRecord} players={players} />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col col-12">
+              <FinalPoints startingPoint={STARTING_POINT[4 - n]} />
+            </div>
+          </div>
+        </React.Fragment>
       </div>
     </GameContext.Provider>
   );
