@@ -113,7 +113,7 @@ export function StartUp({
         playerTable={playerNames}
         playerCell={PlayerCell}
         centerCell={PlayerInputCenterCell}
-        LTCell={PlayerNumInputCell}
+        LTCell={PlayerNumInputCell()}
       />
     </React.Fragment>
   );
