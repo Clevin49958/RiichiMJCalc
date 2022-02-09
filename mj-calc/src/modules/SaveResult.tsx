@@ -3,7 +3,7 @@ import { GameStatus } from "./util/GameStatus";
 import IGame from "./util/IGame";
 import { IPlayerTable } from "./util/IPlayer";
 import { IRecord } from "./util/IRecord";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 export function generateResult(
   gameStatus: GameStatus,
@@ -20,22 +20,38 @@ export function generateResult(
 }
 
 export function saveJson(result: IGame) {
-  console.log(JSON.stringify(result));
+  const strContent = JSON.stringify(result, null, 2);
+  const filename = result.endTime.toLocaleDateString() + ".json";
+  const fileContent = new Blob([strContent], { type: "json" });
+  return (
+    <a
+      className="ml-2"
+      style={{ display: "block" }}
+      href={URL.createObjectURL(fileContent)}
+      download={filename}
+    >
+      {filename}
+    </a>
+  );
 }
 
 export function ExportResult() {
   const { gameStatus, players, records } = useContext(GameContext);
+  const [resultLink, setResultLink] = useState(<></>);
 
   return (
-    <button
-      type="button"
-      className="btn btn-primary"
-      onClick={(_event) => {
-        const result = generateResult(gameStatus, players, records);
-        saveJson(result);
-      }}
-    >
-      Export results
-    </button>
+    <div className="d-flex align-items-center">
+      <button
+        type="button"
+        className="btn btn-primary"
+        onClick={(_event) => {
+          const result = generateResult(gameStatus, players, records);
+          setResultLink(saveJson(result));
+        }}
+      >
+        Export results
+      </button>
+      {resultLink}
+    </div>
   );
 }
