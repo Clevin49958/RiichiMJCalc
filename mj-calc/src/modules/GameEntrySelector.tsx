@@ -4,6 +4,7 @@ import { IPlayerTable, IPlayer } from "./util/IPlayer";
 import { WindNumber } from "./util/Wind";
 import { GameStatus } from "./util/GameStatus";
 import { DropdownEntry } from "./CalculatorCore";
+import { ExportResult } from "./SaveResult";
 
 interface GameEntrySelectorProps {
   endingType: string;
@@ -181,8 +182,10 @@ export function GameEntrySelector({
             }}
           />
         </div>
+      </div>
+      <div className="d-flex flex-row mt-3 justify-content-around">
         <button
-          className="btn btn-primary mt-3"
+          className="btn btn-primary"
           type="button"
           onClick={() => {
             saveEntry();
@@ -191,6 +194,7 @@ export function GameEntrySelector({
         >
           Save entry
         </button>
+        <ExportResult />
       </div>
     </>
   );
