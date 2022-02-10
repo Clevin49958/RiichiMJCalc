@@ -20,7 +20,10 @@ export default function PlayerTable<T = IPlayer>({
 }) {
   return (
     <>
-      <div className="player-table container" style={{ maxWidth: "380px" }}>
+      <div
+        className="player-table container my-2"
+        style={{ maxWidth: "380px" }}
+      >
         <div className="row">
           <div className="col col-4 p-2 player-table-cell">{LTCell}</div>
           <div className="col col-4 p-2 player-table-cell player-cell">

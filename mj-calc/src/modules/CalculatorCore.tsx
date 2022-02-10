@@ -17,6 +17,7 @@ import { GameEntrySelector } from "./GameEntrySelector";
 import Select from "react-select";
 import GameContext from "./util/Context";
 import FinalPoints from "./FinalPoints";
+import IGame from "./util/IGame";
 
 const STARTING_POINT = [25000, 35000, 50000];
 const STARTING_WIND = 0;
@@ -80,27 +81,34 @@ export function DropdownEntry<T extends string | number>({
 export function CalculatorCore({
   n,
   playerNames,
+  viewOnly,
+  state = null,
 }: {
   n: NP;
   playerNames: string[];
+  viewOnly: boolean;
+  state: IGame | null;
 }) {
-  const [gameStatus, setGameStatus] = useState<GameStatus>({
-    numPlayers: n,
-    wind: STARTING_WIND,
-    round: 1,
-    honba: STARTING_HONBA,
-    richiiStick: 0,
-    richii: Array(n).fill(false),
-  });
+  const [gameStatus, setGameStatus] = useState<GameStatus>(
+    state?.gameStatus ?? {
+      numPlayers: n,
+      wind: STARTING_WIND,
+      round: 1,
+      honba: STARTING_HONBA,
+      richiiStick: 0,
+      richii: Array(n).fill(false),
+    },
+  );
 
   const prevGameStatus = useRef<GameStatus | undefined>();
 
   const [players, setPlayers] = useState<IPlayerTable>(
-    (Array.from(Array(n).keys()) as WindNumber[]).map((seating) => ({
-      name: playerNames[seating],
-      seating: seating,
-      score: STARTING_POINT[4 - n],
-    })) as IPlayerTable,
+    state?.players ??
+      ((Array.from(Array(n).keys()) as WindNumber[]).map((seating) => ({
+        name: playerNames[seating],
+        seating: seating,
+        score: STARTING_POINT[4 - n],
+      })) as IPlayerTable),
   );
 
   const [fan, setFan] = useState<number>(DEFAULT_FAN);
@@ -109,7 +117,7 @@ export function CalculatorCore({
   const [dealIn, setDealIn] = useState<WindNumber>(DEFAULT_PLAYER(gameStatus));
   const [tenpai, setTenpai] = useState<boolean[]>(Array(n).fill(false));
   const [endingType, setEndingType] = useState<"Win" | "Draw">("Win");
-  const [gameRecord, setGameRecord] = useState<IRecord[]>([]);
+  const [gameRecord, setGameRecord] = useState<IRecord[]>(state?.records ?? []);
 
   const pushRecord = (record: IRecord) => {
     setGameRecord([...gameRecord, record]);
@@ -295,27 +303,29 @@ export function CalculatorCore({
               />
             </div>
           </div>
-          <div className="row">
-            <div className="col col-12">
-              <GameEntrySelector
-                endingType={endingType}
-                setEndingType={setEndingType}
-                fan={fan}
-                setFan={setFan}
-                fu={fu}
-                setFu={setFu}
-                players={players}
-                winner={winner}
-                setWinner={setWinner}
-                dealIn={dealIn}
-                setDealIn={setDealIn}
-                tenpai={tenpai}
-                setTenpai={setTenpai}
-                saveEntry={saveEntry}
-                isReady={isReady}
-              />
+          {viewOnly || (
+            <div className="row">
+              <div className="col col-12">
+                <GameEntrySelector
+                  endingType={endingType}
+                  setEndingType={setEndingType}
+                  fan={fan}
+                  setFan={setFan}
+                  fu={fu}
+                  setFu={setFu}
+                  players={players}
+                  winner={winner}
+                  setWinner={setWinner}
+                  dealIn={dealIn}
+                  setDealIn={setDealIn}
+                  tenpai={tenpai}
+                  setTenpai={setTenpai}
+                  saveEntry={saveEntry}
+                  isReady={isReady}
+                />
+              </div>
             </div>
-          </div>
+          )}
           <div className="row">
             <div className="col col-12">
               <RoundHistory records={gameRecord} players={players} />
