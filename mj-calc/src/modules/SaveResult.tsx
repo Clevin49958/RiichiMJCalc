@@ -23,21 +23,17 @@ export function saveJson(result: IGame) {
   const strContent = JSON.stringify(result, null, 2);
   const filename = result.endTime.toLocaleDateString() + ".json";
   const fileContent = new Blob([strContent], { type: "json" });
-  return (
-    <a
-      className="ml-2"
-      style={{ display: "block" }}
-      href={URL.createObjectURL(fileContent)}
-      download={filename}
-    >
-      {filename}
-    </a>
-  );
+
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(fileContent);
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 
 export function ExportResult() {
   const { gameStatus, players, records } = useContext(GameContext);
-  const [resultLink, setResultLink] = useState(<></>);
 
   return (
     <div className="d-flex align-items-center">
@@ -46,12 +42,11 @@ export function ExportResult() {
         className="btn btn-primary"
         onClick={(_event) => {
           const result = generateResult(gameStatus, players, records);
-          setResultLink(saveJson(result));
+          saveJson(result);
         }}
       >
         Export results
       </button>
-      {resultLink}
     </div>
   );
 }
