@@ -2,6 +2,7 @@ import React from "react";
 import { Dispatch, SetStateAction } from "react";
 import { GameStatus } from "./GameStatus";
 import { IPlayer, IPlayerTable } from "./IPlayer";
+import { IRecord } from "./IRecord";
 import { getWind, NP, WindNumber } from "./Wind";
 
 interface IGameContext {
@@ -9,6 +10,7 @@ interface IGameContext {
   setGameStatus: Dispatch<SetStateAction<GameStatus>>;
   players: IPlayerTable;
   setPlayers: Dispatch<SetStateAction<IPlayerTable>>;
+  records: IRecord[];
 }
 
 const _np: NP = 4;
@@ -37,6 +39,7 @@ const GameContext = React.createContext<IGameContext>({
       "Not implemented error. \nUsing setPlayers from uninitialised context.",
     );
   },
+  records: [],
 });
 
 export default GameContext;

@@ -279,6 +279,7 @@ export function CalculatorCore({
         players,
         setGameStatus,
         setPlayers,
+        records: gameRecord,
       }}
     >
       <div className="container">
