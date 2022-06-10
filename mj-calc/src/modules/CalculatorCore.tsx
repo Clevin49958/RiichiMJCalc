@@ -66,7 +66,7 @@ export function DropdownEntry<T extends string | number>({
     <label>
       <span>{label}: </span>
       <Select<OptionType>
-        defaultValue={options.find((obj) => obj.value === value)}
+        value={options.find((obj) => obj.value === value)}
         options={options}
         isMulti={false}
         isClearable={false}
