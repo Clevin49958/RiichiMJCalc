@@ -53,7 +53,7 @@ export default function FinalPoints({
   const [okaOption, setOkaOption] = useState(okaPresets[0]);
 
   const sortedPlayers = [...players].sort(
-    (playerA, playerB) => playerB.score - playerA.score,
+    (playerA, playerB) => playerB.score - playerA.score
   );
   const rawPoints = sortedPlayers.map((player, idx) => {
     return (player.score - startingPoint) / 1000;

@@ -133,7 +133,7 @@ export function GameEntrySelector({
             <DropdownEntry
               label="Deal in"
               labels={players.map((p) =>
-                p.seating === winner ? "Tsumo" : p.name,
+                p.seating === winner ? "Tsumo" : p.name
               )}
               values={players.map((p) => p.seating)}
               value={dealIn}

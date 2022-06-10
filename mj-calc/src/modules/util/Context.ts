@@ -26,7 +26,7 @@ const GameContext = React.createContext<IGameContext>({
   },
   setGameStatus: (value: SetStateAction<GameStatus>) => {
     throw new Error(
-      "Not implemented error. \nUsing setGameStatus from uninitialised context.",
+      "Not implemented error. \nUsing setGameStatus from uninitialised context."
     );
   },
   players: (Array.from(Array(_np).keys()) as WindNumber[]).map((value) => ({
@@ -36,7 +36,7 @@ const GameContext = React.createContext<IGameContext>({
   })),
   setPlayers: (value: SetStateAction<IPlayerTable>) => {
     throw new Error(
-      "Not implemented error. \nUsing setPlayers from uninitialised context.",
+      "Not implemented error. \nUsing setPlayers from uninitialised context."
     );
   },
   records: [],
