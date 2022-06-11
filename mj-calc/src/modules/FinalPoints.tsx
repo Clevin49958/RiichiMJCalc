@@ -1,7 +1,6 @@
 import GameContext from "./util/Context";
 import { useContext, useState } from "react";
-import { IPlayerTable } from "./util/IPlayer";
-import Select, { SingleValue } from "react-select/";
+import Select from "react-select/";
 
 interface Uma {
   label: string;

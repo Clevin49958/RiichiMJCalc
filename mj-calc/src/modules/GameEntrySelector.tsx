@@ -2,7 +2,6 @@ import React from "react";
 import PlayerTable from "./PlayerTable";
 import { IPlayerTable, IPlayer } from "./util/IPlayer";
 import { WindNumber } from "./util/Wind";
-import { GameStatus } from "./util/GameStatus";
 import { DropdownEntry } from "./CalculatorCore";
 import { ExportResult } from "./SaveResult";
 

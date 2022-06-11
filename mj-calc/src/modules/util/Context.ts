@@ -1,7 +1,7 @@
 import React from "react";
 import { Dispatch, SetStateAction } from "react";
 import { GameStatus } from "./GameStatus";
-import { IPlayer, IPlayerTable } from "./IPlayer";
+import { IPlayerTable } from "./IPlayer";
 import { IRecord } from "./IRecord";
 import { getWind, NP, WindNumber } from "./Wind";
 
