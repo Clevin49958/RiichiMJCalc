@@ -109,6 +109,10 @@ export function PointsPlot({
   // options
   const options: Parameters<typeof Line>[0]["options"] = {
     responsive: true,
+    interaction: {
+      intersect: false,
+      mode: "index",
+    },
     scales: {
       y: {
         ticks: {
