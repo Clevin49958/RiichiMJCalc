@@ -210,7 +210,7 @@ export function CalculatorCore({
     const richii = gameStatus.richii;
     const hasRichii = richii[player.seating];
     return (
-      <div className="container">
+      <div className="container-fluid px-0">
         <div className="row mb-2">
           <div
             className="col"
