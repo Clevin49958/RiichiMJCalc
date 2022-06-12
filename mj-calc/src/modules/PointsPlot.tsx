@@ -14,7 +14,6 @@ import {
 import annotationPlugin from "chartjs-plugin-annotation";
 import { GameStatus } from "./util/GameStatus";
 import { getWind } from "./util/Wind";
-import { chunk } from "lodash";
 
 ChartJS.register(
   CategoryScale,
@@ -36,12 +35,12 @@ const COLOR_CODES = [
 
 function getPointsLabel({ wind, round, honba }: GameStatus | IRecord) {
   if (round === 1) {
-    return `${getWind(wind)}${round}`;
+    return `${getWind(wind)}`;
   }
   if (honba === 0) {
-    return `${round}`;
+    return `${getWind(wind)}${round}`;
   }
-  return `${round}.${honba}`;
+  return `${getWind(wind)}${round}-${honba}`;
 }
 
 export function PointsPlot({
