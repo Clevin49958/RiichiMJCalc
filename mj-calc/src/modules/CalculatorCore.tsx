@@ -18,6 +18,7 @@ import Select from "react-select";
 import GameContext from "./util/Context";
 import FinalPoints from "./FinalPoints";
 import IGame from "./util/IGame";
+import { PointsPlot } from "./PointsPlot";
 
 const STARTING_POINT = [25000, 35000, 50000];
 const STARTING_WIND = 0;
@@ -97,18 +98,18 @@ export function CalculatorCore({
       honba: STARTING_HONBA,
       richiiStick: 0,
       richii: Array(n).fill(false),
-    },
+    }
   );
 
   const prevGameStatus = useRef<GameStatus | undefined>();
-
+  const startingPoint = STARTING_POINT[4 - n];
   const [players, setPlayers] = useState<IPlayerTable>(
     state?.players ??
       ((Array.from(Array(n).keys()) as WindNumber[]).map((seating) => ({
         name: playerNames[seating],
         seating: seating,
-        score: STARTING_POINT[4 - n],
-      })) as IPlayerTable),
+        score: startingPoint,
+      })) as IPlayerTable)
   );
 
   const [fan, setFan] = useState<number>(DEFAULT_FAN);
@@ -158,7 +159,7 @@ export function CalculatorCore({
         winner === dealIn,
         winner!,
         gameStatus,
-        dealIn!,
+        dealIn!
       );
     } else {
       deltas = getDeltaWithoutWinner(tenpai);
@@ -185,8 +186,8 @@ export function CalculatorCore({
       nextGameStatus(
         endingType === "Win" ? winner : null,
         tenpai[getDealer(gameStatus)],
-        gameStatus,
-      ),
+        gameStatus
+      )
     );
     resetWinState();
   };
@@ -336,6 +337,16 @@ export function CalculatorCore({
               <FinalPoints startingPoint={STARTING_POINT[4 - n]} />
             </div>
           </div>
+          <div className="row">
+            <div className="col col-12">
+              <PointsPlot
+                players={players}
+                gameRecord={gameRecord}
+                startingPoint={startingPoint}
+                gameStatus={gameStatus}
+              />
+            </div>
+          </div>
         </React.Fragment>
       </div>
     </GameContext.Provider>
@@ -345,7 +356,7 @@ export function CalculatorCore({
 export function nextGameStatus(
   winner: null | WindNumber,
   isDealerTenpai: boolean,
-  gameStatus: GameStatus,
+  gameStatus: GameStatus
 ) {
   // update honba
   if (winner === null) {

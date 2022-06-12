@@ -3,12 +3,12 @@ import { GameStatus } from "./util/GameStatus";
 import IGame from "./util/IGame";
 import { IPlayerTable } from "./util/IPlayer";
 import { IRecord } from "./util/IRecord";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
 export function generateResult(
   gameStatus: GameStatus,
   players: IPlayerTable,
-  records: IRecord[],
+  records: IRecord[]
 ) {
   const result: IGame = {
     endTime: new Date(),

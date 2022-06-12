@@ -12,13 +12,13 @@ export function getWind(windNum: WindNumber) {
    */
   switch (windNum) {
     case 0:
-      return "East";
+      return "东";
     case 1:
-      return "South";
+      return "南";
     case 2:
-      return "West";
+      return "西";
     case 3:
-      return "North";
+      return "北";
     default:
       const _exhaustiveCheck: never = windNum;
       return _exhaustiveCheck;

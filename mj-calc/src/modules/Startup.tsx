@@ -72,7 +72,7 @@ export function StartUp({
         numPlayers={numPlayers}
       />
     ),
-    [numPlayers, setPlayerNames],
+    [numPlayers, setPlayerNames]
   );
 
   const PlayerNumInputCell = useCallback(
@@ -93,7 +93,7 @@ export function StartUp({
                 ({
                   value: count,
                   label: count,
-                } as { value: NP; label: NP }),
+                } as { value: NP; label: NP })
             )}
             value={{
               value: numPlayers,
@@ -103,7 +103,7 @@ export function StartUp({
           />
         </label>
       ) as JSX.Element,
-    [numPlayers, setNumPlayers],
+    [numPlayers, setNumPlayers]
   );
 
   return (

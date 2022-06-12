@@ -2,7 +2,6 @@ import React from "react";
 import PlayerTable from "./PlayerTable";
 import { IPlayerTable, IPlayer } from "./util/IPlayer";
 import { WindNumber } from "./util/Wind";
-import { GameStatus } from "./util/GameStatus";
 import { DropdownEntry } from "./CalculatorCore";
 import { ExportResult } from "./SaveResult";
 
@@ -133,7 +132,7 @@ export function GameEntrySelector({
             <DropdownEntry
               label="Deal in"
               labels={players.map((p) =>
-                p.seating === winner ? "Tsumo" : p.name,
+                p.seating === winner ? "Tsumo" : p.name
               )}
               values={players.map((p) => p.seating)}
               value={dealIn}

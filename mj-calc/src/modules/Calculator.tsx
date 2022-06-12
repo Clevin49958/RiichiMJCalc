@@ -10,7 +10,7 @@ export default function Calculator() {
   const [numPlayers, setNumPlayers] = useState<NP>(DEFAULT_N_PLAYERS);
 
   const [playerNames, setPlayerNames] = useState<string[]>(
-    (Array.from(Array(DEFAULT_N_PLAYERS).keys()) as WindNumber[]).map(getWind),
+    (Array.from(Array(DEFAULT_N_PLAYERS).keys()) as WindNumber[]).map(getWind)
   );
 
   const [namesReady, setNamesReady] = useState(false);
