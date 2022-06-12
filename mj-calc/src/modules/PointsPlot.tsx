@@ -37,6 +37,13 @@ const options = {
   },
 };
 
+const COLOR_CODES = [
+  [255, 99, 132],
+  [75, 192, 192],
+  [255, 205, 86],
+  [153, 102, 255],
+];
+
 export function PointsPlot({
   players,
   gameRecord,
@@ -49,18 +56,10 @@ export function PointsPlot({
   gameStatus: GameStatus;
 }) {
   const n = players.length;
-  const colors = [
-    "rgb(255,  99, 132)",
-    "rgb( 75, 192, 192)",
-    "rgb(255, 205, 86)",
-    "rgb(153, 102, 255)",
-  ];
-  const bgColors = [
-    "rgba(255,  99, 132, 0.5)",
-    "rgba( 75, 192, 192, 0.5)",
-    "rgba(255, 205, 86 , 0.5)",
-    "rgba(153, 102, 255, 0.5)",
-  ];
+
+  const colors = COLOR_CODES.map((codes) => `rgb(${codes.join(",")})`);
+  const bgColors = COLOR_CODES.map((codes) => `rgba(${codes.join(",")}, 0.5)`);
+
   const ptsData: number[][] = Array(n)
     .fill(0)
     .map(() => Array(1).fill(startingPoint));
@@ -70,14 +69,16 @@ export function PointsPlot({
       ptsData[iDelta].push(ptsData[iDelta][iRecord] + delta);
     });
   });
-  console.log(ptsData);
-  console.log(gameRecord);
+
+  // players' points
   const datasets = ptsData.map((ptsData, index) => ({
     label: players[index].name,
     data: ptsData,
     borderColor: colors[index],
     backgroundColor: bgColors[index],
   }));
+
+  // labels (x)
   const labels = gameRecord.map(
     (record) => `${getWind(record.wind)}${record.round}.${record.honba}`
   );
