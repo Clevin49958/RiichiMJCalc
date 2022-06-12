@@ -26,6 +26,28 @@ ChartJS.register(
 
 const options = {
   responsive: true,
+  scales: {
+    y: {
+      ticks: {
+        stepSize: 2500,
+      },
+      grid: {
+        color: function (context: any) {
+          if (context.tick.value > 25000) {
+            // green
+            return "rgba(75, 192, 192, 0.5)";
+          } else if (context.tick.value === 25000) {
+            return "#000000";
+          } else if (context.tick.value >= 0) {
+            // orange
+            return "rgba(255, 159, 64, 0.5)";
+          }
+          // red
+          return "rgba(255, 99, 132, 0.5)";
+        },
+      },
+    },
+  },
   plugins: {
     legend: {
       position: "top" as const,
@@ -43,6 +65,16 @@ const COLOR_CODES = [
   [255, 205, 86],
   [153, 102, 255],
 ];
+
+function getPointsLabel({ wind, round, honba }: GameStatus | IRecord) {
+  if (round === 1) {
+    return `${getWind(wind)}${round}`;
+  }
+  if (honba === 0) {
+    return `${round}`;
+  }
+  return `${round}.${honba}`;
+}
 
 export function PointsPlot({
   players,
@@ -79,12 +111,8 @@ export function PointsPlot({
   }));
 
   // labels (x)
-  const labels = gameRecord.map(
-    (record) => `${getWind(record.wind)}${record.round}.${record.honba}`
-  );
-  labels.push(
-    `${getWind(gameStatus.wind)}${gameStatus.round}.${gameStatus.honba}`
-  );
+  const labels = ["Start"];
+  labels.push(...gameRecord.map(getPointsLabel));
   const data = {
     labels,
     datasets,
