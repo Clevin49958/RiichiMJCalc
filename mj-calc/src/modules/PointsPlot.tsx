@@ -11,8 +11,10 @@ import {
   LinearScale,
   PointElement,
 } from "chart.js";
+import annotationPlugin from "chartjs-plugin-annotation";
 import { GameStatus } from "./util/GameStatus";
 import { getWind } from "./util/Wind";
+import { chunk } from "lodash";
 
 ChartJS.register(
   CategoryScale,
@@ -21,43 +23,9 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  annotationPlugin
 );
-
-const options = {
-  responsive: true,
-  scales: {
-    y: {
-      ticks: {
-        stepSize: 2500,
-      },
-      grid: {
-        color: function (context: any) {
-          if (context.tick.value > 25000) {
-            // green
-            return "rgba(75, 192, 192, 0.5)";
-          } else if (context.tick.value === 25000) {
-            return "#000000";
-          } else if (context.tick.value >= 0) {
-            // orange
-            return "rgba(255, 159, 64, 0.5)";
-          }
-          // red
-          return "rgba(255, 99, 132, 0.5)";
-        },
-      },
-    },
-  },
-  plugins: {
-    legend: {
-      position: "top" as const,
-    },
-    title: {
-      display: false,
-      text: "Chart.js Line Chart",
-    },
-  },
-};
 
 const COLOR_CODES = [
   [255, 99, 132],
@@ -111,15 +79,79 @@ export function PointsPlot({
   }));
 
   // labels (x)
-  const labels = ["Start"];
+  const labels = [""];
   labels.push(...gameRecord.map(getPointsLabel));
-  const data = {
+  const data: Parameters<typeof Line>[0]["data"] = {
     labels,
     datasets,
   };
+
+  // Wind region (starting index)
+  const regions = gameRecord
+    .map((record, index, array) =>
+      index === 0 || record.wind !== array[index - 1].wind ? index + 1 : -1
+    )
+    .filter((idx) => idx !== -1);
+  const annotations = Object.fromEntries(
+    regions.map((region, index) => [
+      index,
+      {
+        drawTime: "afterDatasetsDraw",
+        type: "line",
+        xMin: region,
+        xMax: region,
+        borderColor: "rgba(255, 99, 132, 0.6)",
+        borderWidth: 2,
+      },
+    ])
+  );
+
+  // options
+  const options: Parameters<typeof Line>[0]["options"] = {
+    responsive: true,
+    scales: {
+      y: {
+        ticks: {
+          stepSize: 2500,
+        },
+        grid: {
+          color: function (context: any) {
+            if (context.tick.value > 25000) {
+              // green
+              return "rgba(75, 192, 192, 0.5)";
+            } else if (context.tick.value === 25000) {
+              return "#000000";
+            } else if (context.tick.value >= 0) {
+              // orange
+              return "rgba(255, 159, 64, 0.5)";
+            }
+            // red
+            return "rgba(255, 99, 132, 0.5)";
+          },
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        position: "top" as const,
+      },
+      title: {
+        font: {
+          family: "Helvetica",
+          size: 14,
+          weight: "bold",
+        },
+        display: true,
+        text: "Final points",
+      },
+      annotation: {
+        annotations: annotations as any,
+      },
+    },
+  };
+
   return (
-    <div className="card">
-      <div className="card-header">Final points: </div>
+    <div className="card mt-2">
       <div className="card-body">
         <Line options={options} data={data}></Line>
       </div>
