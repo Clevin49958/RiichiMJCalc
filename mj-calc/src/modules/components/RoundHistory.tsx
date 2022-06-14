@@ -18,9 +18,10 @@ export default function RoundHistory({
           if (wins[0].winner === wins[0].dealIn) {
             content = (
               <div className="row">
-                <div className="col col-4 win-prompt">Tsumo</div>
-                <div className="col col-4">{players[wins[0].winner].name}</div>
-                <div className="col col-4">
+                <div className="col col-3 win-prompt">Tsumo</div>
+                <div className="col col-3">{players[wins[0].winner].name}</div>
+                <div className="col col-3">{`${wins[0].fan}Fan ${wins[0].fu}Fu`}</div>
+                <div className="col col-3">
                   +{record.deltas[wins[0].winner]}
                 </div>
               </div>
@@ -30,20 +31,21 @@ export default function RoundHistory({
               <>
                 {wins.map((win) => (
                   <div className="row">
-                    <div className="col col-4 win-prompt">Ron</div>
-                    <div className="col col-4">{players[win.winner].name}</div>
-                    <div className="col col-4">
+                    <div className="col col-3 win-prompt">Ron</div>
+                    <div className="col col-3">{players[win.winner].name}</div>
+                    <div className="col col-3">{`${win.fan}Fan ${win.fu}Fu`}</div>
+                    <div className="col col-3">
                       +{record.deltas[win.winner]}
                     </div>
                   </div>
                 ))}
 
                 <div className="row">
-                  <div className="col col-4 deal-in-prompt">Deal in</div>
-                  <div className="col col-4">
+                  <div className="col col-3 deal-in-prompt">Deal in</div>
+                  <div className="col col-3">
                     {players[wins[0].dealIn].name}
                   </div>
-                  <div className="col col-4">
+                  <div className="col col-3 offset-3">
                     {record.deltas[wins[0].dealIn]}
                   </div>
                 </div>
