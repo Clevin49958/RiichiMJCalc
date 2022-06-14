@@ -27,6 +27,7 @@ import {
   DEFAULT_PLAYER,
   StickIconSize,
 } from "./util/Constants";
+import { includes } from "lodash";
 
 export function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
@@ -72,10 +73,14 @@ export function CalculatorCore({
       })) as IPlayerTable)
   );
 
-  const [fan, setFan] = useState<number>(DEFAULT_FAN);
-  const [fu, setFu] = useState<number>(DEFAULT_FU);
-  const [winner, setWinner] = useState<WindNumber>(DEFAULT_PLAYER(gameStatus));
-  const [dealIn, setDealIn] = useState<WindNumber>(DEFAULT_PLAYER(gameStatus));
+  const [winInfo, setWinInfo] = useState<WinRecord[]>([
+    {
+      fan: DEFAULT_FAN,
+      fu: DEFAULT_FU,
+      winner: DEFAULT_PLAYER(gameStatus),
+      dealIn: DEFAULT_PLAYER(gameStatus),
+    },
+  ]);
   const [tenpai, setTenpai] = useState<boolean[]>(Array(n).fill(false));
   const [endingType, setEndingType] = useState<"Win" | "Draw">("Win");
   const [gameRecord, setGameRecord] = useState<IRecord[]>(state?.records ?? []);
@@ -99,10 +104,14 @@ export function CalculatorCore({
   const isReady = true;
 
   const resetWinState = () => {
-    setFan(DEFAULT_FAN);
-    setFu(DEFAULT_FU);
-    setWinner(DEFAULT_PLAYER(gameStatus));
-    setDealIn(DEFAULT_PLAYER(gameStatus));
+    setWinInfo([
+      {
+        fan: DEFAULT_FAN,
+        fu: DEFAULT_FU,
+        winner: DEFAULT_PLAYER(gameStatus),
+        dealIn: DEFAULT_PLAYER(gameStatus),
+      },
+    ]);
     setTenpai(Array(n).fill(false));
     setEndingType("Win");
   };
@@ -113,14 +122,7 @@ export function CalculatorCore({
     };
     let deltas: number[];
     if (endingType === "Win") {
-      deltas = getDeltaWithWinner(
-        fan,
-        fu,
-        winner === dealIn,
-        winner,
-        gameStatus,
-        dealIn
-      );
+      deltas = getDeltaWithWinner(winInfo, gameStatus);
     } else {
       deltas = getDeltaWithoutWinner(tenpai);
     }
@@ -136,10 +138,7 @@ export function CalculatorCore({
       pushRecord({
         ...record,
         type: endingType,
-        info: {
-          winner: winner,
-          dealIn: dealIn,
-        },
+        info: winInfo,
       });
     } else {
       pushRecord({
@@ -153,7 +152,7 @@ export function CalculatorCore({
 
     setGameStatus(
       nextGameStatus(
-        endingType === "Win" ? winner : null,
+        endingType === "Win" ? winInfo.map((record) => record.winner) : null,
         tenpai[getDealer(gameStatus)],
         gameStatus
       )
@@ -279,15 +278,9 @@ export function CalculatorCore({
                 <GameEntrySelector
                   endingType={endingType}
                   setEndingType={setEndingType}
-                  fan={fan}
-                  setFan={setFan}
-                  fu={fu}
-                  setFu={setFu}
                   players={players}
-                  winner={winner}
-                  setWinner={setWinner}
-                  dealIn={dealIn}
-                  setDealIn={setDealIn}
+                  winInfo={winInfo}
+                  setWinInfo={setWinInfo}
                   tenpai={tenpai}
                   setTenpai={setTenpai}
                   saveEntry={saveEntry}
@@ -323,7 +316,7 @@ export function CalculatorCore({
 }
 
 export function nextGameStatus(
-  winner: null | WindNumber,
+  winner: null | WindNumber[],
   isDealerTenpai: boolean,
   gameStatus: GameStatus
 ) {
@@ -334,7 +327,7 @@ export function nextGameStatus(
       incrementRound(gameStatus);
     }
   } else {
-    if (winner === getDealer(gameStatus)) {
+    if (includes(winner, getDealer(gameStatus))) {
       gameStatus.honba += 1;
     } else {
       incrementRound(gameStatus);

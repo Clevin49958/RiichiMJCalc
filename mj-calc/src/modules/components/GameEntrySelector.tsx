@@ -1,24 +1,21 @@
-import React from "react";
+import React, { Dispatch, SetStateAction, useContext, useMemo } from "react";
 import PlayerTable from "./PlayerTable";
 import { IPlayerTable, IPlayer } from "../util/IPlayer";
 import { WindNumber } from "../util/Wind";
 import { DropdownEntry } from "./DropdownEntry";
 import { ExportResult } from "./SaveResult";
+import { WinRecord } from "../util/IRecord";
+import { DEFAULT_FAN, DEFAULT_FU, DEFAULT_PLAYER } from "../util/Constants";
+import GameContext from "../util/Context";
 
 interface GameEntrySelectorProps {
   endingType: string;
-  setEndingType: React.Dispatch<React.SetStateAction<"Win" | "Draw">>;
-  fan: number;
-  setFan: React.Dispatch<React.SetStateAction<number>>;
-  fu: number;
-  setFu: React.Dispatch<React.SetStateAction<number>>;
+  setEndingType: Dispatch<SetStateAction<"Win" | "Draw">>;
   players: IPlayerTable;
-  winner: number;
-  setWinner: React.Dispatch<React.SetStateAction<WindNumber>>;
-  dealIn: number;
-  setDealIn: React.Dispatch<React.SetStateAction<WindNumber>>;
+  winInfo: WinRecord[];
+  setWinInfo: Dispatch<SetStateAction<WinRecord[]>>;
   tenpai: boolean[];
-  setTenpai: React.Dispatch<React.SetStateAction<boolean[]>>;
+  setTenpai: Dispatch<SetStateAction<boolean[]>>;
   saveEntry: () => void;
   isReady: boolean;
 }
@@ -26,22 +23,56 @@ interface GameEntrySelectorProps {
 export function GameEntrySelector({
   endingType,
   setEndingType,
-  fan,
-  setFan,
-  fu,
-  setFu,
   players,
-  winner,
-  setWinner,
-  dealIn,
-  setDealIn,
+  winInfo,
+  setWinInfo,
   tenpai,
   setTenpai,
   saveEntry,
   isReady,
 }: GameEntrySelectorProps) {
+  const gameContext = useContext(GameContext);
   const fans = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 26, 39, 52, 65, 78];
   const fus = [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110];
+  const { fan, fu, winner, dealIn } = winInfo[0];
+
+  const [setFan, setFu, setWinner, setDealIn] = useMemo(() => {
+    const setFan = (fan: number, idx: number) =>
+      setWinInfo((winInfo) => {
+        const newInfo = [...winInfo];
+        newInfo[idx] = {
+          ...newInfo[idx],
+          fan,
+        };
+        return newInfo;
+      });
+    const setFu = (fu: number, idx: number) =>
+      setWinInfo((winInfo) => {
+        const newInfo = [...winInfo];
+        newInfo[idx] = {
+          ...newInfo[idx],
+          fu,
+        };
+        return newInfo;
+      });
+    const setWinner = (winner: WindNumber, idx: number) =>
+      setWinInfo((winInfo) => {
+        const newInfo = [...winInfo];
+        newInfo[idx] = {
+          ...newInfo[idx],
+          winner,
+        };
+        return newInfo;
+      });
+    const setDealIn = (dealIn: WindNumber, idx: number) =>
+      setWinInfo((winInfo) =>
+        winInfo.map((info) => ({
+          ...info,
+          dealIn,
+        }))
+      );
+    return [setFan, setFu, setWinner, setDealIn];
+  }, [setWinInfo]);
   return (
     <>
       <nav>
@@ -83,62 +114,97 @@ export function GameEntrySelector({
           role="tabpanel"
           aria-labelledby="nav-win-tab"
         >
-          <div className="d-flex flex-row flex-wrap">
-            <DropdownEntry
-              label="Fan"
-              labels={fans.map((fan) => {
-                if (fan % 13 === 0) {
-                  switch (fan / 13) {
-                    case 1:
-                      return "Yakuman";
-                    case 2:
-                      return "Double Yakuman";
-                    case 3:
-                      return "Triple Yakuman";
-                    case 4:
-                      return "Quadraple Yakuman";
-                    case 5:
-                      return "Quintuple Yakuman";
-                    case 6:
-                      return "Sextuple Yakuman";
-                    default:
-                      return "Yakuman takusan";
+          {winInfo.map((info, idx) => (
+            <div className="d-flex flex-row flex-wrap align-item-end">
+              <DropdownEntry
+                label="Fan"
+                labels={fans.map((fan) => {
+                  if (fan % 13 === 0) {
+                    switch (fan / 13) {
+                      case 1:
+                        return "Yakuman";
+                      case 2:
+                        return "Double Yakuman";
+                      case 3:
+                        return "Triple Yakuman";
+                      case 4:
+                        return "Quadraple Yakuman";
+                      case 5:
+                        return "Quintuple Yakuman";
+                      case 6:
+                        return "Sextuple Yakuman";
+                      default:
+                        return "Yakuman takusan";
+                    }
+                  } else {
+                    return fan.toString();
                   }
-                } else {
-                  return fan.toString();
-                }
-              })}
-              values={fans}
-              value={fan}
-              setter={setFan}
-            />
+                })}
+                values={fans}
+                value={info.fan}
+                setter={(fan) => setFan(fan, idx)}
+              />
 
-            <DropdownEntry
-              label="Fu"
-              labels={fus}
-              values={fus}
-              value={fu}
-              setter={setFu}
-            />
+              <DropdownEntry
+                label="Fu"
+                labels={fus}
+                values={fus}
+                value={info.fu}
+                setter={(fu) => setFu(fu, idx)}
+              />
 
-            <DropdownEntry
-              label="Winner"
-              labels={players.map((p) => p.name)}
-              values={players.map((p) => p.seating)}
-              value={winner}
-              setter={(v) => setWinner(v as WindNumber)}
-            />
+              <DropdownEntry
+                label="Winner"
+                labels={players.map((p) => p.name)}
+                values={players.map((p) => p.seating)}
+                value={info.winner}
+                setter={(v) => setWinner(v as WindNumber, idx)}
+              />
 
-            <DropdownEntry
-              label="Deal in"
-              labels={players.map((p) =>
-                p.seating === winner ? "Tsumo" : p.name
+              {idx === 0 && (
+                <DropdownEntry
+                  label="Deal in"
+                  labels={players.map((p) =>
+                    p.seating === winner ? "Tsumo" : p.name
+                  )}
+                  values={players.map((p) => p.seating)}
+                  value={info.dealIn}
+                  setter={(v) => setDealIn(v as WindNumber, idx)}
+                />
               )}
-              values={players.map((p) => p.seating)}
-              value={dealIn}
-              setter={(v) => setDealIn(v as WindNumber)}
-            />
-          </div>
+
+              {idx === 0 && winInfo.length <= 2 && (
+                <button
+                  type="button"
+                  className="btn btn-sm btn-info text-white mt-4 ms-2"
+                  onClick={() =>
+                    setWinInfo([
+                      ...winInfo,
+                      {
+                        fan: DEFAULT_FAN,
+                        fu: DEFAULT_FU,
+                        winner: DEFAULT_PLAYER(gameContext.gameStatus),
+                        dealIn: winInfo[0].dealIn,
+                      },
+                    ])
+                  }
+                >
+                  {winInfo.length == 1 ? "Double Ron!" : "Triple Ron!"}
+                </button>
+              )}
+              {idx !== 0 && (
+                <button
+                  type="button"
+                  className="btn btn-sm text-danger mt-4"
+                  onClick={() =>
+                    setWinInfo(winInfo.filter((_info, index) => index !== idx))
+                  }
+                >
+                  <i className="fa-solid fa-circle-xmark"></i>
+                </button>
+              )}
+            </div>
+          ))}
         </div>
 
         <div

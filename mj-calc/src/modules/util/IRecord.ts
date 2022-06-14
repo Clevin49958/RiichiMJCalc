@@ -4,6 +4,8 @@ import { WindNumber } from "./Wind";
 export interface WinRecord {
   winner: WindNumber;
   dealIn: WindNumber;
+  fan: number;
+  fu: number;
   // self deal in == tsumo
 }
 
@@ -13,7 +15,7 @@ export interface DrawRecord {
 
 type Record =
   | {
-      info: WinRecord;
+      info: WinRecord[];
       type: "Win";
     }
   | {

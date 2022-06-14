@@ -14,27 +14,38 @@ export default function RoundHistory({
       {[...records].reverse().map((record) => {
         let content: JSX.Element;
         if (record.type === "Win") {
-          const info = record.info as WinRecord;
-          if (info.winner === info.dealIn) {
+          const wins = record.info;
+          if (wins[0].winner === wins[0].dealIn) {
             content = (
               <div className="row">
                 <div className="col col-4 win-prompt">Tsumo</div>
-                <div className="col col-4">{players[info.winner].name}</div>
-                <div className="col col-4">+{record.deltas[info.winner]}</div>
+                <div className="col col-4">{players[wins[0].winner].name}</div>
+                <div className="col col-4">
+                  +{record.deltas[wins[0].winner]}
+                </div>
               </div>
             );
           } else {
             content = (
               <>
-                <div className="row">
-                  <div className="col col-4 win-prompt">Ron</div>
-                  <div className="col col-4">{players[info.winner].name}</div>
-                  <div className="col col-4">+{record.deltas[info.winner]}</div>
-                </div>
+                {wins.map((win) => (
+                  <div className="row">
+                    <div className="col col-4 win-prompt">Ron</div>
+                    <div className="col col-4">{players[win.winner].name}</div>
+                    <div className="col col-4">
+                      +{record.deltas[win.winner]}
+                    </div>
+                  </div>
+                ))}
+
                 <div className="row">
                   <div className="col col-4 deal-in-prompt">Deal in</div>
-                  <div className="col col-4">{players[info.dealIn].name}</div>
-                  <div className="col col-4">{record.deltas[info.dealIn]}</div>
+                  <div className="col col-4">
+                    {players[wins[0].dealIn].name}
+                  </div>
+                  <div className="col col-4">
+                    {record.deltas[wins[0].dealIn]}
+                  </div>
                 </div>
               </>
             );
