@@ -29,4 +29,4 @@ jobs:
       - name: Build the calculator
         working-directory: mj-calc
         run: npm ci
-        run: npm run build
+      - run: npm run build
