@@ -34,7 +34,7 @@ const COLOR_CODES = [
 ];
 
 function getPointsLabel({ wind, round, honba }: GameStatus | IRecord) {
-  if (round === 1) {
+  if (round === 1 && honba === 0) {
     return `${getWind(wind)}`;
   }
   if (honba === 0) {
