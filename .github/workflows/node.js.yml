@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x]
+        node-version: [12.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -24,9 +24,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Am I in the right repo?
-        run: ls -lsa
       - name: Build the calculator
         working-directory: mj-calc
         run: npm ci
-      - run: npm run build
+      - 
+        working-directory: mj-calc
+        run: npm run build
