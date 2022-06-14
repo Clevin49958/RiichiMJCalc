@@ -10,9 +10,8 @@ import {
   getDeltaWithWinner,
 } from "./util/Score";
 import { HonbaStick, RichiiStick } from "./Icons";
-import { DrawRecord, IRecord, WinRecord } from "./util/IRecord";
+import { IRecord, WinRecord } from "./util/IRecord";
 import RoundHistory from "./components/RoundHistory";
-import Header from "./components/Header";
 import { GameEntrySelector } from "./components/GameEntrySelector";
 import GameContext from "./util/Context";
 import FinalPoints from "./components/FinalPoints";

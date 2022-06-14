@@ -1,5 +1,5 @@
 import { IPlayerTable } from "../util/IPlayer";
-import { DrawRecord, IRecord, WinRecord } from "../util/IRecord";
+import { DrawRecord, IRecord } from "../util/IRecord";
 import { getWind } from "../util/Wind";
 
 export default function RoundHistory({
