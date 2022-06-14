@@ -18,17 +18,15 @@ import GameContext from "./util/Context";
 import FinalPoints from "./components/FinalPoints";
 import IGame from "./util/IGame";
 import { PointsPlot } from "./components/PointsPlot";
-
-const STARTING_POINT = [25000, 35000, 50000];
-const STARTING_WIND = 0;
-const STARTING_HONBA = 0;
-export const StickIconSize = { width: 56, height: 18 };
-
-const DEFAULT_FAN = 3;
-const DEFAULT_FU = 30;
-const DEFAULT_PLAYER = (gameStatus: GameStatus) => {
-  return getDealer(gameStatus);
-};
+import {
+  STARTING_HONBA,
+  STARTING_POINT,
+  STARTING_WIND,
+  DEFAULT_FAN,
+  DEFAULT_FU,
+  DEFAULT_PLAYER,
+  StickIconSize,
+} from "./util/Constants";
 
 export function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
