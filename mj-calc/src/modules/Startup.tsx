@@ -1,4 +1,11 @@
-import React, { Dispatch, SetStateAction, useCallback, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import PlayerTable from "./components/PlayerTable";
 import { NP, WindNumber } from "./util/Wind";
 import Select from "react-select/";
@@ -16,6 +23,18 @@ function PlayerInputCell({
   numPlayers: NP;
 }) {
   const [playerNameInput, setPlayerNameInput] = useState(player);
+  const prevName = useRef(player);
+
+  useEffect(() => {
+    if (prevName.current !== player) {
+      setPlayerNameInput(player);
+      prevName.current = player;
+    }
+  }, [player]);
+
+  if (seating === 1) {
+    console.log([player, prevName.current, playerNameInput]);
+  }
   return (
     <input
       aria-label="Player Name"

@@ -3,13 +3,15 @@ import { getWind, NP, WindNumber } from "./util/Wind";
 import { CalculatorCore } from "./CalculatorCore";
 import { StartUp } from "./Startup";
 import IGame from "./util/IGame";
+import { useLocalStorage } from "./util/useLocalStorage";
 
 export default function Calculator() {
   // 3 or 4 players
   const DEFAULT_N_PLAYERS = 4;
   const [numPlayers, setNumPlayers] = useState<NP>(DEFAULT_N_PLAYERS);
 
-  const [playerNames, setPlayerNames] = useState<string[]>(
+  const [playerNames, setPlayerNames] = useLocalStorage<string[]>(
+    "names",
     (Array.from(Array(DEFAULT_N_PLAYERS).keys()) as WindNumber[]).map(getWind)
   );
 
