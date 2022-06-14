@@ -1,5 +1,6 @@
 {
   "name": "mj-calc",
+  "homepage": "http://mahjong.bestholdingnz.company/",
   "version": "0.3.0",
   "private": true,
   "dependencies": {
