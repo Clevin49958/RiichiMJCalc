@@ -116,34 +116,43 @@ export function CalculatorCore({
     let deltas: number[];
     if (endingType === "Win") {
       deltas = getDeltaWithWinner(
-        fan!,
-        fu!,
+        fan,
+        fu,
         winner === dealIn,
-        winner!,
+        winner,
         gameStatus,
-        dealIn!
+        dealIn
       );
     } else {
       deltas = getDeltaWithoutWinner(tenpai);
     }
     applyScoreChange(players, deltas);
     setPlayers([...players]);
-    pushRecord({
-      type: endingType,
+    const record: Omit<IRecord, "info" | "type"> = {
       deltas: deltas,
       wind: gameStatus.wind,
       round: gameStatus.round,
       honba: gameStatus.honba,
-      info:
-        endingType === "Win"
-          ? ({
-              winner: winner,
-              dealIn: dealIn,
-            } as WinRecord)
-          : ({
-              tenpai: tenpai,
-            } as DrawRecord),
-    });
+    };
+    if (endingType === "Win") {
+      pushRecord({
+        ...record,
+        type: endingType,
+        info: {
+          winner: winner,
+          dealIn: dealIn,
+        },
+      });
+    } else {
+      pushRecord({
+        ...record,
+        type: endingType,
+        info: {
+          tenpai: tenpai,
+        },
+      });
+    }
+
     setGameStatus(
       nextGameStatus(
         endingType === "Win" ? winner : null,
