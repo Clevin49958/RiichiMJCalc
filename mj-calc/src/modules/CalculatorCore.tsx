@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import PlayerTable from "./PlayerTable";
+import PlayerTable from "./components/PlayerTable";
 import { IPlayerTable, IPlayer } from "./util/IPlayer";
 import { getWind, NP, WindNumber } from "./util/Wind";
 import { GameStatus, incrementRound, IRichii } from "./util/GameStatus";
@@ -11,25 +11,23 @@ import {
 } from "./util/Score";
 import { HonbaStick, RichiiStick } from "./Icons";
 import { DrawRecord, IRecord, WinRecord } from "./util/IRecord";
-import RoundHistory from "./RoundHistory";
-import Header from "./Header";
-import { GameEntrySelector } from "./GameEntrySelector";
-import Select from "react-select";
+import RoundHistory from "./components/RoundHistory";
+import Header from "./components/Header";
+import { GameEntrySelector } from "./components/GameEntrySelector";
 import GameContext from "./util/Context";
-import FinalPoints from "./FinalPoints";
+import FinalPoints from "./components/FinalPoints";
 import IGame from "./util/IGame";
-import { PointsPlot } from "./PointsPlot";
-
-const STARTING_POINT = [25000, 35000, 50000];
-const STARTING_WIND = 0;
-const STARTING_HONBA = 0;
-export const StickIconSize = { width: 56, height: 18 };
-
-const DEFAULT_FAN = 3;
-const DEFAULT_FU = 30;
-const DEFAULT_PLAYER = (gameStatus: GameStatus) => {
-  return getDealer(gameStatus);
-};
+import { PointsPlot } from "./components/PointsPlot";
+import {
+  STARTING_HONBA,
+  STARTING_POINT,
+  STARTING_WIND,
+  DEFAULT_FAN,
+  DEFAULT_FU,
+  DEFAULT_PLAYER,
+  StickIconSize,
+} from "./util/Constants";
+import { includes } from "lodash";
 
 export function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
@@ -42,43 +40,6 @@ export function GameStatusCenterCell(gameStatus: GameStatus) {
     </div>
   );
 }
-export function DropdownEntry<T extends string | number>({
-  label,
-  labels,
-  values,
-  setter,
-  value,
-}: {
-  label: string;
-  labels: string[] | number[];
-  values: T[];
-  value: T;
-  setter: (t: T) => void;
-}) {
-  const options = labels.map((key, index) => ({
-    value: values[index],
-    label: key.toString(),
-  }));
-  interface OptionType {
-    value: T;
-    label: string;
-  }
-  return (
-    <label>
-      <span>{label}: </span>
-      <Select<OptionType>
-        value={options.find((obj) => obj.value === value)}
-        options={options}
-        isMulti={false}
-        isClearable={false}
-        onChange={(newValue) => {
-          setter(newValue!.value);
-        }}
-      />
-    </label>
-  );
-}
-
 export function CalculatorCore({
   n,
   playerNames,
@@ -112,10 +73,14 @@ export function CalculatorCore({
       })) as IPlayerTable)
   );
 
-  const [fan, setFan] = useState<number>(DEFAULT_FAN);
-  const [fu, setFu] = useState<number>(DEFAULT_FU);
-  const [winner, setWinner] = useState<WindNumber>(DEFAULT_PLAYER(gameStatus));
-  const [dealIn, setDealIn] = useState<WindNumber>(DEFAULT_PLAYER(gameStatus));
+  const [winInfo, setWinInfo] = useState<WinRecord[]>([
+    {
+      fan: DEFAULT_FAN,
+      fu: DEFAULT_FU,
+      winner: DEFAULT_PLAYER(gameStatus),
+      dealIn: DEFAULT_PLAYER(gameStatus),
+    },
+  ]);
   const [tenpai, setTenpai] = useState<boolean[]>(Array(n).fill(false));
   const [endingType, setEndingType] = useState<"Win" | "Draw">("Win");
   const [gameRecord, setGameRecord] = useState<IRecord[]>(state?.records ?? []);
@@ -139,10 +104,14 @@ export function CalculatorCore({
   const isReady = true;
 
   const resetWinState = () => {
-    setFan(DEFAULT_FAN);
-    setFu(DEFAULT_FU);
-    setWinner(DEFAULT_PLAYER(gameStatus));
-    setDealIn(DEFAULT_PLAYER(gameStatus));
+    setWinInfo([
+      {
+        fan: DEFAULT_FAN,
+        fu: DEFAULT_FU,
+        winner: DEFAULT_PLAYER(gameStatus),
+        dealIn: DEFAULT_PLAYER(gameStatus),
+      },
+    ]);
     setTenpai(Array(n).fill(false));
     setEndingType("Win");
   };
@@ -153,38 +122,37 @@ export function CalculatorCore({
     };
     let deltas: number[];
     if (endingType === "Win") {
-      deltas = getDeltaWithWinner(
-        fan!,
-        fu!,
-        winner === dealIn,
-        winner!,
-        gameStatus,
-        dealIn!
-      );
+      deltas = getDeltaWithWinner(winInfo, gameStatus);
     } else {
       deltas = getDeltaWithoutWinner(tenpai);
     }
     applyScoreChange(players, deltas);
     setPlayers([...players]);
-    pushRecord({
-      type: endingType,
+    const record: Omit<IRecord, "info" | "type"> = {
       deltas: deltas,
       wind: gameStatus.wind,
       round: gameStatus.round,
       honba: gameStatus.honba,
-      info:
-        endingType === "Win"
-          ? ({
-              winner: winner,
-              dealIn: dealIn,
-            } as WinRecord)
-          : ({
-              tenpai: tenpai,
-            } as DrawRecord),
-    });
+    };
+    if (endingType === "Win") {
+      pushRecord({
+        ...record,
+        type: endingType,
+        info: winInfo,
+      });
+    } else {
+      pushRecord({
+        ...record,
+        type: endingType,
+        info: {
+          tenpai: tenpai,
+        },
+      });
+    }
+
     setGameStatus(
       nextGameStatus(
-        endingType === "Win" ? winner : null,
+        endingType === "Win" ? winInfo.map((record) => record.winner) : null,
         tenpai[getDealer(gameStatus)],
         gameStatus
       )
@@ -310,15 +278,9 @@ export function CalculatorCore({
                 <GameEntrySelector
                   endingType={endingType}
                   setEndingType={setEndingType}
-                  fan={fan}
-                  setFan={setFan}
-                  fu={fu}
-                  setFu={setFu}
                   players={players}
-                  winner={winner}
-                  setWinner={setWinner}
-                  dealIn={dealIn}
-                  setDealIn={setDealIn}
+                  winInfo={winInfo}
+                  setWinInfo={setWinInfo}
                   tenpai={tenpai}
                   setTenpai={setTenpai}
                   saveEntry={saveEntry}
@@ -354,7 +316,7 @@ export function CalculatorCore({
 }
 
 export function nextGameStatus(
-  winner: null | WindNumber,
+  winner: null | WindNumber[],
   isDealerTenpai: boolean,
   gameStatus: GameStatus
 ) {
@@ -365,7 +327,7 @@ export function nextGameStatus(
       incrementRound(gameStatus);
     }
   } else {
-    if (winner === getDealer(gameStatus)) {
+    if (includes(winner, getDealer(gameStatus))) {
       gameStatus.honba += 1;
     } else {
       incrementRound(gameStatus);

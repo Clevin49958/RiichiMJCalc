@@ -4,6 +4,8 @@ import { WindNumber } from "./Wind";
 export interface WinRecord {
   winner: WindNumber;
   dealIn: WindNumber;
+  fan: number;
+  fu: number;
   // self deal in == tsumo
 }
 
@@ -11,11 +13,19 @@ export interface DrawRecord {
   tenpai: boolean[];
 }
 
-export interface IRecord {
-  info: WinRecord | DrawRecord;
-  type: "Win" | "Draw";
+type Record =
+  | {
+      info: WinRecord[];
+      type: "Win";
+    }
+  | {
+      info: DrawRecord;
+      type: "Draw";
+    };
+
+export type IRecord = Record & {
   deltas: number[];
   wind: WindNumber;
   round: RoundNumber;
   honba: number;
-}
+};

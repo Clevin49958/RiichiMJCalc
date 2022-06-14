@@ -1,5 +1,6 @@
 import { GameStatus } from "./GameStatus";
 import { IPlayerTable, updatePlayerScore } from "./IPlayer";
+import { WinRecord } from "./IRecord";
 import { WindNumber } from "./Wind";
 
 const NOTEN_BAPPU = {
@@ -79,14 +80,9 @@ function getDeltaForRon(
   return deltas;
 }
 
-export function getDeltaWithWinner(
-  fan: number,
-  fu: number,
-  isTsumo: boolean,
-  winner: WindNumber,
-  gameStatus: GameStatus,
-  winFrom?: WindNumber
-) {
+function getDeltaOneWinner(record: WinRecord, gameStatus: GameStatus) {
+  const { fan, fu, winner, dealIn: winFrom } = record;
+  const isTsumo = winFrom === winner;
   const dealer = getDealer(gameStatus);
   const basePoint = getBasePoint(fan, fu);
   let deltas: number[];
@@ -107,9 +103,33 @@ export function getDeltaWithWinner(
   } else {
     deltas = getDeltaForRon(basePoint, dealer, winner, winFrom!, gameStatus);
   }
+  return deltas;
+}
 
+export function getDeltaWithWinner(
+  records: WinRecord[],
+  gameStatus: GameStatus
+) {
+  const deltaArr = records.map((record) =>
+    getDeltaOneWinner(record, gameStatus)
+  );
+
+  // sum all deltas
+  const deltas = deltaArr.reduce(
+    (prev, curr) => prev.map((val, idx) => val + curr[idx]),
+    Array(gameStatus.numPlayers).fill(0)
+  );
   // richii stick
-  deltas[winner] += gameStatus.richiiStick * 1000;
+  // The RHS of the one who deal in gets richii stick
+  const dealIn = records[0].dealIn;
+  const winners = records.map((record) =>
+    record.winner < dealIn
+      ? record.winner + gameStatus.numPlayers
+      : record.winner
+  );
+  const getter = (Math.min(...winners) % gameStatus.numPlayers) as WindNumber;
+  console.log([dealIn, winners, getter]);
+  deltas[getter] += gameStatus.richiiStick * 1000;
 
   return deltas;
 }
