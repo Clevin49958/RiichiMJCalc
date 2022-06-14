@@ -24,6 +24,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Am I in the right repo?
+        run: ls -lsa
       - name: Build the calculator
         working-directory: mj-calc
         run: npm run build
