@@ -1,7 +1,5 @@
 ---
 deployment:
   tasks:
-    - cd mj-calc
-    - npm run build
     - export DEPLOYPATH=/home/clevin/public_html/mahjong
-    - /bin/cp -r build $DEPLOYPATH
+    - /bin/cp -R mj-calc/build $DEPLOYPATH
