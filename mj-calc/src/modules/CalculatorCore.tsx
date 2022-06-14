@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import PlayerTable from "./PlayerTable";
+import PlayerTable from "./components/PlayerTable";
 import { IPlayerTable, IPlayer } from "./util/IPlayer";
 import { getWind, NP, WindNumber } from "./util/Wind";
 import { GameStatus, incrementRound, IRichii } from "./util/GameStatus";
@@ -11,14 +11,13 @@ import {
 } from "./util/Score";
 import { HonbaStick, RichiiStick } from "./Icons";
 import { DrawRecord, IRecord, WinRecord } from "./util/IRecord";
-import RoundHistory from "./RoundHistory";
-import Header from "./Header";
-import { GameEntrySelector } from "./GameEntrySelector";
-import Select from "react-select";
+import RoundHistory from "./components/RoundHistory";
+import Header from "./components/Header";
+import { GameEntrySelector } from "./components/GameEntrySelector";
 import GameContext from "./util/Context";
-import FinalPoints from "./FinalPoints";
+import FinalPoints from "./components/FinalPoints";
 import IGame from "./util/IGame";
-import { PointsPlot } from "./PointsPlot";
+import { PointsPlot } from "./components/PointsPlot";
 
 const STARTING_POINT = [25000, 35000, 50000];
 const STARTING_WIND = 0;
@@ -42,43 +41,6 @@ export function GameStatusCenterCell(gameStatus: GameStatus) {
     </div>
   );
 }
-export function DropdownEntry<T extends string | number>({
-  label,
-  labels,
-  values,
-  setter,
-  value,
-}: {
-  label: string;
-  labels: string[] | number[];
-  values: T[];
-  value: T;
-  setter: (t: T) => void;
-}) {
-  const options = labels.map((key, index) => ({
-    value: values[index],
-    label: key.toString(),
-  }));
-  interface OptionType {
-    value: T;
-    label: string;
-  }
-  return (
-    <label>
-      <span>{label}: </span>
-      <Select<OptionType>
-        value={options.find((obj) => obj.value === value)}
-        options={options}
-        isMulti={false}
-        isClearable={false}
-        onChange={(newValue) => {
-          setter(newValue!.value);
-        }}
-      />
-    </label>
-  );
-}
-
 export function CalculatorCore({
   n,
   playerNames,

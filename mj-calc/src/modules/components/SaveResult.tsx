@@ -1,8 +1,8 @@
-import GameContext from "./util/Context";
-import { GameStatus } from "./util/GameStatus";
-import IGame from "./util/IGame";
-import { IPlayerTable } from "./util/IPlayer";
-import { IRecord } from "./util/IRecord";
+import GameContext from "../util/Context";
+import { GameStatus } from "../util/GameStatus";
+import IGame from "../util/IGame";
+import { IPlayerTable } from "../util/IPlayer";
+import { IRecord } from "../util/IRecord";
 import { useContext } from "react";
 
 export function generateResult(

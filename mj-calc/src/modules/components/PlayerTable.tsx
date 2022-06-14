@@ -1,5 +1,5 @@
-import { IPlayer } from "./util/IPlayer";
-import { WindNumber } from "./util/Wind";
+import { IPlayer } from "../util/IPlayer";
+import { WindNumber } from "../util/Wind";
 
 export default function PlayerTable<T = IPlayer>({
   playerTable,

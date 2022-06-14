@@ -1,6 +1,6 @@
 import { Line } from "react-chartjs-2";
-import { IPlayerTable } from "./util/IPlayer";
-import { IRecord } from "./util/IRecord";
+import { IPlayerTable } from "../util/IPlayer";
+import { IRecord } from "../util/IRecord";
 import {
   Chart as ChartJS,
   LineElement,
@@ -12,8 +12,8 @@ import {
   PointElement,
 } from "chart.js";
 import annotationPlugin from "chartjs-plugin-annotation";
-import { GameStatus } from "./util/GameStatus";
-import { getWind } from "./util/Wind";
+import { GameStatus } from "../util/GameStatus";
+import { getWind } from "../util/Wind";
 
 ChartJS.register(
   CategoryScale,

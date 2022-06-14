@@ -1,8 +1,8 @@
 import React from "react";
 import PlayerTable from "./PlayerTable";
-import { IPlayerTable, IPlayer } from "./util/IPlayer";
-import { WindNumber } from "./util/Wind";
-import { DropdownEntry } from "./CalculatorCore";
+import { IPlayerTable, IPlayer } from "../util/IPlayer";
+import { WindNumber } from "../util/Wind";
+import { DropdownEntry } from "./DropdownEntry";
 import { ExportResult } from "./SaveResult";
 
 interface GameEntrySelectorProps {
