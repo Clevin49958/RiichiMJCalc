@@ -279,7 +279,7 @@ export function CalculatorCore({
       }}
     >
       {tabletopMode ? (
-        <div className="container-fluid">
+        <div className="container-fluid p-0">
           <PlayerTable
             playerTable={playersScoreView}
             playerCell={PlayerInfoCell}

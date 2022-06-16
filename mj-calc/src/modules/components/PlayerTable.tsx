@@ -20,15 +20,19 @@ export default function PlayerTable<T = IPlayer>({
 }) {
   return (
     <>
-      <div className="player-table container-fluid my-2">
+      <div className="player-table container-fluid p-0">
         <div className="row">
-          <div className="col col-4 p-2 player-table-cell">{LTCell}</div>
+          <div className="col col-4 p-2 player-table-cell corner-cell d-flex align-items-center justify-content-center">
+            {LTCell}
+          </div>
           <div className="col col-4 p-2 player-table-cell player-cell">
             {/* West */}
             {playerTable.length >= 3 &&
               playerCell(playerTable[2], 2, playerTable)}
           </div>
-          <div className="col col-4 p-2 player-table-cell">{RTCell}</div>
+          <div className="col col-4 p-2 player-table-cell corner-cell d-flex align-items-center justify-content-center">
+            {RTCell}
+          </div>
         </div>
         <div className="row">
           <div className="col col-4 p-2 player-table-cell player-cell">
@@ -46,12 +50,16 @@ export default function PlayerTable<T = IPlayer>({
           </div>
         </div>
         <div className="row">
-          <div className="col col-4 p-2 player-table-cell">{LBCell}</div>
+          <div className="col col-4 p-2 player-table-cell corner-cell d-flex align-items-center justify-content-center">
+            {LBCell}
+          </div>
           <div className="col col-4 p-2 player-table-cell player-cell">
             {/* East */}
             {playerCell(playerTable[0], 0, playerTable)}
           </div>
-          <div className="col col-4 p-2 player-table-cell ">{RBCell}</div>
+          <div className="col col-4 p-2 player-table-cell corner-cell d-flex align-items-center justify-content-center">
+            {RBCell}
+          </div>
         </div>
       </div>
     </>
