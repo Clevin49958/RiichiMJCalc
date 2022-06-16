@@ -34,7 +34,6 @@ export function GameEntrySelector({
   const gameContext = useContext(GameContext);
   const fans = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 26, 39, 52, 65, 78];
   const fus = [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110];
-  const { fan, fu, winner, dealIn } = winInfo[0];
 
   const [setFan, setFu, setWinner, setDealIn] = useMemo(() => {
     const setFan = (fan: number, idx: number) =>
@@ -165,7 +164,7 @@ export function GameEntrySelector({
                 <DropdownEntry
                   label="Deal in"
                   labels={players.map((p) =>
-                    p.seating === winner ? "Tsumo" : p.name
+                    p.seating === winInfo[0].winner ? "Tsumo" : p.name
                   )}
                   values={players.map((p) => p.seating)}
                   value={info.dealIn}
@@ -189,7 +188,7 @@ export function GameEntrySelector({
                     ])
                   }
                 >
-                  {winInfo.length == 1 ? "Double Ron!" : "Triple Ron!"}
+                  {winInfo.length === 1 ? "Double Ron!" : "Triple Ron!"}
                 </button>
               )}
               {idx !== 0 && (

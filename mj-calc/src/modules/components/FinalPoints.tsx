@@ -104,17 +104,15 @@ export default function FinalPoints({
                 </thead>
                 <tbody>
                   <tr>
-                    <th scope="row">End Pts</th>
+                    <th scope="row">Ending Score</th>
                     {sortedPlayers.map((player) => (
-                      <th key={player.seating}>
-                        {(player.score / 1000).toFixed(1)}
-                      </th>
+                      <th key={player.seating}>{player.score}</th>
                     ))}
                   </tr>
                   <tr>
-                    <th scope="row">Pts</th>
+                    <th scope="row">{"\u0394"}Score</th>
                     {rawPoints.map((pt, idx) => (
-                      <th key={sortedPlayers[idx].seating}>{pt.toFixed(1)}</th>
+                      <th key={sortedPlayers[idx].seating}>{pt * 1000}</th>
                     ))}
                   </tr>
                   <tr>
