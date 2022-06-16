@@ -128,7 +128,6 @@ export function getDeltaWithWinner(
       : record.winner
   );
   const getter = (Math.min(...winners) % gameStatus.numPlayers) as WindNumber;
-  console.log([dealIn, winners, getter]);
   deltas[getter] += gameStatus.richiiStick * 1000;
 
   return deltas;

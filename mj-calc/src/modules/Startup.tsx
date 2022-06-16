@@ -31,10 +31,6 @@ function PlayerInputCell({
       prevName.current = player;
     }
   }, [player]);
-
-  if (seating === 1) {
-    console.log([player, prevName.current, playerNameInput]);
-  }
   return (
     <input
       aria-label="Player Name"
