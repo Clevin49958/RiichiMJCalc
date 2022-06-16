@@ -272,10 +272,10 @@ export function CalculatorCore({
         className="btn btn-light"
         onClick={flipTabletopMode}
       >
-        Tabletop mode
+        {tabletopMode ? "Tabletop mode" : "Display mode"}
       </button>
     ),
-    []
+    [tabletopMode]
   );
 
   return (
@@ -288,57 +288,45 @@ export function CalculatorCore({
         records: gameRecord,
       }}
     >
-      {tabletopMode ? (
-        <div className="container p-0" style={{ maxWidth: "500px" }}>
-          <PlayerTable
-            playerTable={playersScoreView}
-            playerCell={PlayerInfoCell}
-            centerCell={() => GameStatusCenterCell(gameStatus)}
-            RBCell={rewindButton}
-            LTCell={switchTabletopModeButton}
-          />
-        </div>
-      ) : (
-        <div className="container">
-          <div className="d-flex flex-column">
-            <div className="container-fluid" style={{ maxWidth: "500px" }}>
-              <PlayerTable
-                playerTable={playersScoreView}
-                playerCell={PlayerInfoCell}
-                centerCell={() => GameStatusCenterCell(gameStatus)}
-                RBCell={rewindButton}
-                LTCell={switchTabletopModeButton}
-              />
-            </div>
-
-            {viewOnly || (
-              <div className="row">
-                <div className="col col-12">
-                  <GameEntrySelector
-                    endingType={endingType}
-                    setEndingType={setEndingType}
-                    players={players}
-                    winInfo={winInfo}
-                    setWinInfo={setWinInfo}
-                    tenpai={tenpai}
-                    setTenpai={setTenpai}
-                    saveEntry={saveEntry}
-                    isReady={isReady}
-                  />
-                </div>
-              </div>
-            )}
-            <RoundHistory records={gameRecord} players={players} />
-            <FinalPoints startingPoint={STARTING_POINT[4 - n]} />
-            <PointsPlot
-              players={players}
-              gameRecord={gameRecord}
-              startingPoint={startingPoint}
-              gameStatus={gameStatus}
+      <div className="container">
+        <div className="d-flex flex-column">
+          <div className="container-fluid" style={{ maxWidth: "500px" }}>
+            <PlayerTable
+              playerTable={playersScoreView}
+              playerCell={PlayerInfoCell}
+              centerCell={() => GameStatusCenterCell(gameStatus)}
+              RBCell={rewindButton}
+              LTCell={switchTabletopModeButton}
             />
           </div>
+
+          {viewOnly || (
+            <div className="row">
+              <div className="col col-12">
+                <GameEntrySelector
+                  endingType={endingType}
+                  setEndingType={setEndingType}
+                  players={players}
+                  winInfo={winInfo}
+                  setWinInfo={setWinInfo}
+                  tenpai={tenpai}
+                  setTenpai={setTenpai}
+                  saveEntry={saveEntry}
+                  isReady={isReady}
+                />
+              </div>
+            </div>
+          )}
+          <RoundHistory records={gameRecord} players={players} />
+          <FinalPoints startingPoint={STARTING_POINT[4 - n]} />
+          <PointsPlot
+            players={players}
+            gameRecord={gameRecord}
+            startingPoint={startingPoint}
+            gameStatus={gameStatus}
+          />
         </div>
-      )}
+      </div>
     </GameContext.Provider>
   );
 }
