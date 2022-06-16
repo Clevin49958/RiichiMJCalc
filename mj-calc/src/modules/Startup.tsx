@@ -123,6 +123,11 @@ export function StartUp({
 
   return (
     <React.Fragment>
+      <img
+        src="/Header.jpg"
+        style={{ maxHeight: "100%", maxWidth: "100%" }}
+        mb-4
+      />
       <h1 style={{ textAlign: "center" }}>Please enter players' names</h1>
       <PlayerTable<string>
         playerTable={playerNames}
