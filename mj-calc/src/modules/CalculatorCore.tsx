@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import PlayerTable from "./components/PlayerTable";
 import { IPlayerTable, IPlayer } from "./util/IPlayer";
 import { getWind, NP, WindNumber } from "./util/Wind";
@@ -89,6 +89,10 @@ export function CalculatorCore({
   };
 
   const [displayDelta, setDisplayDelta] = useState(-1);
+  const [tabletopMode, setTabletopMode] = useState(false);
+  const flipTabletopMode = useCallback(() => {
+    setTabletopMode((mode) => !mode);
+  }, [setTabletopMode]);
 
   const playersScoreView = players.map((player) => ({
     ...player,
@@ -215,27 +219,28 @@ export function CalculatorCore({
     );
   }
 
-  const rewindButton = () => {
-    function rewind() {
-      if (!prevGameStatus.current) {
-        return;
-      }
-
-      // reset player score
-      players.forEach((player) => {
-        player.score = player.lastScore!;
-        player.lastScore = undefined;
-      });
-
-      setGameStatus({
-        ...prevGameStatus.current,
-      });
-      prevGameStatus.current = undefined;
-
-      setPlayers([...players]);
-      gameRecord.pop();
+  const rewind = useCallback(() => {
+    if (!prevGameStatus.current) {
+      return;
     }
-    return (
+
+    // reset player score
+    players.forEach((player) => {
+      player.score = player.lastScore!;
+      player.lastScore = undefined;
+    });
+
+    setGameStatus({
+      ...prevGameStatus.current,
+    });
+    prevGameStatus.current = undefined;
+
+    setPlayers([...players]);
+    gameRecord.pop();
+  }, [players]);
+
+  const rewindButton = useMemo(
+    () => (
       <button
         type="button"
         aria-label="rewind"
@@ -245,8 +250,23 @@ export function CalculatorCore({
       >
         Rewind
       </button>
-    );
-  };
+    ),
+    []
+  );
+
+  const switchTabletopModeButton = useMemo(
+    () => (
+      <button
+        type="button"
+        aria-label="switch tabletop mode"
+        className="btn btn-light"
+        onClick={flipTabletopMode}
+      >
+        Tabletop mode
+      </button>
+    ),
+    []
+  );
 
   return (
     <GameContext.Provider
@@ -258,58 +278,57 @@ export function CalculatorCore({
         records: gameRecord,
       }}
     >
-      <div className="container">
-        {/* <Header /> */}
-        <React.Fragment>
-          <div className="row">
-            <div className="col col-12">
+      {tabletopMode ? (
+        <div className="container-fluid">
+          <PlayerTable
+            playerTable={playersScoreView}
+            playerCell={PlayerInfoCell}
+            centerCell={() => GameStatusCenterCell(gameStatus)}
+            RBCell={rewindButton}
+            LTCell={switchTabletopModeButton}
+          />
+        </div>
+      ) : (
+        <div className="container">
+          <div className="d-flex flex-column">
+            <div className="container-fluid" style={{ maxWidth: "500px" }}>
               <PlayerTable
                 playerTable={playersScoreView}
                 playerCell={PlayerInfoCell}
                 centerCell={() => GameStatusCenterCell(gameStatus)}
-                RBCell={rewindButton()}
+                RBCell={rewindButton}
+                LTCell={switchTabletopModeButton}
               />
             </div>
-          </div>
-          {viewOnly || (
-            <div className="row">
-              <div className="col col-12">
-                <GameEntrySelector
-                  endingType={endingType}
-                  setEndingType={setEndingType}
-                  players={players}
-                  winInfo={winInfo}
-                  setWinInfo={setWinInfo}
-                  tenpai={tenpai}
-                  setTenpai={setTenpai}
-                  saveEntry={saveEntry}
-                  isReady={isReady}
-                />
+
+            {viewOnly || (
+              <div className="row">
+                <div className="col col-12">
+                  <GameEntrySelector
+                    endingType={endingType}
+                    setEndingType={setEndingType}
+                    players={players}
+                    winInfo={winInfo}
+                    setWinInfo={setWinInfo}
+                    tenpai={tenpai}
+                    setTenpai={setTenpai}
+                    saveEntry={saveEntry}
+                    isReady={isReady}
+                  />
+                </div>
               </div>
-            </div>
-          )}
-          <div className="row">
-            <div className="col col-12">
-              <RoundHistory records={gameRecord} players={players} />
-            </div>
+            )}
+            <RoundHistory records={gameRecord} players={players} />
+            <FinalPoints startingPoint={STARTING_POINT[4 - n]} />
+            <PointsPlot
+              players={players}
+              gameRecord={gameRecord}
+              startingPoint={startingPoint}
+              gameStatus={gameStatus}
+            />
           </div>
-          <div className="row">
-            <div className="col col-12">
-              <FinalPoints startingPoint={STARTING_POINT[4 - n]} />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col col-12">
-              <PointsPlot
-                players={players}
-                gameRecord={gameRecord}
-                startingPoint={startingPoint}
-                gameStatus={gameStatus}
-              />
-            </div>
-          </div>
-        </React.Fragment>
-      </div>
+        </div>
+      )}
     </GameContext.Provider>
   );
 }
