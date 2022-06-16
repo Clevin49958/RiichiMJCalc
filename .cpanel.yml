@@ -1,5 +1,0 @@
----
-deployment:
-  tasks:
-    - export DEPLOYPATH=/home/clevin/public_html/mahjong
-    - /bin/cp -R mj-calc/build $DEPLOYPATH
