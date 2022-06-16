@@ -93,6 +93,7 @@ export function CalculatorCore({
   const flipTabletopMode = useCallback(() => {
     setTabletopMode((mode) => !mode);
   }, [setTabletopMode]);
+  const orientation = tabletopMode ? displayDelta : -1;
 
   const playersScoreView = players.map((player) => ({
     ...player,
@@ -180,8 +181,17 @@ export function CalculatorCore({
   function PlayerInfoCell(player: IPlayer) {
     const richii = gameStatus.richii;
     const hasRichii = richii[player.seating];
+
+    const angle =
+      4 -
+      (tabletopMode ? (orientation === -1 ? player.seating : orientation) : 4);
     return (
-      <div className="container-fluid px-0">
+      <div
+        className="container-fluid px-0"
+        style={{
+          transform: `rotate(${angle * 90}deg)`,
+        }}
+      >
         <div className="row mb-2">
           <div
             className="col"
@@ -279,7 +289,7 @@ export function CalculatorCore({
       }}
     >
       {tabletopMode ? (
-        <div className="container-fluid p-0">
+        <div className="container p-0" style={{ maxWidth: "500px" }}>
           <PlayerTable
             playerTable={playersScoreView}
             playerCell={PlayerInfoCell}
