@@ -194,7 +194,7 @@ export function CalculatorCore({
           transform: `rotate(${angle * 90}deg)`,
         }}
       >
-        <div className="row mb-2">
+        <div className="row mb-2 no-select">
           <div
             className="col"
             onMouseDown={() => setDisplayDelta(player.seating)}
