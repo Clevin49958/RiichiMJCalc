@@ -7,6 +7,8 @@ import { ExportResult } from "./SaveResult";
 import { WinRecord } from "../util/IRecord";
 import { DEFAULT_FAN, DEFAULT_FU, DEFAULT_PLAYER } from "../util/Constants";
 import GameContext from "../util/Context";
+import { Classes, Popover2 } from "@blueprintjs/popover2";
+import { Button, H5, Intent } from "@blueprintjs/core";
 
 interface GameEntrySelectorProps {
   endingType: string;
@@ -261,6 +263,33 @@ export function GameEntrySelector({
           Save entry
         </button>
         <ExportResult />
+        <Popover2
+          popoverClassName={Classes.POPOVER2_CONTENT_SIZING}
+          content={
+            <div className="container">
+              <h5>Confirm deletion</h5>
+              <p>
+                Are you sure you want to delete these items? You won&apos;t be
+                able to recover them.
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginTop: 15,
+                }}
+              >
+                <button className="btn btn-primary button-delete">
+                  Delete
+                </button>
+              </div>
+            </div>
+          }
+        >
+          <button type="submit" className="btn btn-secondary">
+            Next game!
+          </button>
+        </Popover2>
       </div>
     </>
   );
