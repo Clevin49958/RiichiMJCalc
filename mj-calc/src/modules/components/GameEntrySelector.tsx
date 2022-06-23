@@ -17,6 +17,7 @@ interface GameEntrySelectorProps {
   tenpai: boolean[];
   setTenpai: Dispatch<SetStateAction<boolean[]>>;
   saveEntry: () => void;
+  onNextGame: () => void;
   isReady: boolean;
 }
 
@@ -30,6 +31,7 @@ export function GameEntrySelector({
   setTenpai,
   saveEntry,
   isReady,
+  onNextGame,
 }: GameEntrySelectorProps) {
   const gameContext = useContext(GameContext);
   const fans = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 26, 39, 52, 65, 78];
@@ -68,7 +70,7 @@ export function GameEntrySelector({
         winInfo.map((info) => ({
           ...info,
           dealIn,
-        }))
+        })),
       );
     return [setFan, setFu, setWinner, setDealIn];
   }, [setWinInfo]);
@@ -164,7 +166,7 @@ export function GameEntrySelector({
                 <DropdownEntry
                   label="Deal in"
                   labels={players.map((p) =>
-                    p.seating === winInfo[0].winner ? "Tsumo" : p.name
+                    p.seating === winInfo[0].winner ? "Tsumo" : p.name,
                   )}
                   values={players.map((p) => p.seating)}
                   value={info.dealIn}

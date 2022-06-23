@@ -26,7 +26,7 @@ import {
   DEFAULT_PLAYER,
   StickIconSize,
 } from "./util/Constants";
-import { includes } from "lodash";
+import { concat, includes, maxBy } from "lodash";
 
 export function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
@@ -44,11 +44,13 @@ export function CalculatorCore({
   playerNames,
   viewOnly,
   state = null,
+  onNextGame,
 }: {
   n: NP;
   playerNames: string[];
   viewOnly: boolean;
   state: IGame | null;
+  onNextGame: (names: string[]) => void;
 }) {
   const [gameStatus, setGameStatus] = useState<GameStatus>(
     state?.gameStatus ?? {
@@ -58,7 +60,7 @@ export function CalculatorCore({
       honba: STARTING_HONBA,
       richiiStick: 0,
       richii: Array(n).fill(false),
-    }
+    },
   );
 
   const prevGameStatus = useRef<GameStatus | undefined>();
@@ -69,7 +71,7 @@ export function CalculatorCore({
         name: playerNames[seating],
         seating: seating,
         score: startingPoint,
-      })) as IPlayerTable)
+      })) as IPlayerTable),
   );
 
   const [winInfo, setWinInfo] = useState<WinRecord[]>([
@@ -158,8 +160,8 @@ export function CalculatorCore({
       nextGameStatus(
         endingType === "Win" ? winInfo.map((record) => record.winner) : null,
         tenpai[getDealer(gameStatus)],
-        gameStatus
-      )
+        gameStatus,
+      ),
     );
     resetWinState();
   };
@@ -261,7 +263,7 @@ export function CalculatorCore({
         Rewind
       </button>
     ),
-    []
+    [],
   );
 
   const switchTabletopModeButton = useMemo(
@@ -275,8 +277,18 @@ export function CalculatorCore({
         {tabletopMode ? "Tabletop mode" : "Display mode"}
       </button>
     ),
-    [tabletopMode]
+    [tabletopMode],
   );
+
+  const onNextGameMemo = useCallback(() => {
+    const highestPlayerIndex = (
+      maxBy(players, (player) => player.score) ?? players[0]
+    ).seating;
+    const newPlayerNames = players.map(
+      (_player, idx, players) => players[(idx + highestPlayerIndex) % n].name,
+    );
+    onNextGame(newPlayerNames);
+  }, []);
 
   return (
     <GameContext.Provider
@@ -313,6 +325,7 @@ export function CalculatorCore({
                   setTenpai={setTenpai}
                   saveEntry={saveEntry}
                   isReady={isReady}
+                  onNextGame={onNextGameMemo}
                 />
               </div>
             </div>
@@ -334,7 +347,7 @@ export function CalculatorCore({
 export function nextGameStatus(
   winner: null | WindNumber[],
   isDealerTenpai: boolean,
-  gameStatus: GameStatus
+  gameStatus: GameStatus,
 ) {
   // update honba
   if (winner === null) {

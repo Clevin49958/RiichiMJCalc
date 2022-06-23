@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { getWind, NP, WindNumber } from "./util/Wind";
 import { CalculatorCore } from "./CalculatorCore";
 import { StartUp } from "./Startup";
@@ -12,7 +12,7 @@ export default function Calculator() {
 
   const [playerNames, setPlayerNames] = useLocalStorage<string[]>(
     "names",
-    (Array.from(Array(DEFAULT_N_PLAYERS).keys()) as WindNumber[]).map(getWind)
+    (Array.from(Array(DEFAULT_N_PLAYERS).keys()) as WindNumber[]).map(getWind),
   );
 
   const [namesReady, setNamesReady] = useState(false);
@@ -22,12 +22,18 @@ export default function Calculator() {
 
   const gameReady = namesReady;
 
+  const onNextGame = useCallback((names: string[]) => {
+    setPlayerNames(names);
+    setNamesReady(false);
+  }, []);
+
   return gameReady ? (
     <CalculatorCore
       n={numPlayers}
       playerNames={playerNames.slice(0, numPlayers)}
       viewOnly={viewOnly}
       state={viewFile}
+      onNextGame={onNextGame}
     />
   ) : (
     <>
