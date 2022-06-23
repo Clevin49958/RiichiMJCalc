@@ -66,7 +66,7 @@ export function GameEntrySelector({
         };
         return newInfo;
       });
-    const setDealIn = (dealIn: WindNumber, idx: number) =>
+    const setDealIn = (dealIn: WindNumber, _idx: number) =>
       setWinInfo((winInfo) =>
         winInfo.map((info) => ({
           ...info,

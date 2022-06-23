@@ -14,7 +14,7 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
       const item = window.localStorage.getItem(key);
 
       if (item === "undefined") {
-        setStoredValue(undefined as any);
+        setStoredValue(undefined as T);
         return;
       }
 

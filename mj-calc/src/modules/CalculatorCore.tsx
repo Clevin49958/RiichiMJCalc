@@ -26,7 +26,7 @@ import {
   DEFAULT_PLAYER,
   StickIconSize,
 } from "./util/Constants";
-import { concat, includes, maxBy } from "lodash";
+import { includes, maxBy } from "lodash";
 
 export function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */

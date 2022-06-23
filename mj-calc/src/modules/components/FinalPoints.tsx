@@ -54,7 +54,7 @@ export default function FinalPoints({
   const sortedPlayers = [...players].sort(
     (playerA, playerB) => playerB.score - playerA.score
   );
-  const rawPoints = sortedPlayers.map((player, idx) => {
+  const rawPoints = sortedPlayers.map((player) => {
     return (player.score - startingPoint) / 1000;
   });
   const finalPoints = rawPoints.map((pt, idx) => {
