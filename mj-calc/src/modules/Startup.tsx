@@ -87,7 +87,7 @@ export function StartUp({
         numPlayers={numPlayers}
       />
     ),
-    [numPlayers, setPlayerNames],
+    [numPlayers, setPlayerNames]
   );
 
   const PlayerNumInputCell = useCallback(
@@ -108,7 +108,7 @@ export function StartUp({
                 ({
                   value: count,
                   label: count,
-                } as { value: NP; label: NP }),
+                } as { value: NP; label: NP })
             )}
             value={{
               value: numPlayers,
@@ -118,7 +118,7 @@ export function StartUp({
           />
         </label>
       ) as JSX.Element,
-    [numPlayers, setNumPlayers],
+    [numPlayers, setNumPlayers]
   );
 
   return (
@@ -126,7 +126,7 @@ export function StartUp({
       <img
         src="/Header.jpg"
         style={{ maxHeight: "100%", maxWidth: "100%" }}
-        mb-4
+        className="mb-4"
       />
       <h1 style={{ textAlign: "center" }}>Please enter players&apos; names</h1>
       <PlayerTable<string>

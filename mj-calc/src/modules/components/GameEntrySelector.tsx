@@ -7,8 +7,7 @@ import { ExportResult } from "./SaveResult";
 import { WinRecord } from "../util/IRecord";
 import { DEFAULT_FAN, DEFAULT_FU, DEFAULT_PLAYER } from "../util/Constants";
 import GameContext from "../util/Context";
-import { Classes, Popover2 } from "@blueprintjs/popover2";
-import { Button, H5, Intent } from "@blueprintjs/core";
+import { OverlayTrigger, Popover } from "react-bootstrap";
 
 interface GameEntrySelectorProps {
   endingType: string;
@@ -72,10 +71,37 @@ export function GameEntrySelector({
         winInfo.map((info) => ({
           ...info,
           dealIn,
-        })),
+        }))
       );
     return [setFan, setFu, setWinner, setDealIn];
   }, [setWinInfo]);
+
+  const popover = (
+    <Popover>
+      <Popover.Header as="h5">Confirmation</Popover.Header>
+      <Popover.Body>
+        <p>
+          Are you sure you want to start a new game? You won&apos;t be able to
+          recover them if you haven&apos;t save.
+        </p>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginTop: 15,
+          }}
+        >
+          <button
+            className="btn btn-success"
+            type="submit"
+            onClick={onNextGame}
+          >
+            Go!
+          </button>
+        </div>
+      </Popover.Body>
+    </Popover>
+  );
   return (
     <>
       <nav>
@@ -168,7 +194,7 @@ export function GameEntrySelector({
                 <DropdownEntry
                   label="Deal in"
                   labels={players.map((p) =>
-                    p.seating === winInfo[0].winner ? "Tsumo" : p.name,
+                    p.seating === winInfo[0].winner ? "Tsumo" : p.name
                   )}
                   values={players.map((p) => p.seating)}
                   value={info.dealIn}
@@ -263,33 +289,11 @@ export function GameEntrySelector({
           Save entry
         </button>
         <ExportResult />
-        <Popover2
-          popoverClassName={Classes.POPOVER2_CONTENT_SIZING}
-          content={
-            <div className="container">
-              <h5>Confirm deletion</h5>
-              <p>
-                Are you sure you want to delete these items? You won&apos;t be
-                able to recover them.
-              </p>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  marginTop: 15,
-                }}
-              >
-                <button className="btn btn-primary button-delete">
-                  Delete
-                </button>
-              </div>
-            </div>
-          }
-        >
-          <button type="submit" className="btn btn-secondary">
+        <OverlayTrigger trigger="click" overlay={popover}>
+          <button type="submit" className="btn btn-primary">
             Next game!
           </button>
-        </Popover2>
+        </OverlayTrigger>
       </div>
     </>
   );
