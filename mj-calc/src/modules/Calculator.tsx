@@ -66,7 +66,9 @@ export default function Calculator() {
                   setViewFile(json!);
                   setViewOnly(true);
                   setNamesReady(true);
-                } catch (error) {}
+                } catch (error) {
+                  alert("Failed to parse result file.");
+                }
                 console.log(json);
               };
             }}

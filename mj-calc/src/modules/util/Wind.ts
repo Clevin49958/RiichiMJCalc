@@ -1,6 +1,6 @@
 export type WindNumber = 0 | 1 | 2 | 3;
 
-/**Number of Players */
+/** Number of Players */
 export type NP = 2 | 3 | 4;
 
 export function getWind(windNum: WindNumber) {
@@ -19,8 +19,9 @@ export function getWind(windNum: WindNumber) {
       return "西";
     case 3:
       return "北";
-    default:
+    default: {
       const _exhaustiveCheck: never = windNum;
       return _exhaustiveCheck;
+    }
   }
 }
