@@ -203,9 +203,7 @@ export function CalculatorCore({
             onTouchEnd={() => setDisplayDelta(-1)}
           >
             <span
-              className={`${tabletopMode ? "fs-3" : ""} ${
-                getDealer(gameStatus) === player.seating ? "fw-bold" : ""
-              }`}
+              className={`${tabletopMode ? "fs-3" : ""}`}
               style={{
                 color: getDealer(gameStatus) === player.seating ? "red" : "",
               }}
