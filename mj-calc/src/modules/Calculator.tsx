@@ -12,7 +12,7 @@ export default function Calculator() {
 
   const [playerNames, setPlayerNames] = useLocalStorage<string[]>(
     "names",
-    (Array.from(Array(DEFAULT_N_PLAYERS).keys()) as WindNumber[]).map(getWind),
+    (Array.from(Array(DEFAULT_N_PLAYERS).keys()) as WindNumber[]).map(getWind)
   );
 
   const [namesReady, setNamesReady] = useState(false);
@@ -37,13 +37,15 @@ export default function Calculator() {
     />
   ) : (
     <>
-      <StartUp
-        numPlayers={numPlayers}
-        playerNames={playerNames}
-        setNumPlayers={setNumPlayers}
-        setPlayerNames={setPlayerNames}
-        setNamesReady={setNamesReady}
-      />
+      <div className="d-flex flex-column align-items-center">
+        <StartUp
+          numPlayers={numPlayers}
+          playerNames={playerNames}
+          setNumPlayers={setNumPlayers}
+          setPlayerNames={setPlayerNames}
+          setNamesReady={setNamesReady}
+        />
+      </div>
       <div className="container" style={{ maxWidth: "380px" }}>
         <label className="form-label center-block" style={{ display: "block" }}>
           <h5>View an exported game here:</h5>
