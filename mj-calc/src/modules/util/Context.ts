@@ -1,5 +1,4 @@
-import React from "react";
-import { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { GameStatus } from "./GameStatus";
 import { IPlayerTable } from "./IPlayer";
 import { IRecord } from "./IRecord";
@@ -26,7 +25,7 @@ const GameContext = React.createContext<IGameContext>({
   },
   setGameStatus: (value: SetStateAction<GameStatus>) => {
     throw new Error(
-      "Not implemented error. \nUsing setGameStatus from uninitialised context."
+      "Not implemented error. \nUsing setGameStatus from uninitialised context.",
     );
   },
   players: (Array.from(Array(_np).keys()) as WindNumber[]).map((value) => ({
@@ -36,7 +35,7 @@ const GameContext = React.createContext<IGameContext>({
   })),
   setPlayers: (value: SetStateAction<IPlayerTable>) => {
     throw new Error(
-      "Not implemented error. \nUsing setPlayers from uninitialised context."
+      "Not implemented error. \nUsing setPlayers from uninitialised context.",
     );
   },
   records: [],

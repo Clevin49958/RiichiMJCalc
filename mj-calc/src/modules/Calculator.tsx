@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { getWind, NP, WindNumber } from "./util/Wind";
 import { CalculatorCore } from "./CalculatorCore";
 import { StartUp } from "./Startup";
@@ -22,22 +22,30 @@ export default function Calculator() {
 
   const gameReady = namesReady;
 
+  const onNextGame = useCallback((names: string[]) => {
+    setPlayerNames(names);
+    setNamesReady(false);
+  }, []);
+
   return gameReady ? (
     <CalculatorCore
       n={numPlayers}
       playerNames={playerNames.slice(0, numPlayers)}
       viewOnly={viewOnly}
       state={viewFile}
+      onNextGame={onNextGame}
     />
   ) : (
     <>
-      <StartUp
-        numPlayers={numPlayers}
-        playerNames={playerNames}
-        setNumPlayers={setNumPlayers}
-        setPlayerNames={setPlayerNames}
-        setNamesReady={setNamesReady}
-      />
+      <div className="d-flex flex-column align-items-center">
+        <StartUp
+          numPlayers={numPlayers}
+          playerNames={playerNames}
+          setNumPlayers={setNumPlayers}
+          setPlayerNames={setPlayerNames}
+          setNamesReady={setNamesReady}
+        />
+      </div>
       <div className="container" style={{ maxWidth: "380px" }}>
         <label className="form-label center-block" style={{ display: "block" }}>
           <h5>View an exported game here:</h5>
@@ -60,7 +68,9 @@ export default function Calculator() {
                   setViewFile(json!);
                   setViewOnly(true);
                   setNamesReady(true);
-                } catch (error) {}
+                } catch (error) {
+                  alert("Failed to parse result file.");
+                }
                 console.log(json);
               };
             }}

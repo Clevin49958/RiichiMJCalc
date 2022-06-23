@@ -31,10 +31,6 @@ function PlayerInputCell({
       prevName.current = player;
     }
   }, [player]);
-
-  if (seating === 1) {
-    console.log([player, prevName.current, playerNameInput]);
-  }
   return (
     <input
       aria-label="Player Name"
@@ -127,7 +123,12 @@ export function StartUp({
 
   return (
     <React.Fragment>
-      <h1 style={{ textAlign: "center" }}>Please enter players' names</h1>
+      <img
+        src="/Header.jpg"
+        style={{ maxHeight: "100%", maxWidth: "100%" }}
+        className="mb-4"
+      />
+      <h1 style={{ textAlign: "center" }}>Please enter players&apos; names</h1>
       <PlayerTable<string>
         playerTable={playerNames}
         playerCell={PlayerCell}

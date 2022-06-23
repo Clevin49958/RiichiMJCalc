@@ -7,6 +7,7 @@ import { ExportResult } from "./SaveResult";
 import { WinRecord } from "../util/IRecord";
 import { DEFAULT_FAN, DEFAULT_FU, DEFAULT_PLAYER } from "../util/Constants";
 import GameContext from "../util/Context";
+import { OverlayTrigger, Popover } from "react-bootstrap";
 
 interface GameEntrySelectorProps {
   endingType: string;
@@ -17,6 +18,7 @@ interface GameEntrySelectorProps {
   tenpai: boolean[];
   setTenpai: Dispatch<SetStateAction<boolean[]>>;
   saveEntry: () => void;
+  onNextGame: () => void;
   isReady: boolean;
 }
 
@@ -30,6 +32,7 @@ export function GameEntrySelector({
   setTenpai,
   saveEntry,
   isReady,
+  onNextGame,
 }: GameEntrySelectorProps) {
   const gameContext = useContext(GameContext);
   const fans = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 26, 39, 52, 65, 78];
@@ -63,7 +66,7 @@ export function GameEntrySelector({
         };
         return newInfo;
       });
-    const setDealIn = (dealIn: WindNumber, idx: number) =>
+    const setDealIn = (dealIn: WindNumber, _idx: number) =>
       setWinInfo((winInfo) =>
         winInfo.map((info) => ({
           ...info,
@@ -72,6 +75,33 @@ export function GameEntrySelector({
       );
     return [setFan, setFu, setWinner, setDealIn];
   }, [setWinInfo]);
+
+  const popover = (
+    <Popover>
+      <Popover.Header as="h5">Confirmation</Popover.Header>
+      <Popover.Body>
+        <p>
+          Are you sure you want to start a new game? You won&apos;t be able to
+          recover them if you haven&apos;t save.
+        </p>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginTop: 15,
+          }}
+        >
+          <button
+            className="btn btn-success"
+            type="submit"
+            onClick={onNextGame}
+          >
+            Go!
+          </button>
+        </div>
+      </Popover.Body>
+    </Popover>
+  );
   return (
     <>
       <nav>
@@ -259,6 +289,11 @@ export function GameEntrySelector({
           Save entry
         </button>
         <ExportResult />
+        <OverlayTrigger trigger="click" overlay={popover}>
+          <button type="submit" className="btn btn-primary">
+            Next game!
+          </button>
+        </OverlayTrigger>
       </div>
     </>
   );

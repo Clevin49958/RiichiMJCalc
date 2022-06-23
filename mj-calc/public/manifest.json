@@ -1,21 +1,17 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "RichiiCalc",
+  "name": "Richii Mahjong Calculator",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "src": "Header.ico",
+      "sizes": "256x160",
       "type": "image/x-icon"
     },
+
     {
-      "src": "logo192.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "logo512.png",
-      "type": "image/png",
-      "sizes": "512x512"
+      "src": "Header.png",
+      "type": "image/jpg",
+      "sizes": "1720x1080"
     }
   ],
   "start_url": ".",

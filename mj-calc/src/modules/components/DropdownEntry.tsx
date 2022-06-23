@@ -30,6 +30,7 @@ export function DropdownEntry<T extends string | number>({
         options={options}
         isMulti={false}
         isClearable={false}
+        isSearchable={false}
         onChange={(newValue) => {
           setter(newValue!.value);
         }}

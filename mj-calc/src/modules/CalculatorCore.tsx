@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import PlayerTable from "./components/PlayerTable";
 import { IPlayerTable, IPlayer } from "./util/IPlayer";
 import { getWind, NP, WindNumber } from "./util/Wind";
@@ -26,7 +26,7 @@ import {
   DEFAULT_PLAYER,
   StickIconSize,
 } from "./util/Constants";
-import { includes } from "lodash";
+import { includes, maxBy } from "lodash";
 
 export function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
@@ -44,11 +44,13 @@ export function CalculatorCore({
   playerNames,
   viewOnly,
   state = null,
+  onNextGame,
 }: {
   n: NP;
   playerNames: string[];
   viewOnly: boolean;
   state: IGame | null;
+  onNextGame: (names: string[]) => void;
 }) {
   const [gameStatus, setGameStatus] = useState<GameStatus>(
     state?.gameStatus ?? {
@@ -89,6 +91,11 @@ export function CalculatorCore({
   };
 
   const [displayDelta, setDisplayDelta] = useState(-1);
+  const [tabletopMode, setTabletopMode] = useState(false);
+  const flipTabletopMode = useCallback(() => {
+    setTabletopMode((mode) => !mode);
+  }, [setTabletopMode]);
+  const orientation = tabletopMode ? displayDelta : -1;
 
   const playersScoreView = players.map((player) => ({
     ...player,
@@ -176,9 +183,18 @@ export function CalculatorCore({
   function PlayerInfoCell(player: IPlayer) {
     const richii = gameStatus.richii;
     const hasRichii = richii[player.seating];
+
+    const angle =
+      4 -
+      (tabletopMode ? (orientation === -1 ? player.seating : orientation) : 4);
     return (
-      <div className="container-fluid px-0">
-        <div className="row mb-2">
+      <div
+        className="container-fluid px-0"
+        style={{
+          transform: `rotate(${angle * 90}deg)`,
+        }}
+      >
+        <div className="row mb-2 no-select">
           <div
             className="col"
             onMouseDown={() => setDisplayDelta(player.seating)}
@@ -187,15 +203,17 @@ export function CalculatorCore({
             onTouchEnd={() => setDisplayDelta(-1)}
           >
             <span
+              className={`${tabletopMode ? "fs-3" : ""}`}
               style={{
                 color: getDealer(gameStatus) === player.seating ? "red" : "",
-                fontSize: "20px",
               }}
             >
               {player.name}
             </span>
             <br />
-            <span>{player.score}</span>
+            <span className={`${tabletopMode ? "fs-2" : ""}`}>
+              {player.score}
+            </span>
           </div>
         </div>
         <div className="row">
@@ -204,7 +222,9 @@ export function CalculatorCore({
               aria-label="Richii"
               type="button"
               style={{ backgroundColor: hasRichii ? "transparent" : "" }}
-              className={`btn ${hasRichii ? "p-0" : "btn-primary"}  border-0`}
+              className={`btn ${hasRichii ? "p-0" : "btn-primary"} ${
+                tabletopMode ? "" : "btn-sm"
+              } border-0`}
               onClick={() => flipPlayerRichii(player.seating)}
             >
               {hasRichii ? RichiiStick(StickIconSize) : <span>Richii!</span>}
@@ -215,27 +235,28 @@ export function CalculatorCore({
     );
   }
 
-  const rewindButton = () => {
-    function rewind() {
-      if (!prevGameStatus.current) {
-        return;
-      }
-
-      // reset player score
-      players.forEach((player) => {
-        player.score = player.lastScore!;
-        player.lastScore = undefined;
-      });
-
-      setGameStatus({
-        ...prevGameStatus.current,
-      });
-      prevGameStatus.current = undefined;
-
-      setPlayers([...players]);
-      gameRecord.pop();
+  const rewind = useCallback(() => {
+    if (!prevGameStatus.current) {
+      return;
     }
-    return (
+
+    // reset player score
+    players.forEach((player) => {
+      player.score = player.lastScore!;
+      player.lastScore = undefined;
+    });
+
+    setGameStatus({
+      ...prevGameStatus.current,
+    });
+    prevGameStatus.current = undefined;
+
+    setPlayers([...players]);
+    gameRecord.pop();
+  }, [players]);
+
+  const rewindButton = useMemo(
+    () => (
       <button
         type="button"
         aria-label="rewind"
@@ -245,8 +266,33 @@ export function CalculatorCore({
       >
         Rewind
       </button>
+    ),
+    []
+  );
+
+  const switchTabletopModeButton = useMemo(
+    () => (
+      <button
+        type="button"
+        aria-label="switch tabletop mode"
+        className="btn btn-light"
+        onClick={flipTabletopMode}
+      >
+        {tabletopMode ? "Tabletop mode" : "Display mode"}
+      </button>
+    ),
+    [tabletopMode]
+  );
+
+  const onNextGameMemo = useCallback(() => {
+    const highestPlayerIndex = (
+      maxBy(players, (player) => player.score) ?? players[0]
+    ).seating;
+    const newPlayerNames = players.map(
+      (_player, idx, players) => players[(idx + highestPlayerIndex) % n].name
     );
-  };
+    onNextGame(newPlayerNames);
+  }, []);
 
   return (
     <GameContext.Provider
@@ -259,18 +305,17 @@ export function CalculatorCore({
       }}
     >
       <div className="container">
-        {/* <Header /> */}
-        <React.Fragment>
-          <div className="row">
-            <div className="col col-12">
-              <PlayerTable
-                playerTable={playersScoreView}
-                playerCell={PlayerInfoCell}
-                centerCell={() => GameStatusCenterCell(gameStatus)}
-                RBCell={rewindButton()}
-              />
-            </div>
+        <div className="d-flex flex-column">
+          <div className="container-fluid" style={{ maxWidth: "500px" }}>
+            <PlayerTable
+              playerTable={playersScoreView}
+              playerCell={PlayerInfoCell}
+              centerCell={() => GameStatusCenterCell(gameStatus)}
+              RBCell={rewindButton}
+              LTCell={switchTabletopModeButton}
+            />
           </div>
+
           {viewOnly || (
             <div className="row">
               <div className="col col-12">
@@ -284,31 +329,20 @@ export function CalculatorCore({
                   setTenpai={setTenpai}
                   saveEntry={saveEntry}
                   isReady={isReady}
+                  onNextGame={onNextGameMemo}
                 />
               </div>
             </div>
           )}
-          <div className="row">
-            <div className="col col-12">
-              <RoundHistory records={gameRecord} players={players} />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col col-12">
-              <FinalPoints startingPoint={STARTING_POINT[4 - n]} />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col col-12">
-              <PointsPlot
-                players={players}
-                gameRecord={gameRecord}
-                startingPoint={startingPoint}
-                gameStatus={gameStatus}
-              />
-            </div>
-          </div>
-        </React.Fragment>
+          <RoundHistory records={gameRecord} players={players} />
+          <FinalPoints startingPoint={STARTING_POINT[4 - n]} />
+          <PointsPlot
+            players={players}
+            gameRecord={gameRecord}
+            startingPoint={startingPoint}
+            gameStatus={gameStatus}
+          />
+        </div>
       </div>
     </GameContext.Provider>
   );
