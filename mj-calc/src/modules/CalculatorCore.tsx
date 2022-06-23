@@ -60,7 +60,7 @@ export function CalculatorCore({
       honba: STARTING_HONBA,
       richiiStick: 0,
       richii: Array(n).fill(false),
-    },
+    }
   );
 
   const prevGameStatus = useRef<GameStatus | undefined>();
@@ -71,7 +71,7 @@ export function CalculatorCore({
         name: playerNames[seating],
         seating: seating,
         score: startingPoint,
-      })) as IPlayerTable),
+      })) as IPlayerTable)
   );
 
   const [winInfo, setWinInfo] = useState<WinRecord[]>([
@@ -160,8 +160,8 @@ export function CalculatorCore({
       nextGameStatus(
         endingType === "Win" ? winInfo.map((record) => record.winner) : null,
         tenpai[getDealer(gameStatus)],
-        gameStatus,
-      ),
+        gameStatus
+      )
     );
     resetWinState();
   };
@@ -203,15 +203,19 @@ export function CalculatorCore({
             onTouchEnd={() => setDisplayDelta(-1)}
           >
             <span
+              className={`${tabletopMode ? "fs-3" : ""} ${
+                getDealer(gameStatus) === player.seating ? "fw-bold" : ""
+              }`}
               style={{
                 color: getDealer(gameStatus) === player.seating ? "red" : "",
-                fontSize: "20px",
               }}
             >
               {player.name}
             </span>
             <br />
-            <span>{player.score}</span>
+            <span className={`${tabletopMode ? "fs-2" : ""}`}>
+              {player.score}
+            </span>
           </div>
         </div>
         <div className="row">
@@ -220,7 +224,9 @@ export function CalculatorCore({
               aria-label="Richii"
               type="button"
               style={{ backgroundColor: hasRichii ? "transparent" : "" }}
-              className={`btn ${hasRichii ? "p-0" : "btn-primary"}  border-0`}
+              className={`btn ${hasRichii ? "p-0" : "btn-primary"} ${
+                tabletopMode ? "" : "btn-sm"
+              } border-0`}
               onClick={() => flipPlayerRichii(player.seating)}
             >
               {hasRichii ? RichiiStick(StickIconSize) : <span>Richii!</span>}
@@ -263,7 +269,7 @@ export function CalculatorCore({
         Rewind
       </button>
     ),
-    [],
+    []
   );
 
   const switchTabletopModeButton = useMemo(
@@ -277,7 +283,7 @@ export function CalculatorCore({
         {tabletopMode ? "Tabletop mode" : "Display mode"}
       </button>
     ),
-    [tabletopMode],
+    [tabletopMode]
   );
 
   const onNextGameMemo = useCallback(() => {
@@ -285,7 +291,7 @@ export function CalculatorCore({
       maxBy(players, (player) => player.score) ?? players[0]
     ).seating;
     const newPlayerNames = players.map(
-      (_player, idx, players) => players[(idx + highestPlayerIndex) % n].name,
+      (_player, idx, players) => players[(idx + highestPlayerIndex) % n].name
     );
     onNextGame(newPlayerNames);
   }, []);
@@ -347,7 +353,7 @@ export function CalculatorCore({
 export function nextGameStatus(
   winner: null | WindNumber[],
   isDealerTenpai: boolean,
-  gameStatus: GameStatus,
+  gameStatus: GameStatus
 ) {
   // update honba
   if (winner === null) {
