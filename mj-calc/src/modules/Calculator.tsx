@@ -29,7 +29,7 @@ import {
 export function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
   return (
-    <div style={{ textAlign: "center" }}>
+    <div className="no-select" style={{ textAlign: "center" }}>
       {`${getWind(gameStatus.wind)} ${gameStatus.round}`} <br />
       {`${gameStatus.honba}`} {HonbaStick(StickIconSize)}
       <br />
@@ -172,48 +172,53 @@ export function CalculatorCore({
       (tabletopMode ? (orientation === -1 ? player.seating : orientation) : 4);
     return (
       <div
-        className="container-fluid px-0"
+        className={`d-flex flex-column p-0 no-select justify-content-center align-items-center ${
+          tabletopMode ? "" : "m-3"
+        }`}
         style={{
           transform: `rotate(${angle * 90}deg)`,
+          height: tabletopMode ? "33.3vh" : undefined,
+          width: tabletopMode
+            ? angle % 2 === 1
+              ? "33.3vh"
+              : "33.3vw"
+            : undefined,
         }}
       >
-        <div className="row mb-2 no-select">
-          <div
-            className="col"
-            onMouseDown={() => setDisplayDelta(player.seating)}
-            onTouchStart={() => setDisplayDelta(player.seating)}
-            onMouseUp={() => setDisplayDelta(-1)}
-            onTouchEnd={() => setDisplayDelta(-1)}
+        <div
+          className="mb-2"
+          onMouseDown={() => setDisplayDelta(player.seating)}
+          onTouchStart={() => setDisplayDelta(player.seating)}
+          onMouseUp={() => setDisplayDelta(-1)}
+          onTouchEnd={() => setDisplayDelta(-1)}
+        >
+          <span
+            className={`${tabletopMode ? "fs-1" : ""}`}
+            style={{
+              color: getDealer(gameStatus) === player.seating ? "red" : "",
+            }}
           >
-            <span
-              className={`${tabletopMode ? "fs-3" : ""}`}
-              style={{
-                color: getDealer(gameStatus) === player.seating ? "red" : "",
-              }}
-            >
-              {player.name}
-            </span>
-            <br />
-            <span className={`${tabletopMode ? "fs-2" : ""}`}>
-              {player.score}
-            </span>
-          </div>
+            {player.name}
+          </span>
+          <br />
+          <span className={`${tabletopMode ? "fs-1" : ""}`}>
+            {player.score}
+          </span>
         </div>
-        <div className="row">
-          <div className="col">
-            <button
-              aria-label="Richii"
-              type="button"
-              style={{ backgroundColor: hasRichii ? "transparent" : "" }}
-              className={`btn ${hasRichii ? "p-0" : "btn-primary"} ${
-                tabletopMode ? "" : "btn-sm"
-              } border-0`}
-              onClick={() => flipPlayerRichii(player.seating)}
-            >
-              {hasRichii ? RichiiStick(StickIconSize) : <span>Richii!</span>}
-            </button>
-          </div>
-        </div>
+        <button
+          aria-label="Richii"
+          type="button"
+          style={{
+            backgroundColor: hasRichii ? "transparent" : "",
+            width: tabletopMode ? "50%" : undefined,
+          }}
+          className={`btn ${hasRichii ? "p-0" : "btn-primary"} ${
+            tabletopMode ? "" : "btn-sm"
+          } border-0`}
+          onClick={() => flipPlayerRichii(player.seating)}
+        >
+          {hasRichii ? RichiiStick(StickIconSize) : <span>Richii!</span>}
+        </button>
       </div>
     );
   }
@@ -278,44 +283,46 @@ export function CalculatorCore({
   }, [n, onNextGame, players]);
 
   return (
-    <div className="container">
+    <div className={`p-0 container${tabletopMode ? "-fluid" : ""}`}>
       <div className="d-flex flex-column">
-        <div className="container-fluid" style={{ maxWidth: "500px" }}>
-          <PlayerTable
-            playerTable={playersScoreView}
-            playerCell={PlayerInfoCell}
-            centerCell={() => GameStatusCenterCell(gameStatus)}
-            RBCell={rewindButton}
-            LTCell={switchTabletopModeButton}
-          />
-        </div>
-
-        {viewOnly || (
-          <div className="row">
-            <div className="col col-12">
-              <GameEntrySelector
-                endingType={endingType}
-                setEndingType={setEndingType}
-                players={players}
-                winInfo={winInfo}
-                setWinInfo={setWinInfo}
-                tenpai={tenpai}
-                setTenpai={setTenpai}
-                saveEntry={saveEntry}
-                isReady={isReady}
-                onNextGame={onNextGameMemo}
-              />
-            </div>
-          </div>
-        )}
-        <RoundHistory records={gameRecord} players={players} />
-        <FinalPoints startingPoint={STARTING_POINT[4 - n]} />
-        <PointsPlot
-          players={players}
-          gameRecord={gameRecord}
-          startingPoint={startingPoint}
-          gameStatus={gameStatus}
+        <PlayerTable
+          playerTable={playersScoreView}
+          playerCell={PlayerInfoCell}
+          centerCell={() => GameStatusCenterCell(gameStatus)}
+          RBCell={rewindButton}
+          LTCell={switchTabletopModeButton}
+          tableTopMode={tabletopMode}
         />
+        {!tabletopMode && (
+          <>
+            {viewOnly || (
+              <div className="row">
+                <div className="col col-12">
+                  <GameEntrySelector
+                    endingType={endingType}
+                    setEndingType={setEndingType}
+                    players={players}
+                    winInfo={winInfo}
+                    setWinInfo={setWinInfo}
+                    tenpai={tenpai}
+                    setTenpai={setTenpai}
+                    saveEntry={saveEntry}
+                    isReady={isReady}
+                    onNextGame={onNextGameMemo}
+                  />
+                </div>
+              </div>
+            )}
+            <RoundHistory records={gameRecord} players={players} />
+            <FinalPoints startingPoint={STARTING_POINT[4 - n]} />
+            <PointsPlot
+              players={players}
+              gameRecord={gameRecord}
+              startingPoint={startingPoint}
+              gameStatus={gameStatus}
+            />
+          </>
+        )}
       </div>
     </div>
   );
