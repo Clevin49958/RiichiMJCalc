@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 
 import { getWind, NP, WindNumber } from "./util/Wind";
-import { CalculatorCore } from "./CalculatorCore";
+import { CalculatorCore } from "./Calculator";
 import { StartUp } from "./NameInputGrid";
 import IGame from "./util/IGame";
 import { useLocalStorage } from "./util/useLocalStorage";
