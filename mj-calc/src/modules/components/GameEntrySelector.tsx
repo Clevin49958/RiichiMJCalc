@@ -6,7 +6,7 @@ import { DropdownEntry } from "./DropdownEntry";
 import { ExportResult } from "./SaveResult";
 import { WinRecord } from "../util/IRecord";
 import { DEFAULT_FAN, DEFAULT_FU, DEFAULT_PLAYER } from "../util/Constants";
-import GameContext from "../util/Context";
+import GameContext from "../context/GameContext";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 
 interface GameEntrySelectorProps {

@@ -5,6 +5,7 @@ import { CalculatorCore } from "./CalculatorCore";
 import { StartUp } from "./Startup";
 import IGame from "./util/IGame";
 import { useLocalStorage } from "./util/useLocalStorage";
+import { GameContextProvider } from "./context/GameContextProvider";
 
 const DEFAULT_N_PLAYERS = 4;
 
@@ -20,7 +21,7 @@ export default function Calculator() {
   const [namesReady, setNamesReady] = useState(false);
 
   const [viewOnly, setViewOnly] = useState(false);
-  const [viewFile, setViewFile] = useState<IGame | null>(null);
+  const [viewFile, setViewFile] = useState<IGame | undefined>(undefined);
 
   const gameReady = namesReady;
 
@@ -33,13 +34,13 @@ export default function Calculator() {
   );
 
   return gameReady ? (
-    <CalculatorCore
+    <GameContextProvider
       n={numPlayers}
       playerNames={playerNames.slice(0, numPlayers)}
-      viewOnly={viewOnly}
       state={viewFile}
-      onNextGame={onNextGame}
-    />
+    >
+      <CalculatorCore viewOnly={viewOnly} onNextGame={onNextGame} />
+    </GameContextProvider>
   ) : (
     <>
       <div className="d-flex flex-column align-items-center">
@@ -66,17 +67,16 @@ export default function Calculator() {
               fileReader.readAsText(file);
               fileReader.onload = (event) => {
                 const stringContent = event.target?.result?.toString() ?? "";
-                let json = null;
                 try {
-                  json = JSON.parse(stringContent);
+                  const json = JSON.parse(stringContent);
                   // TODO: Maybe verify for json content?
                   setViewFile(json!);
                   setViewOnly(true);
                   setNamesReady(true);
+                  console.log(json);
                 } catch (error) {
                   alert("Failed to parse result file.");
                 }
-                console.log(json);
               };
             }}
           />

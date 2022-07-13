@@ -1,4 +1,4 @@
-import GameContext from "../util/Context";
+import GameContext from "../context/GameContext";
 import { useContext, useState } from "react";
 import Select from "react-select/";
 

@@ -1,4 +1,4 @@
-import GameContext from "../util/Context";
+import GameContext from "../context/GameContext";
 import { GameStatus } from "../util/GameStatus";
 import IGame from "../util/IGame";
 import { IPlayerTable } from "../util/IPlayer";

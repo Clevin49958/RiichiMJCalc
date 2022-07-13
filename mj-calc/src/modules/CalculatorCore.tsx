@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useContext, useMemo, useRef, useState } from "react";
 import { includes, maxBy } from "lodash";
 
 import PlayerTable from "./components/PlayerTable";
@@ -15,7 +15,7 @@ import { HonbaStick, RichiiStick } from "./Icons";
 import { IRecord, WinRecord } from "./util/IRecord";
 import RoundHistory from "./components/RoundHistory";
 import { GameEntrySelector } from "./components/GameEntrySelector";
-import GameContext from "./util/Context";
+import GameContext from "./context/GameContext";
 import FinalPoints from "./components/FinalPoints";
 import IGame from "./util/IGame";
 import { PointsPlot } from "./components/PointsPlot";
@@ -41,39 +41,25 @@ export function GameStatusCenterCell(gameStatus: GameStatus) {
   );
 }
 export function CalculatorCore({
-  n,
-  playerNames,
   viewOnly,
-  state = null,
   onNextGame,
 }: {
-  n: NP;
-  playerNames: string[];
   viewOnly: boolean;
-  state: IGame | null;
   onNextGame: (names: string[]) => void;
 }) {
-  const [gameStatus, setGameStatus] = useState<GameStatus>(
-    state?.gameStatus ?? {
-      numPlayers: n,
-      wind: STARTING_WIND,
-      round: 1,
-      honba: STARTING_HONBA,
-      richiiStick: 0,
-      richii: Array(n).fill(false),
-    }
-  );
+  const {
+    gameStatus,
+    setGameStatus,
+    players,
+    setPlayers,
+    records: gameRecord,
+    setRecords: setGameRecord,
+  } = useContext(GameContext);
+
+  const n = gameStatus.numPlayers;
 
   const prevGameStatus = useRef<GameStatus | undefined>();
   const startingPoint = STARTING_POINT[4 - n];
-  const [players, setPlayers] = useState<IPlayerTable>(
-    state?.players ??
-      ((Array.from(Array(n).keys()) as WindNumber[]).map((seating) => ({
-        name: playerNames[seating],
-        seating,
-        score: startingPoint,
-      })) as IPlayerTable)
-  );
 
   const [winInfo, setWinInfo] = useState<WinRecord[]>([
     {
@@ -85,7 +71,6 @@ export function CalculatorCore({
   ]);
   const [tenpai, setTenpai] = useState<boolean[]>(Array(n).fill(false));
   const [endingType, setEndingType] = useState<"Win" | "Draw">("Win");
-  const [gameRecord, setGameRecord] = useState<IRecord[]>(state?.records ?? []);
 
   const pushRecord = (record: IRecord) => {
     setGameRecord([...gameRecord, record]);
@@ -307,48 +292,46 @@ export function CalculatorCore({
   );
 
   return (
-    <GameContext.Provider value={gameContext}>
-      <div className="container">
-        <div className="d-flex flex-column">
-          <div className="container-fluid" style={{ maxWidth: "500px" }}>
-            <PlayerTable
-              playerTable={playersScoreView}
-              playerCell={PlayerInfoCell}
-              centerCell={() => GameStatusCenterCell(gameStatus)}
-              RBCell={rewindButton}
-              LTCell={switchTabletopModeButton}
-            />
-          </div>
-
-          {viewOnly || (
-            <div className="row">
-              <div className="col col-12">
-                <GameEntrySelector
-                  endingType={endingType}
-                  setEndingType={setEndingType}
-                  players={players}
-                  winInfo={winInfo}
-                  setWinInfo={setWinInfo}
-                  tenpai={tenpai}
-                  setTenpai={setTenpai}
-                  saveEntry={saveEntry}
-                  isReady={isReady}
-                  onNextGame={onNextGameMemo}
-                />
-              </div>
-            </div>
-          )}
-          <RoundHistory records={gameRecord} players={players} />
-          <FinalPoints startingPoint={STARTING_POINT[4 - n]} />
-          <PointsPlot
-            players={players}
-            gameRecord={gameRecord}
-            startingPoint={startingPoint}
-            gameStatus={gameStatus}
+    <div className="container">
+      <div className="d-flex flex-column">
+        <div className="container-fluid" style={{ maxWidth: "500px" }}>
+          <PlayerTable
+            playerTable={playersScoreView}
+            playerCell={PlayerInfoCell}
+            centerCell={() => GameStatusCenterCell(gameStatus)}
+            RBCell={rewindButton}
+            LTCell={switchTabletopModeButton}
           />
         </div>
+
+        {viewOnly || (
+          <div className="row">
+            <div className="col col-12">
+              <GameEntrySelector
+                endingType={endingType}
+                setEndingType={setEndingType}
+                players={players}
+                winInfo={winInfo}
+                setWinInfo={setWinInfo}
+                tenpai={tenpai}
+                setTenpai={setTenpai}
+                saveEntry={saveEntry}
+                isReady={isReady}
+                onNextGame={onNextGameMemo}
+              />
+            </div>
+          </div>
+        )}
+        <RoundHistory records={gameRecord} players={players} />
+        <FinalPoints startingPoint={STARTING_POINT[4 - n]} />
+        <PointsPlot
+          players={players}
+          gameRecord={gameRecord}
+          startingPoint={startingPoint}
+          gameStatus={gameStatus}
+        />
       </div>
-    </GameContext.Provider>
+    </div>
   );
 }
 
