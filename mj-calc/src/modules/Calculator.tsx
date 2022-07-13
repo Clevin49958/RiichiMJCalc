@@ -3,7 +3,7 @@ import { includes, maxBy } from "lodash";
 
 import PlayerTable from "./components/PlayerTable";
 import { IPlayerTable, IPlayer } from "./util/IPlayer";
-import { getWind, NP, WindNumber } from "./util/Wind";
+import { getWind, WindNumber } from "./util/Wind";
 import { GameStatus, incrementRound, IRichii } from "./util/GameStatus";
 import {
   applyScoreChange,
@@ -17,12 +17,9 @@ import RoundHistory from "./components/RoundHistory";
 import { GameEntrySelector } from "./components/GameEntrySelector";
 import GameContext from "./context/GameContext";
 import FinalPoints from "./components/FinalPoints";
-import IGame from "./util/IGame";
 import { PointsPlot } from "./components/PointsPlot";
 import {
-  STARTING_HONBA,
   STARTING_POINT,
-  STARTING_WIND,
   DEFAULT_FAN,
   DEFAULT_FU,
   DEFAULT_PLAYER,
@@ -77,10 +74,10 @@ export function CalculatorCore({
   };
 
   const [displayDelta, setDisplayDelta] = useState(-1);
-  const [tabletopMode, setTabletopMode] = useState(false);
+  const [tabletopMode, _setTabletopMode] = useState(false);
   const flipTabletopMode = useCallback(() => {
-    setTabletopMode((mode) => !mode);
-  }, [setTabletopMode]);
+    _setTabletopMode((mode) => !mode);
+  }, [_setTabletopMode]);
   const orientation = tabletopMode ? displayDelta : -1;
 
   const playersScoreView = players.map((player) => ({
@@ -279,17 +276,6 @@ export function CalculatorCore({
     );
     onNextGame(newPlayerNames);
   }, [n, onNextGame, players]);
-
-  const gameContext = useMemo(
-    () => ({
-      gameStatus,
-      players,
-      setGameStatus,
-      setPlayers,
-      records: gameRecord,
-    }),
-    [gameRecord, gameStatus, players]
-  );
 
   return (
     <div className="container">

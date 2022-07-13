@@ -11,16 +11,10 @@ import { IRecord } from "../util/IRecord";
 import { NP, WindNumber } from "../util/Wind";
 import GameContext from "./GameContext";
 
-interface LoadedGameProps {
-  state: IGame;
-}
-
-interface NewGameProps {
+type GameContextProps = {
   n: NP;
   playerNames: string[];
-}
-
-type GameContextProps = (LoadedGameProps | NewGameProps) & {
+  state?: IGame;
   children: ReactNode;
 };
 
@@ -28,7 +22,7 @@ export function GameContextProvider({ children, ...props }: GameContextProps) {
   let initialGameStatus: GameStatus;
   let initialPlayers: IPlayerTable;
   let initialRecord: IRecord[] = [];
-  if ("state" in props) {
+  if (props.state) {
     initialGameStatus = props.state.gameStatus;
     initialPlayers = props.state.players;
     initialRecord = props.state.records;
