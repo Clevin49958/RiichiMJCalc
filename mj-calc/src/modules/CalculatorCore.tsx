@@ -1,4 +1,6 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { includes, maxBy } from "lodash";
+
 import PlayerTable from "./components/PlayerTable";
 import { IPlayerTable, IPlayer } from "./util/IPlayer";
 import { getWind, NP, WindNumber } from "./util/Wind";
@@ -26,7 +28,6 @@ import {
   DEFAULT_PLAYER,
   StickIconSize,
 } from "./util/Constants";
-import { includes, maxBy } from "lodash";
 
 export function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
@@ -69,7 +70,7 @@ export function CalculatorCore({
     state?.players ??
       ((Array.from(Array(n).keys()) as WindNumber[]).map((seating) => ({
         name: playerNames[seating],
-        seating: seating,
+        seating,
         score: startingPoint,
       })) as IPlayerTable)
   );
@@ -135,7 +136,7 @@ export function CalculatorCore({
     applyScoreChange(players, deltas);
     setPlayers([...players]);
     const record: Omit<IRecord, "info" | "type"> = {
-      deltas: deltas,
+      deltas,
       wind: gameStatus.wind,
       round: gameStatus.round,
       honba: gameStatus.honba,
@@ -151,7 +152,7 @@ export function CalculatorCore({
         ...record,
         type: endingType,
         info: {
-          tenpai: tenpai,
+          tenpai,
         },
       });
     }
@@ -253,7 +254,7 @@ export function CalculatorCore({
 
     setPlayers([...players]);
     gameRecord.pop();
-  }, [players]);
+  }, [players, gameRecord]);
 
   const rewindButton = useMemo(
     () => (
@@ -267,7 +268,7 @@ export function CalculatorCore({
         Rewind
       </button>
     ),
-    []
+    [rewind]
   );
 
   const switchTabletopModeButton = useMemo(
@@ -281,7 +282,7 @@ export function CalculatorCore({
         {tabletopMode ? "Tabletop mode" : "Display mode"}
       </button>
     ),
-    [tabletopMode]
+    [flipTabletopMode, tabletopMode]
   );
 
   const onNextGameMemo = useCallback(() => {
@@ -292,18 +293,21 @@ export function CalculatorCore({
       (_player, idx, players) => players[(idx + highestPlayerIndex) % n].name
     );
     onNextGame(newPlayerNames);
-  }, []);
+  }, [n, onNextGame, players]);
+
+  const gameContext = useMemo(
+    () => ({
+      gameStatus,
+      players,
+      setGameStatus,
+      setPlayers,
+      records: gameRecord,
+    }),
+    [gameRecord, gameStatus, players]
+  );
 
   return (
-    <GameContext.Provider
-      value={{
-        gameStatus,
-        players,
-        setGameStatus,
-        setPlayers,
-        records: gameRecord,
-      }}
-    >
+    <GameContext.Provider value={gameContext}>
       <div className="container">
         <div className="d-flex flex-column">
           <div className="container-fluid" style={{ maxWidth: "500px" }}>
