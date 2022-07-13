@@ -1,13 +1,15 @@
 import { useCallback, useState } from "react";
+
 import { getWind, NP, WindNumber } from "./util/Wind";
 import { CalculatorCore } from "./CalculatorCore";
 import { StartUp } from "./Startup";
 import IGame from "./util/IGame";
 import { useLocalStorage } from "./util/useLocalStorage";
 
+const DEFAULT_N_PLAYERS = 4;
+
 export default function Calculator() {
   // 3 or 4 players
-  const DEFAULT_N_PLAYERS = 4;
   const [numPlayers, setNumPlayers] = useState<NP>(DEFAULT_N_PLAYERS);
 
   const [playerNames, setPlayerNames] = useLocalStorage<string[]>(
@@ -22,10 +24,13 @@ export default function Calculator() {
 
   const gameReady = namesReady;
 
-  const onNextGame = useCallback((names: string[]) => {
-    setPlayerNames(names);
-    setNamesReady(false);
-  }, []);
+  const onNextGame = useCallback(
+    (names: string[]) => {
+      setPlayerNames(names);
+      setNamesReady(false);
+    },
+    [setPlayerNames]
+  );
 
   return gameReady ? (
     <CalculatorCore
