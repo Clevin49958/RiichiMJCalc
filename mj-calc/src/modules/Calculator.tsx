@@ -26,6 +26,7 @@ import {
   StickIconSize,
 } from "./util/Constants";
 import { useGameManager } from "./hooks/useGameManager";
+import { useToggle } from "./hooks/useToggle";
 
 export function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
@@ -77,10 +78,7 @@ export function CalculatorCore({
   };
 
   const [displayDelta, setDisplayDelta] = useState(-1);
-  const [tabletopMode, _setTabletopMode] = useState(false);
-  const flipTabletopMode = useCallback(() => {
-    _setTabletopMode((mode) => !mode);
-  }, [_setTabletopMode]);
+  const [tabletopMode, toggleTabletopMode] = useToggle(false);
   const orientation = tabletopMode ? displayDelta : -1;
 
   const playersScoreView = players.map((player) => ({
@@ -260,12 +258,12 @@ export function CalculatorCore({
         type="button"
         aria-label="switch tabletop mode"
         className="btn btn-light"
-        onClick={flipTabletopMode}
+        onClick={toggleTabletopMode}
       >
         {tabletopMode ? "Tabletop mode" : "Display mode"}
       </button>
     ),
-    [flipTabletopMode, tabletopMode]
+    [toggleTabletopMode, tabletopMode]
   );
 
   const onNextGameMemo = useCallback(() => {
