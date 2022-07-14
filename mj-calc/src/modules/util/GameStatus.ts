@@ -1,17 +1,5 @@
-import { NP, WindNumber } from "./Wind";
-
-export type RoundNumber = 1 | 2 | 3 | 4;
-
-export type IRichii = boolean[];
-
-export interface GameStatus {
-  numPlayers: NP;
-  wind: WindNumber;
-  round: RoundNumber;
-  honba: number;
-  richiiStick: number;
-  richii: IRichii;
-}
+import { GameStatus, RoundNumber } from "../types/GameStatus";
+import { WindNumber } from "./Wind";
 
 export function incrementRound(gameStatus: GameStatus) {
   gameStatus.round = ((gameStatus.round % gameStatus.numPlayers) +

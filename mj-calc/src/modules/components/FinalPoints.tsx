@@ -1,6 +1,7 @@
-import GameContext from "../util/Context";
+import GameContext from "../context/GameContext";
 import { useContext, useState } from "react";
 import Select from "react-select/";
+import { STARTING_POINT } from "../util/Constants";
 
 interface Uma {
   label: string;
@@ -40,12 +41,9 @@ const AllOkaPresets = {
   2: [{ label: "0", oka: [0, 0] }],
 };
 
-export default function FinalPoints({
-  startingPoint,
-}: {
-  startingPoint: number;
-}) {
+export default function FinalPoints() {
   const { players, gameStatus } = useContext(GameContext);
+  const startingPoint = STARTING_POINT[4 - gameStatus.numPlayers];
   const umaPresets = AllUmaPresets[gameStatus.numPlayers];
   const okaPresets = AllOkaPresets[gameStatus.numPlayers];
   const [umaOption, setUmaOption] = useState(umaPresets[0]);

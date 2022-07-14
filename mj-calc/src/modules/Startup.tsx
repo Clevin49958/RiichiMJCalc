@@ -1,141 +1,90 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import PlayerTable from "./components/PlayerTable";
-import { NP, WindNumber } from "./util/Wind";
-import Select from "react-select/";
-import { ArrayType } from "./util/CustomType";
+import { useCallback, useState } from "react";
 
-function PlayerInputCell({
-  seating,
-  player,
-  setPlayers,
-  numPlayers,
-}: {
-  seating: WindNumber;
-  player: string;
-  setPlayers: Dispatch<SetStateAction<string[]>>;
-  numPlayers: NP;
-}) {
-  const [playerNameInput, setPlayerNameInput] = useState(player);
-  const prevName = useRef(player);
+import { getWind, NP, WindNumber } from "./util/Wind";
+import { Calculator } from "./Calculator";
+import { NameInputGrid } from "./components/NameInputGrid";
+import GameEntity from "./types/GameEntity";
+import { useLocalStorage } from "./hooks/useLocalStorage";
+import { GameContextProvider } from "./provider/GameContextProvider";
+import { ResultInputContextProvider } from "./provider/ResultInputContextProvider";
 
-  useEffect(() => {
-    if (prevName.current !== player) {
-      setPlayerNameInput(player);
-      prevName.current = player;
-    }
-  }, [player]);
-  return (
-    <input
-      aria-label="Player Name"
-      className="form-control table-item-player-number"
-      key={seating}
-      onChange={(event) => {
-        setPlayerNameInput(event.target.value);
-      }}
-      disabled={seating >= numPlayers}
-      onBlur={(_event) => {
-        setPlayers((players) => {
-          const newPlayerTable = [...players] as ArrayType<4, string>;
-          newPlayerTable[seating] = playerNameInput;
-          return newPlayerTable;
-        });
-      }}
-      value={playerNameInput}
-    />
-  );
-}
-export function StartUp({
-  numPlayers,
-  playerNames,
-  setNumPlayers,
-  setPlayerNames,
-  setNamesReady,
-}: {
-  numPlayers: NP;
-  playerNames: string[];
-  setNumPlayers: Dispatch<SetStateAction<NP>>;
-  setPlayerNames: Dispatch<SetStateAction<string[]>>;
-  setNamesReady: Dispatch<SetStateAction<boolean>>;
-}) {
-  const PlayerInputCenterCell = () => {
-    return (
-      <button
-        type="button"
-        className="btn btn-primary"
-        onClick={() => {
-          setNamesReady(true);
-        }}
-      >
-        Game start!
-      </button>
-    );
-  };
+const DEFAULT_N_PLAYERS = 4;
 
-  const PlayerCell = useCallback(
-    (player: string, seating: WindNumber) => (
-      <PlayerInputCell
-        seating={seating}
-        player={player}
-        setPlayers={setPlayerNames}
-        numPlayers={numPlayers}
-      />
-    ),
-    [numPlayers, setPlayerNames]
+export default function Startup() {
+  // 3 or 4 players
+  const [numPlayers, setNumPlayers] = useState<NP>(DEFAULT_N_PLAYERS);
+
+  const [playerNames, setPlayerNames] = useLocalStorage<string[]>(
+    "names",
+    (Array.from(Array(DEFAULT_N_PLAYERS).keys()) as WindNumber[]).map(getWind)
   );
 
-  const PlayerNumInputCell = useCallback(
-    () =>
-      (
-        <label
-          style={{
-            display: "block",
-            marginLeft: "auto",
-            marginRight: "auto",
-            backgroundColor: "lightgrey",
-          }}
-        >
-          Number of players:
-          <Select
-            options={[2, 3, 4].map(
-              (count) =>
-                ({
-                  value: count,
-                  label: count,
-                } as { value: NP; label: NP })
-            )}
-            value={{
-              value: numPlayers,
-              label: numPlayers,
+  const [namesReady, setNamesReady] = useState(false);
+
+  const [viewOnly, setViewOnly] = useState(false);
+  const [viewFile, setViewFile] = useState<GameEntity | undefined>(undefined);
+
+  const gameReady = namesReady;
+
+  const onNextGame = useCallback(
+    (names: string[]) => {
+      setPlayerNames(names);
+      setNamesReady(false);
+    },
+    [setPlayerNames]
+  );
+
+  return gameReady ? (
+    <GameContextProvider
+      n={numPlayers}
+      playerNames={playerNames.slice(0, numPlayers)}
+      state={viewFile}
+    >
+      <ResultInputContextProvider>
+        <Calculator viewOnly={viewOnly} onNextGame={onNextGame} />
+      </ResultInputContextProvider>
+    </GameContextProvider>
+  ) : (
+    <>
+      <div className="d-flex flex-column align-items-center">
+        <NameInputGrid
+          numPlayers={numPlayers}
+          playerNames={playerNames}
+          setNumPlayers={setNumPlayers}
+          setPlayerNames={setPlayerNames}
+          setNamesReady={setNamesReady}
+        />
+      </div>
+      <div className="container" style={{ maxWidth: "380px" }}>
+        <label className="form-label center-block" style={{ display: "block" }}>
+          <h5>View an exported game here:</h5>
+          <input
+            className="form-control"
+            type="file"
+            onChange={(event) => {
+              const file = event.target.files?.item(0);
+              const fileReader = new FileReader();
+              if (!file) {
+                return;
+              }
+              fileReader.readAsText(file);
+              fileReader.onload = (event) => {
+                const stringContent = event.target?.result?.toString() ?? "";
+                try {
+                  const json = JSON.parse(stringContent);
+                  // TODO: Maybe verify for json content?
+                  setViewFile(json!);
+                  setViewOnly(true);
+                  setNamesReady(true);
+                  console.log(json);
+                } catch (error) {
+                  alert("Failed to parse result file.");
+                }
+              };
             }}
-            onChange={(wrapper) => setNumPlayers(wrapper!.value)}
           />
         </label>
-      ) as JSX.Element,
-    [numPlayers, setNumPlayers]
-  );
-
-  return (
-    <React.Fragment>
-      <img
-        src="/Header.jpg"
-        alt=""
-        style={{ maxHeight: "100%", maxWidth: "100%" }}
-        className="mb-4"
-      />
-      <h1 style={{ textAlign: "center" }}>Please enter players&apos; names</h1>
-      <PlayerTable<string>
-        playerTable={playerNames}
-        playerCell={PlayerCell}
-        centerCell={PlayerInputCenterCell}
-        LTCell={PlayerNumInputCell()}
-      />
-    </React.Fragment>
+      </div>
+    </>
   );
 }

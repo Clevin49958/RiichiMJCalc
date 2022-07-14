@@ -1,16 +1,16 @@
-import GameContext from "../util/Context";
-import { GameStatus } from "../util/GameStatus";
-import IGame from "../util/IGame";
-import { IPlayerTable } from "../util/IPlayer";
-import { IRecord } from "../util/IRecord";
+import GameContext from "../context/GameContext";
+import { GameStatus } from "../types/GameStatus";
+import GameEntity from "../types/GameEntity";
+import { PlayerList } from "../types/Player";
+import { Record } from "../types/Record";
 import { useContext } from "react";
 
 export function generateResult(
   gameStatus: GameStatus,
-  players: IPlayerTable,
-  records: IRecord[]
+  players: PlayerList,
+  records: Record[]
 ) {
-  const result: IGame = {
+  const result: GameEntity = {
     endTime: new Date(),
     gameStatus,
     players,
@@ -19,7 +19,7 @@ export function generateResult(
   return result;
 }
 
-export function saveJson(result: IGame) {
+export function saveJson(result: GameEntity) {
   const strContent = JSON.stringify(result, null, 2);
   const filename = result.endTime.toLocaleDateString() + ".json";
   const fileContent = new Blob([strContent], { type: "json" });

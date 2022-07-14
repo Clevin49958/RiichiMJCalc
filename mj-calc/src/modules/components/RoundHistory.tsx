@@ -1,13 +1,13 @@
-import { IPlayerTable } from "../util/IPlayer";
-import { DrawRecord, IRecord } from "../util/IRecord";
+import { PlayerList } from "../types/Player";
+import { DrawRecord, Record } from "../types/Record";
 import { getWind } from "../util/Wind";
 
 export default function RoundHistory({
   records,
   players,
 }: {
-  records: IRecord[];
-  players: IPlayerTable;
+  records: Record[];
+  players: PlayerList;
 }) {
   return (
     <div className="card-column my-2">
@@ -54,7 +54,7 @@ export default function RoundHistory({
           }
         } else {
           const info = record.info as DrawRecord;
-          const tenpaied = players.filter((_player, idx) => info.tenpai[idx]);
+          const tenpaied = players.filter((_player, idx) => info[idx]);
           const displayTenpai =
             tenpaied.length < players.length && tenpaied.length > 0;
           content = (

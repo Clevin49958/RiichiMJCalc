@@ -1,10 +1,10 @@
 import "./App.css";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Calculator from "./modules/Calculator";
+import Startup from "./modules/Startup";
 
 function App() {
-  return <Calculator />;
+  return <Startup />;
 }
 
 export default App;
