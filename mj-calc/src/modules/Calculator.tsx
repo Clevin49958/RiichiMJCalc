@@ -19,10 +19,10 @@ import GameContext from "./context/GameContext";
 import FinalPoints from "./components/FinalPoints";
 import { PointsPlot } from "./components/PointsPlot";
 import {
-  STARTING_POINT,
   DEFAULT_FAN,
   DEFAULT_FU,
   DEFAULT_PLAYER,
+  DEFAULT_WIN_INFO,
   StickIconSize,
 } from "./util/Constants";
 import { useGameManager } from "./hooks/useGameManager";
@@ -46,6 +46,7 @@ export function CalculatorCore({
   viewOnly: boolean;
   onNextGame: (names: string[]) => void;
 }) {
+  // Game state objects
   const {
     gameStatus,
     setGameStatus,
@@ -54,14 +55,10 @@ export function CalculatorCore({
     records: gameRecord,
     setRecords: setGameRecord,
   } = useContext(GameContext);
-
+  const n = gameStatus.numPlayers;
   const { togglePlayerRichii } = useGameManager();
 
-  const n = gameStatus.numPlayers;
-
-  const prevGameStatus = useRef<GameStatus | undefined>();
-  const startingPoint = STARTING_POINT[4 - n];
-
+  // New result input
   const [winInfo, setWinInfo] = useState<WinRecord[]>([
     {
       fan: DEFAULT_FAN,
@@ -76,7 +73,13 @@ export function CalculatorCore({
   const pushRecord = (record: IRecord) => {
     setGameRecord([...gameRecord, record]);
   };
+  const resetWinState = () => {
+    setWinInfo(DEFAULT_WIN_INFO(gameStatus));
+    setTenpai(Array(n).fill(false));
+    setEndingType("Win");
+  };
 
+  // Display
   const [displayDelta, setDisplayDelta] = useState(-1);
   const [tabletopMode, toggleTabletopMode] = useToggle(false);
   const orientation = tabletopMode ? displayDelta : -1;
@@ -91,20 +94,28 @@ export function CalculatorCore({
       }
     });
   }
-  const isReady = true;
 
-  const resetWinState = () => {
-    setWinInfo([
-      {
-        fan: DEFAULT_FAN,
-        fu: DEFAULT_FU,
-        winner: DEFAULT_PLAYER(gameStatus),
-        dealIn: DEFAULT_PLAYER(gameStatus),
-      },
-    ]);
-    setTenpai(Array(n).fill(false));
-    setEndingType("Win");
-  };
+  // Rewind
+  const prevGameStatus = useRef<GameStatus | undefined>();
+  const rewind = useCallback(() => {
+    if (!prevGameStatus.current) {
+      return;
+    }
+
+    // reset player score
+    players.forEach((player) => {
+      player.score = player.lastScore!;
+      player.lastScore = undefined;
+    });
+
+    setGameStatus({
+      ...prevGameStatus.current,
+    });
+    prevGameStatus.current = undefined;
+
+    setPlayers([...players]);
+    gameRecord.pop();
+  }, [players, setGameStatus, setPlayers, gameRecord]);
 
   const saveEntry = () => {
     prevGameStatus.current = {
@@ -217,26 +228,6 @@ export function CalculatorCore({
     [gameStatus, orientation, tabletopMode, togglePlayerRichii]
   );
 
-  const rewind = useCallback(() => {
-    if (!prevGameStatus.current) {
-      return;
-    }
-
-    // reset player score
-    players.forEach((player) => {
-      player.score = player.lastScore!;
-      player.lastScore = undefined;
-    });
-
-    setGameStatus({
-      ...prevGameStatus.current,
-    });
-    prevGameStatus.current = undefined;
-
-    setPlayers([...players]);
-    gameRecord.pop();
-  }, [players, setGameStatus, setPlayers, gameRecord]);
-
   const rewindButton = useMemo(
     () => (
       <button
@@ -252,7 +243,7 @@ export function CalculatorCore({
     [rewind]
   );
 
-  const switchTabletopModeButton = useMemo(
+  const toggleTabletopModeButton = useMemo(
     () => (
       <button
         type="button"
@@ -284,7 +275,7 @@ export function CalculatorCore({
           playerCell={PlayerInfoCell}
           centerCell={() => GameStatusCenterCell(gameStatus)}
           RBCell={rewindButton}
-          LTCell={switchTabletopModeButton}
+          LTCell={toggleTabletopModeButton}
           tableTopMode={tabletopMode}
         />
         {!tabletopMode && (
@@ -301,18 +292,17 @@ export function CalculatorCore({
                     tenpai={tenpai}
                     setTenpai={setTenpai}
                     saveEntry={saveEntry}
-                    isReady={isReady}
+                    isReady={true}
                     onNextGame={onNextGameMemo}
                   />
                 </div>
               </div>
             )}
             <RoundHistory records={gameRecord} players={players} />
-            <FinalPoints startingPoint={STARTING_POINT[4 - n]} />
+            <FinalPoints />
             <PointsPlot
               players={players}
               gameRecord={gameRecord}
-              startingPoint={startingPoint}
               gameStatus={gameStatus}
             />
           </>

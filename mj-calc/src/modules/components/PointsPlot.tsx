@@ -14,6 +14,7 @@ import {
 import annotationPlugin from "chartjs-plugin-annotation";
 import { GameStatus } from "../util/GameStatus";
 import { getWind } from "../util/Wind";
+import { STARTING_POINT } from "../util/Constants";
 
 ChartJS.register(
   CategoryScale,
@@ -46,15 +47,14 @@ function getPointsLabel({ wind, round, honba }: GameStatus | IRecord) {
 export function PointsPlot({
   players,
   gameRecord,
-  startingPoint,
   gameStatus,
 }: {
   players: IPlayerTable;
   gameRecord: IRecord[];
-  startingPoint: number;
   gameStatus: GameStatus;
 }) {
   const n = players.length;
+  const startingPoint = STARTING_POINT[4 - n];
 
   const colors = COLOR_CODES.map((codes) => `rgb(${codes.join(",")})`);
   const bgColors = COLOR_CODES.map((codes) => `rgba(${codes.join(",")}, 0.5)`);

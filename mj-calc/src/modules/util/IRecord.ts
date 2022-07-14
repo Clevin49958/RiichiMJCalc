@@ -3,10 +3,10 @@ import { WindNumber } from "./Wind";
 
 export interface WinRecord {
   winner: WindNumber;
+  // self deal in == tsumo
   dealIn: WindNumber;
   fan: number;
   fu: number;
-  // self deal in == tsumo
 }
 
 export interface DrawRecord {

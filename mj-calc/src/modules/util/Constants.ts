@@ -11,3 +11,14 @@ export const DEFAULT_FU = 30;
 export const DEFAULT_PLAYER = (gameStatus: GameStatus) => {
   return getDealer(gameStatus);
 };
+
+export const DEFAULT_WIN_INFO = (gameStatus: GameStatus) => {
+  return [
+    {
+      fan: DEFAULT_FAN,
+      fu: DEFAULT_FU,
+      winner: DEFAULT_PLAYER(gameStatus),
+      dealIn: DEFAULT_PLAYER(gameStatus),
+    },
+  ];
+};
