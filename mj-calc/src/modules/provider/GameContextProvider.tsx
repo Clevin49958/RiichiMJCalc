@@ -9,7 +9,7 @@ import GameEntity from "../types/GameEntity";
 import { PlayerList } from "../types/Player";
 import { Record } from "../types/Record";
 import { NP, WindNumber } from "../util/Wind";
-import GameContext from "./GameContext";
+import GameContext from "../context/GameContext";
 
 type GameContextProps = {
   n: NP;

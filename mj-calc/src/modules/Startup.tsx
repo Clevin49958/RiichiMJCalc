@@ -1,15 +1,16 @@
 import { useCallback, useState } from "react";
 
 import { getWind, NP, WindNumber } from "./util/Wind";
-import { CalculatorCore } from "./Calculator";
+import { Calculator } from "./Calculator";
 import { StartUp } from "./components/NameInputGrid";
 import GameEntity from "./types/GameEntity";
 import { useLocalStorage } from "./hooks/useLocalStorage";
-import { GameContextProvider } from "./context/GameContextProvider";
+import { GameContextProvider } from "./provider/GameContextProvider";
+import { ResultInputContextProvider } from "./provider/ResultInputContextProvider";
 
 const DEFAULT_N_PLAYERS = 4;
 
-export default function Calculator() {
+export default function Startup() {
   // 3 or 4 players
   const [numPlayers, setNumPlayers] = useState<NP>(DEFAULT_N_PLAYERS);
 
@@ -39,7 +40,9 @@ export default function Calculator() {
       playerNames={playerNames.slice(0, numPlayers)}
       state={viewFile}
     >
-      <CalculatorCore viewOnly={viewOnly} onNextGame={onNextGame} />
+      <ResultInputContextProvider>
+        <Calculator viewOnly={viewOnly} onNextGame={onNextGame} />
+      </ResultInputContextProvider>
     </GameContextProvider>
   ) : (
     <>

@@ -5,7 +5,7 @@ import PlayerTable from "./components/PlayerTable";
 import { PlayerList, Player } from "./types/Player";
 import { getWind, WindNumber } from "./util/Wind";
 import { incrementRound } from "./util/GameStatus";
-import { GameStatus, RichiiList } from "./types/GameStatus";
+import { GameStatus } from "./types/GameStatus";
 import {
   applyScoreChange,
   getDealer,
@@ -13,21 +13,16 @@ import {
   getDeltaWithWinner,
 } from "./util/Score";
 import { HonbaStick, RichiiStick } from "./Icons";
-import { Record, WinRecord } from "./types/Record";
+import { Record } from "./types/Record";
 import RoundHistory from "./components/RoundHistory";
 import { GameEntrySelector } from "./components/GameEntrySelector";
 import GameContext from "./context/GameContext";
 import FinalPoints from "./components/FinalPoints";
 import { PointsPlot } from "./components/PointsPlot";
-import {
-  DEFAULT_FAN,
-  DEFAULT_FU,
-  DEFAULT_PLAYER,
-  DEFAULT_WIN_INFO,
-  StickIconSize,
-} from "./util/Constants";
+import { DEFAULT_WIN_INFO, StickIconSize } from "./util/Constants";
 import { useGameManager } from "./hooks/useGameManager";
 import { useToggle } from "./hooks/useToggle";
+import { ResultInputContext } from "./context/ResultInputContext";
 
 export function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
@@ -40,7 +35,7 @@ export function GameStatusCenterCell(gameStatus: GameStatus) {
     </div>
   );
 }
-export function CalculatorCore({
+export function Calculator({
   viewOnly,
   onNextGame,
 }: {
@@ -57,14 +52,12 @@ export function CalculatorCore({
     setRecords: setGameRecord,
   } = useContext(GameContext);
   const n = gameStatus.numPlayers;
-  const { togglePlayerRichii } = useGameManager();
 
   // New result input
-  const [winInfo, setWinInfo] = useState<WinRecord[]>(
-    DEFAULT_WIN_INFO(gameStatus)
-  );
-  const [tenpai, setTenpai] = useState<boolean[]>(Array(n).fill(false));
-  const [endingType, setEndingType] = useState<"Win" | "Draw">("Win");
+  const { winInfo, setWinInfo, tenpai, setTenpai, endingType, setEndingType } =
+    useContext(ResultInputContext);
+
+  const { togglePlayerRichii } = useGameManager();
 
   const pushRecord = (record: Record) => {
     setGameRecord([...gameRecord, record]);
