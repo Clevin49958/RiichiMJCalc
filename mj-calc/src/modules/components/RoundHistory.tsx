@@ -1,13 +1,13 @@
-import { IPlayerTable } from "../util/IPlayer";
-import { DrawRecord, IRecord } from "../util/IRecord";
+import { PlayerList } from "../types/Player";
+import { DrawRecord, Record } from "../types/Record";
 import { getWind } from "../util/Wind";
 
 export default function RoundHistory({
   records,
   players,
 }: {
-  records: IRecord[];
-  players: IPlayerTable;
+  records: Record[];
+  players: PlayerList;
 }) {
   return (
     <div className="card-column my-2">

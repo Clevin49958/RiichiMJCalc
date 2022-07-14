@@ -1,4 +1,4 @@
-import { GameStatus } from "./GameStatus";
+import { GameStatus } from "../types/GameStatus";
 import { getDealer } from "./Score";
 
 export const STARTING_POINT = [25000, 35000, 50000];

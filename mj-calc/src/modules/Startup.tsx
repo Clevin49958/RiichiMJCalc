@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import { getWind, NP, WindNumber } from "./util/Wind";
 import { CalculatorCore } from "./Calculator";
 import { StartUp } from "./components/NameInputGrid";
-import IGame from "./util/IGame";
+import GameEntity from "./types/GameEntity";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { GameContextProvider } from "./context/GameContextProvider";
 
@@ -21,7 +21,7 @@ export default function Calculator() {
   const [namesReady, setNamesReady] = useState(false);
 
   const [viewOnly, setViewOnly] = useState(false);
-  const [viewFile, setViewFile] = useState<IGame | undefined>(undefined);
+  const [viewFile, setViewFile] = useState<GameEntity | undefined>(undefined);
 
   const gameReady = namesReady;
 

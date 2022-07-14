@@ -1,8 +1,8 @@
 import { HTMLAttributes, useMemo } from "react";
-import { IPlayer } from "../util/IPlayer";
+import { Player } from "../types/Player";
 import { WindNumber } from "../util/Wind";
 
-export default function PlayerTable<T = IPlayer>({
+export default function PlayerTable<T = Player>({
   playerTable,
   playerCell,
   centerCell,

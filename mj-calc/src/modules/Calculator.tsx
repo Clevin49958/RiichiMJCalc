@@ -2,9 +2,10 @@ import { useCallback, useContext, useMemo, useRef, useState } from "react";
 import { includes, maxBy } from "lodash";
 
 import PlayerTable from "./components/PlayerTable";
-import { IPlayerTable, IPlayer } from "./util/IPlayer";
+import { PlayerList, Player } from "./types/Player";
 import { getWind, WindNumber } from "./util/Wind";
-import { GameStatus, incrementRound, IRichii } from "./util/GameStatus";
+import { incrementRound } from "./util/GameStatus";
+import { GameStatus, RichiiList } from "./types/GameStatus";
 import {
   applyScoreChange,
   getDealer,
@@ -12,7 +13,7 @@ import {
   getDeltaWithWinner,
 } from "./util/Score";
 import { HonbaStick, RichiiStick } from "./Icons";
-import { IRecord, WinRecord } from "./util/IRecord";
+import { Record, WinRecord } from "./types/Record";
 import RoundHistory from "./components/RoundHistory";
 import { GameEntrySelector } from "./components/GameEntrySelector";
 import GameContext from "./context/GameContext";
@@ -59,18 +60,13 @@ export function CalculatorCore({
   const { togglePlayerRichii } = useGameManager();
 
   // New result input
-  const [winInfo, setWinInfo] = useState<WinRecord[]>([
-    {
-      fan: DEFAULT_FAN,
-      fu: DEFAULT_FU,
-      winner: DEFAULT_PLAYER(gameStatus),
-      dealIn: DEFAULT_PLAYER(gameStatus),
-    },
-  ]);
+  const [winInfo, setWinInfo] = useState<WinRecord[]>(
+    DEFAULT_WIN_INFO(gameStatus)
+  );
   const [tenpai, setTenpai] = useState<boolean[]>(Array(n).fill(false));
   const [endingType, setEndingType] = useState<"Win" | "Draw">("Win");
 
-  const pushRecord = (record: IRecord) => {
+  const pushRecord = (record: Record) => {
     setGameRecord([...gameRecord, record]);
   };
   const resetWinState = () => {
@@ -86,7 +82,7 @@ export function CalculatorCore({
 
   const playersScoreView = players.map((player) => ({
     ...player,
-  })) as IPlayerTable;
+  })) as PlayerList;
   if (displayDelta >= 0) {
     playersScoreView.forEach((player, wind) => {
       if (wind !== displayDelta) {
@@ -129,7 +125,7 @@ export function CalculatorCore({
     }
     applyScoreChange(players, deltas);
     setPlayers([...players]);
-    const record: Omit<IRecord, "info" | "type"> = {
+    const record: Omit<Record, "info" | "type"> = {
       deltas,
       wind: gameStatus.wind,
       round: gameStatus.round,
@@ -162,7 +158,7 @@ export function CalculatorCore({
   };
 
   const PlayerInfoCell = useCallback(
-    (player: IPlayer) => {
+    (player: Player) => {
       const richii = gameStatus.richii;
       const hasRichii = richii[player.seating];
 

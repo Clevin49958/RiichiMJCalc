@@ -4,24 +4,24 @@ import {
   STARTING_POINT,
   STARTING_WIND,
 } from "../util/Constants";
-import { GameStatus } from "../util/GameStatus";
-import IGame from "../util/IGame";
-import { IPlayerTable } from "../util/IPlayer";
-import { IRecord } from "../util/IRecord";
+import { GameStatus } from "../types/GameStatus";
+import GameEntity from "../types/GameEntity";
+import { PlayerList } from "../types/Player";
+import { Record } from "../types/Record";
 import { NP, WindNumber } from "../util/Wind";
 import GameContext from "./GameContext";
 
 type GameContextProps = {
   n: NP;
   playerNames: string[];
-  state?: IGame;
+  state?: GameEntity;
   children: ReactNode;
 };
 
 export function GameContextProvider({ children, ...props }: GameContextProps) {
   let initialGameStatus: GameStatus;
-  let initialPlayers: IPlayerTable;
-  let initialRecord: IRecord[] = [];
+  let initialPlayers: PlayerList;
+  let initialRecord: Record[] = [];
   if (props.state) {
     initialGameStatus = props.state.gameStatus;
     initialPlayers = props.state.players;
@@ -47,9 +47,9 @@ export function GameContextProvider({ children, ...props }: GameContextProps) {
 
   const [gameStatus, setGameStatus] = useState<GameStatus>(initialGameStatus);
 
-  const [players, setPlayers] = useState<IPlayerTable>(initialPlayers);
+  const [players, setPlayers] = useState<PlayerList>(initialPlayers);
 
-  const [gameRecord, setGameRecord] = useState<IRecord[]>(initialRecord);
+  const [gameRecord, setGameRecord] = useState<Record[]>(initialRecord);
 
   const gameContext = useMemo(
     () => ({

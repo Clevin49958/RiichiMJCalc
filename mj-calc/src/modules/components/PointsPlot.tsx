@@ -1,6 +1,6 @@
 import { Line } from "react-chartjs-2";
-import { IPlayerTable } from "../util/IPlayer";
-import { IRecord } from "../util/IRecord";
+import { PlayerList } from "../types/Player";
+import { Record } from "../types/Record";
 import {
   Chart as ChartJS,
   LineElement,
@@ -12,7 +12,7 @@ import {
   PointElement,
 } from "chart.js";
 import annotationPlugin from "chartjs-plugin-annotation";
-import { GameStatus } from "../util/GameStatus";
+import { GameStatus } from "../types/GameStatus";
 import { getWind } from "../util/Wind";
 import { STARTING_POINT } from "../util/Constants";
 
@@ -34,7 +34,7 @@ const COLOR_CODES = [
   [153, 102, 255],
 ];
 
-function getPointsLabel({ wind, round, honba }: GameStatus | IRecord) {
+function getPointsLabel({ wind, round, honba }: GameStatus | Record) {
   if (round === 1 && honba === 0) {
     return `${getWind(wind)}`;
   }
@@ -49,8 +49,8 @@ export function PointsPlot({
   gameRecord,
   gameStatus,
 }: {
-  players: IPlayerTable;
-  gameRecord: IRecord[];
+  players: PlayerList;
+  gameRecord: Record[];
   gameStatus: GameStatus;
 }) {
   const n = players.length;

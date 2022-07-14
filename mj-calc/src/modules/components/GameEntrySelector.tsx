@@ -1,10 +1,10 @@
 import React, { Dispatch, SetStateAction, useContext, useMemo } from "react";
 import PlayerTable from "./PlayerTable";
-import { IPlayerTable, IPlayer } from "../util/IPlayer";
+import { PlayerList, Player } from "../types/Player";
 import { WindNumber } from "../util/Wind";
 import { DropdownEntry } from "./DropdownEntry";
 import { ExportResult } from "./SaveResult";
-import { WinRecord } from "../util/IRecord";
+import { WinRecord } from "../types/Record";
 import { DEFAULT_FAN, DEFAULT_FU, DEFAULT_PLAYER } from "../util/Constants";
 import GameContext from "../context/GameContext";
 import { OverlayTrigger, Popover } from "react-bootstrap";
@@ -12,7 +12,7 @@ import { OverlayTrigger, Popover } from "react-bootstrap";
 interface GameEntrySelectorProps {
   endingType: string;
   setEndingType: Dispatch<SetStateAction<"Win" | "Draw">>;
-  players: IPlayerTable;
+  players: PlayerList;
   winInfo: WinRecord[];
   setWinInfo: Dispatch<SetStateAction<WinRecord[]>>;
   tenpai: boolean[];
@@ -246,7 +246,7 @@ export function GameEntrySelector({
         >
           <PlayerTable
             playerTable={players}
-            playerCell={function (player: IPlayer): JSX.Element {
+            playerCell={function (player: Player): JSX.Element {
               const id = `tenpai-check-${player.seating}`;
               return (
                 <div className="form-check">

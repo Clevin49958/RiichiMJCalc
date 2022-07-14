@@ -1,7 +1,7 @@
 import { useCallback, useContext } from "react";
 import GameContext from "../context/GameContext";
-import { IRichii } from "../util/GameStatus";
-import { IPlayerTable } from "../util/IPlayer";
+import { RichiiList } from "../types/GameStatus";
+import { PlayerList } from "../types/Player";
 import { WindNumber } from "../util/Wind";
 
 export function useGameManager() {
@@ -17,7 +17,7 @@ export function useGameManager() {
   const togglePlayerRichii = useCallback(
     (seating: WindNumber, isRichiiNow: boolean) => {
       setPlayers((players) => {
-        const newPlayers = [...players] as IPlayerTable;
+        const newPlayers = [...players] as PlayerList;
         newPlayers[seating] = {
           ...newPlayers[seating],
           score: newPlayers[seating].score - (isRichiiNow ? 1000 : -1000),
@@ -26,7 +26,7 @@ export function useGameManager() {
       });
 
       setGameStatus(({ richii, richiiStick, ...props }) => {
-        const newRichiiList = [...richii] as IRichii;
+        const newRichiiList = [...richii] as RichiiList;
         newRichiiList[seating] = isRichiiNow;
         return {
           ...props,

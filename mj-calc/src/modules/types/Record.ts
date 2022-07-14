@@ -1,5 +1,5 @@
 import { RoundNumber } from "./GameStatus";
-import { WindNumber } from "./Wind";
+import { WindNumber } from "../util/Wind";
 
 export interface WinRecord {
   winner: WindNumber;
@@ -13,7 +13,7 @@ export interface DrawRecord {
   tenpai: boolean[];
 }
 
-type Record =
+type EndingRecord =
   | {
       info: WinRecord[];
       type: "Win";
@@ -23,7 +23,7 @@ type Record =
       type: "Draw";
     };
 
-export type IRecord = Record & {
+export type Record = EndingRecord & {
   deltas: number[];
   wind: WindNumber;
   round: RoundNumber;
