@@ -54,7 +54,7 @@ export default function RoundHistory({
           }
         } else {
           const info = record.info as DrawRecord;
-          const tenpaied = players.filter((_player, idx) => info.tenpai[idx]);
+          const tenpaied = players.filter((_player, idx) => info[idx]);
           const displayTenpai =
             tenpaied.length < players.length && tenpaied.length > 0;
           content = (

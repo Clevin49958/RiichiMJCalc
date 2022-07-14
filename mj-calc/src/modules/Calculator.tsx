@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo, useRef, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import { includes, maxBy, omit, pick } from "lodash";
 
 import PlayerTable from "./components/PlayerTable";
@@ -59,14 +59,21 @@ export function Calculator({
 
   const { togglePlayerRichii } = useGameManager();
 
-  const pushRecord = (record: Record) => {
-    setGameRecord([...gameRecord, record]);
-  };
-  const resetWinState = () => {
-    setWinInfo(DEFAULT_WIN_INFO(gameStatus));
-    setTenpai(Array(n).fill(false));
-    setEndingType("Win");
-  };
+  const pushRecord = useCallback(
+    (record: Record) => {
+      setGameRecord((gameRecord) => [...gameRecord, record]);
+    },
+    [setGameRecord]
+  );
+
+  const resetWinState = useCallback(
+    (gameStatus: GameStatus) => {
+      setWinInfo(DEFAULT_WIN_INFO(gameStatus));
+      setTenpai(Array(n).fill(false));
+      setEndingType("Win");
+    },
+    [n, setEndingType, setTenpai, setWinInfo]
+  );
 
   // Display
   const [displayDelta, setDisplayDelta] = useState(-1);
@@ -86,66 +93,95 @@ export function Calculator({
 
   // Rewind
   const rewind = useCallback(() => {
-    const newRecords = [...gameRecord];
-    const lastRecord = newRecords.pop();
-    if (lastRecord === undefined) {
-      // Rewind triggered when no game has been played yet
-      return;
-    }
+    // Pop last record
+    setGameRecord((gameRecord) => {
+      const newRecords = [...gameRecord];
+      const lastRecord = newRecords.pop();
+      if (lastRecord === undefined) {
+        // Rewind triggered when no game has been played yet
+        return newRecords;
+      }
 
-    setPlayers((players) =>
-      applyScoreChange(
-        players,
-        lastRecord.deltas.map(
-          (delta, index) => (gameStatus.richii[index] ? 1000 : 0) - delta
-        )
-      )
-    );
-    setGameStatus((gameStatus) => ({
-      numPlayers: gameStatus.numPlayers,
-      ...pick(lastRecord, "wind", "round", "honba", "richiiStick"),
-      richii: [...lastRecord.richii],
-    }));
-    setGameRecord(newRecords);
-  }, [gameRecord, setPlayers, setGameStatus, setGameRecord, gameStatus.richii]);
+      // Replace with last status
+      setGameStatus((gameStatus) => {
+        // Update players' score based on ending and richii
+        setPlayers((players) =>
+          applyScoreChange(
+            players,
+            lastRecord.deltas.map(
+              (delta, index) => (gameStatus.richii[index] ? 1000 : 0) - delta
+            )
+          )
+        );
 
-  const saveEntry = () => {
-    let deltas: number[];
-    if (endingType === "Win") {
-      deltas = getDeltaWithWinner(winInfo, gameStatus);
-    } else {
-      deltas = getDeltaWithoutWinner(tenpai);
-    }
-    setPlayers((players) => applyScoreChange(players, deltas));
-    const record: Omit<Record, "info" | "type"> = {
-      deltas,
-      ...omit(gameStatus, "numPlayers"),
-    };
-    if (endingType === "Win") {
-      pushRecord({
-        ...record,
-        type: endingType,
-        info: winInfo,
+        return {
+          numPlayers: gameStatus.numPlayers,
+          ...pick(lastRecord, "wind", "round", "honba", "richiiStick"),
+          richii: [...lastRecord.richii],
+        };
       });
-    } else {
-      pushRecord({
-        ...record,
-        type: endingType,
-        info: {
-          tenpai,
-        },
-      });
-    }
 
-    setGameStatus(
-      nextGameStatus(
+      setEndingType(lastRecord.type);
+      if (lastRecord.type === "Win") {
+        setWinInfo(lastRecord.info);
+      } else {
+        setTenpai(lastRecord.info);
+      }
+      return newRecords;
+    });
+  }, [
+    setGameRecord,
+    setGameStatus,
+    setEndingType,
+    setPlayers,
+    setWinInfo,
+    setTenpai,
+  ]);
+
+  const saveEntry = useCallback(() => {
+    setGameStatus((gameStatus) => {
+      let deltas: number[];
+      if (endingType === "Win") {
+        deltas = getDeltaWithWinner(winInfo, gameStatus);
+      } else {
+        deltas = getDeltaWithoutWinner(tenpai);
+      }
+      setPlayers((players) => applyScoreChange(players, deltas));
+      const record: Omit<Record, "info" | "type"> = {
+        deltas,
+        ...omit(gameStatus, "numPlayers"),
+      };
+      if (endingType === "Win") {
+        pushRecord({
+          ...record,
+          type: endingType,
+          info: winInfo,
+        });
+      } else {
+        pushRecord({
+          ...record,
+          type: endingType,
+          info: tenpai,
+        });
+      }
+
+      resetWinState(gameStatus);
+
+      return nextGameStatus(
         endingType === "Win" ? winInfo.map((record) => record.winner) : null,
         tenpai[getDealer(gameStatus)],
         gameStatus
-      )
-    );
-    resetWinState();
-  };
+      );
+    });
+  }, [
+    endingType,
+    pushRecord,
+    resetWinState,
+    setGameStatus,
+    setPlayers,
+    tenpai,
+    winInfo,
+  ]);
 
   const PlayerInfoCell = useCallback(
     (player: Player) => {
@@ -226,7 +262,7 @@ export function Calculator({
         Rewind
       </button>
     ),
-    [rewind]
+    [gameRecord.length, rewind]
   );
 
   const toggleTabletopModeButton = useMemo(

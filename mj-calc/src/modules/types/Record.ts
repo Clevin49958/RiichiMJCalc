@@ -9,9 +9,7 @@ export interface WinRecord {
   fu: number;
 }
 
-export interface DrawRecord {
-  tenpai: boolean[];
-}
+export type DrawRecord = boolean[];
 
 export type EndingRecord = {
   deltas: number[];
