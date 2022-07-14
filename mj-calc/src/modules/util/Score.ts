@@ -1,5 +1,4 @@
 import { GameStatus } from "../types/GameStatus";
-import { updatePlayerScore } from "./Player";
 import { PlayerList } from "../types/Player";
 import { WinRecord } from "../types/Record";
 import { WindNumber } from "./Wind";
@@ -149,8 +148,12 @@ export function getDeltaWithoutWinner(isTenPai: boolean[]) {
   });
 }
 
-export function applyScoreChange(players: PlayerList, deltas: number[]) {
-  deltas.forEach((delta, index) => {
-    updatePlayerScore(players[index], players[index].score + delta);
-  });
+export function applyScoreChange(
+  players: PlayerList,
+  deltas: number[]
+): PlayerList {
+  return deltas.map((delta, index) => ({
+    ...players[index],
+    score: players[index].score + delta,
+  }));
 }

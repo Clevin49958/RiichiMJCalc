@@ -1,5 +1,5 @@
 import { useCallback, useContext, useMemo, useRef, useState } from "react";
-import { includes, maxBy } from "lodash";
+import { includes, maxBy, omit, pick } from "lodash";
 
 import PlayerTable from "./components/PlayerTable";
 import { PlayerList, Player } from "./types/Player";
@@ -85,44 +85,41 @@ export function Calculator({
   }
 
   // Rewind
-  const prevGameStatus = useRef<GameStatus | undefined>();
   const rewind = useCallback(() => {
-    if (!prevGameStatus.current) {
+    const newRecords = [...gameRecord];
+    const lastRecord = newRecords.pop();
+    if (lastRecord === undefined) {
+      // Rewind triggered when no game has been played yet
       return;
     }
 
-    // reset player score
-    players.forEach((player) => {
-      player.score = player.lastScore!;
-      player.lastScore = undefined;
-    });
-
-    setGameStatus({
-      ...prevGameStatus.current,
-    });
-    prevGameStatus.current = undefined;
-
-    setPlayers([...players]);
-    gameRecord.pop();
-  }, [players, setGameStatus, setPlayers, gameRecord]);
+    setPlayers((players) =>
+      applyScoreChange(
+        players,
+        lastRecord.deltas.map(
+          (delta, index) => (gameStatus.richii[index] ? 1000 : 0) - delta
+        )
+      )
+    );
+    setGameStatus((gameStatus) => ({
+      numPlayers: gameStatus.numPlayers,
+      ...pick(lastRecord, "wind", "round", "honba", "richiiStick"),
+      richii: [...lastRecord.richii],
+    }));
+    setGameRecord(newRecords);
+  }, [gameRecord, setPlayers, setGameStatus, setGameRecord, gameStatus.richii]);
 
   const saveEntry = () => {
-    prevGameStatus.current = {
-      ...gameStatus,
-    };
     let deltas: number[];
     if (endingType === "Win") {
       deltas = getDeltaWithWinner(winInfo, gameStatus);
     } else {
       deltas = getDeltaWithoutWinner(tenpai);
     }
-    applyScoreChange(players, deltas);
-    setPlayers([...players]);
+    setPlayers((players) => applyScoreChange(players, deltas));
     const record: Omit<Record, "info" | "type"> = {
       deltas,
-      wind: gameStatus.wind,
-      round: gameStatus.round,
-      honba: gameStatus.honba,
+      ...omit(gameStatus, "numPlayers"),
     };
     if (endingType === "Win") {
       pushRecord({
@@ -223,7 +220,7 @@ export function Calculator({
         type="button"
         aria-label="rewind"
         className="btn btn-primary"
-        disabled={!prevGameStatus.current}
+        disabled={!gameRecord.length}
         onClick={rewind}
       >
         Rewind

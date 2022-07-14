@@ -1,4 +1,4 @@
-import { RoundNumber } from "./GameStatus";
+import { GameStatus } from "./GameStatus";
 import { WindNumber } from "../util/Wind";
 
 export interface WinRecord {
@@ -13,7 +13,9 @@ export interface DrawRecord {
   tenpai: boolean[];
 }
 
-type EndingRecord =
+export type EndingRecord = {
+  deltas: number[];
+} & (
   | {
       info: WinRecord[];
       type: "Win";
@@ -21,11 +23,7 @@ type EndingRecord =
   | {
       info: DrawRecord;
       type: "Draw";
-    };
+    }
+);
 
-export type Record = EndingRecord & {
-  deltas: number[];
-  wind: WindNumber;
-  round: RoundNumber;
-  honba: number;
-};
+export type Record = EndingRecord & Omit<GameStatus, "numPlayers">;
