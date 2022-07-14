@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 
 import { getWind, NP, WindNumber } from "./util/Wind";
 import { Calculator } from "./Calculator";
-import { StartUp } from "./components/NameInputGrid";
+import { NameInputGrid } from "./components/NameInputGrid";
 import GameEntity from "./types/GameEntity";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { GameContextProvider } from "./provider/GameContextProvider";
@@ -47,7 +47,7 @@ export default function Startup() {
   ) : (
     <>
       <div className="d-flex flex-column align-items-center">
-        <StartUp
+        <NameInputGrid
           numPlayers={numPlayers}
           playerNames={playerNames}
           setNumPlayers={setNumPlayers}

@@ -52,7 +52,7 @@ function PlayerInputCell({
     />
   );
 }
-export function StartUp({
+export function NameInputGrid({
   numPlayers,
   playerNames,
   setNumPlayers,
@@ -81,12 +81,14 @@ export function StartUp({
 
   const PlayerCell = useCallback(
     (player: string, seating: WindNumber) => (
-      <PlayerInputCell
-        seating={seating}
-        player={player}
-        setPlayers={setPlayerNames}
-        numPlayers={numPlayers}
-      />
+      <div className="m-3">
+        <PlayerInputCell
+          seating={seating}
+          player={player}
+          setPlayers={setPlayerNames}
+          numPlayers={numPlayers}
+        />
+      </div>
     ),
     [numPlayers, setPlayerNames]
   );
@@ -131,12 +133,14 @@ export function StartUp({
         className="mb-4"
       />
       <h1 style={{ textAlign: "center" }}>Please enter players&apos; names</h1>
-      <PlayerTable<string>
-        playerTable={playerNames}
-        playerCell={PlayerCell}
-        centerCell={PlayerInputCenterCell}
-        LTCell={PlayerNumInputCell}
-      />
+      <div style={{ maxWidth: "510px" }}>
+        <PlayerTable<string>
+          playerTable={playerNames}
+          playerCell={PlayerCell}
+          centerCell={PlayerInputCenterCell}
+          LTCell={PlayerNumInputCell}
+        />
+      </div>
     </React.Fragment>
   );
 }
