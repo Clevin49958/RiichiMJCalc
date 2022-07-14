@@ -25,6 +25,7 @@ import {
   DEFAULT_PLAYER,
   StickIconSize,
 } from "./util/Constants";
+import { useGameManager } from "./hooks/useGameManager";
 
 export function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
@@ -52,6 +53,8 @@ export function CalculatorCore({
     records: gameRecord,
     setRecords: setGameRecord,
   } = useContext(GameContext);
+
+  const { togglePlayerRichii } = useGameManager();
 
   const n = gameStatus.numPlayers;
 
@@ -149,79 +152,72 @@ export function CalculatorCore({
     resetWinState();
   };
 
-  function flipPlayerRichii(seating: WindNumber) {
-    const newRichiiList = [...gameStatus.richii] as IRichii;
+  const PlayerInfoCell = useCallback(
+    (player: IPlayer) => {
+      const richii = gameStatus.richii;
+      const hasRichii = richii[player.seating];
 
-    newRichiiList[seating] = !newRichiiList[seating];
-    gameStatus.richiiStick += newRichiiList[seating] ? 1 : -1;
-
-    const newPlayers = [...players] as IPlayerTable;
-    newPlayers[seating].score -= newRichiiList[seating] ? 1000 : -1000;
-    setGameStatus({
-      ...gameStatus,
-      richii: newRichiiList,
-    });
-  }
-
-  function PlayerInfoCell(player: IPlayer) {
-    const richii = gameStatus.richii;
-    const hasRichii = richii[player.seating];
-
-    const angle =
-      4 -
-      (tabletopMode ? (orientation === -1 ? player.seating : orientation) : 4);
-    return (
-      <div
-        className={`d-flex flex-column p-0 no-select justify-content-center align-items-center ${
-          tabletopMode ? "" : "m-3"
-        }`}
-        style={{
-          transform: `rotate(${angle * 90}deg)`,
-          height: tabletopMode ? "33.3vh" : undefined,
-          width: tabletopMode
-            ? angle % 2 === 1
-              ? "33.3vh"
-              : "33.3vw"
-            : undefined,
-        }}
-      >
+      const angle =
+        4 -
+        (tabletopMode
+          ? orientation === -1
+            ? player.seating
+            : orientation
+          : 4);
+      return (
         <div
-          className="mb-2"
-          onMouseDown={() => setDisplayDelta(player.seating)}
-          onTouchStart={() => setDisplayDelta(player.seating)}
-          onMouseUp={() => setDisplayDelta(-1)}
-          onTouchEnd={() => setDisplayDelta(-1)}
-        >
-          <span
-            className={`${tabletopMode ? "fs-1" : ""}`}
-            style={{
-              color: getDealer(gameStatus) === player.seating ? "red" : "",
-            }}
-          >
-            {player.name}
-          </span>
-          <br />
-          <span className={`${tabletopMode ? "fs-1" : ""}`}>
-            {player.score}
-          </span>
-        </div>
-        <button
-          aria-label="Richii"
-          type="button"
+          className={`d-flex flex-column p-0 no-select justify-content-center align-items-center ${
+            tabletopMode ? "" : "m-3"
+          }`}
           style={{
-            backgroundColor: hasRichii ? "transparent" : "",
-            width: tabletopMode ? "50%" : undefined,
+            transform: `rotate(${angle * 90}deg)`,
+            height: tabletopMode ? "33.3vh" : undefined,
+            width: tabletopMode
+              ? angle % 2 === 1
+                ? "33.3vh"
+                : "33.3vw"
+              : undefined,
           }}
-          className={`btn ${hasRichii ? "p-0" : "btn-primary"} ${
-            tabletopMode ? "" : "btn-sm"
-          } border-0`}
-          onClick={() => flipPlayerRichii(player.seating)}
         >
-          {hasRichii ? RichiiStick(StickIconSize) : <span>Richii!</span>}
-        </button>
-      </div>
-    );
-  }
+          <div
+            className="mb-2"
+            onMouseDown={() => setDisplayDelta(player.seating)}
+            onTouchStart={() => setDisplayDelta(player.seating)}
+            onMouseUp={() => setDisplayDelta(-1)}
+            onTouchEnd={() => setDisplayDelta(-1)}
+          >
+            <span
+              className={`${tabletopMode ? "fs-1" : ""}`}
+              style={{
+                color: getDealer(gameStatus) === player.seating ? "red" : "",
+              }}
+            >
+              {player.name}
+            </span>
+            <br />
+            <span className={`${tabletopMode ? "fs-1" : ""}`}>
+              {player.score}
+            </span>
+          </div>
+          <button
+            aria-label="Richii"
+            type="button"
+            style={{
+              backgroundColor: hasRichii ? "transparent" : "",
+              width: tabletopMode ? "50%" : undefined,
+            }}
+            className={`btn ${hasRichii ? "p-0" : "btn-primary"} ${
+              tabletopMode ? "" : "btn-sm"
+            } border-0`}
+            onClick={() => togglePlayerRichii(player.seating, !hasRichii)}
+          >
+            {hasRichii ? RichiiStick(StickIconSize) : <span>Richii!</span>}
+          </button>
+        </div>
+      );
+    },
+    [gameStatus, orientation, tabletopMode, togglePlayerRichii]
+  );
 
   const rewind = useCallback(() => {
     if (!prevGameStatus.current) {
@@ -241,7 +237,7 @@ export function CalculatorCore({
 
     setPlayers([...players]);
     gameRecord.pop();
-  }, [players, gameRecord]);
+  }, [players, setGameStatus, setPlayers, gameRecord]);
 
   const rewindButton = useMemo(
     () => (
