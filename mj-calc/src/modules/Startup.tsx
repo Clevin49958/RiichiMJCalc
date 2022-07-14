@@ -2,9 +2,9 @@ import { useCallback, useState } from "react";
 
 import { getWind, NP, WindNumber } from "./util/Wind";
 import { CalculatorCore } from "./Calculator";
-import { StartUp } from "./NameInputGrid";
+import { StartUp } from "./components/NameInputGrid";
 import IGame from "./util/IGame";
-import { useLocalStorage } from "./util/useLocalStorage";
+import { useLocalStorage } from "./hooks/useLocalStorage";
 import { GameContextProvider } from "./context/GameContextProvider";
 
 const DEFAULT_N_PLAYERS = 4;

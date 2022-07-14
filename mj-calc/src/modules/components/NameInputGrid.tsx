@@ -3,13 +3,14 @@ import React, {
   SetStateAction,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
-import PlayerTable from "./components/PlayerTable";
-import { NP, WindNumber } from "./util/Wind";
+import PlayerTable from "./PlayerTable";
+import { NP, WindNumber } from "../util/Wind";
 import Select from "react-select/";
-import { ArrayType } from "./util/CustomType";
+import { ArrayType } from "../util/CustomType";
 
 function PlayerInputCell({
   seating,
@@ -90,7 +91,7 @@ export function StartUp({
     [numPlayers, setPlayerNames]
   );
 
-  const PlayerNumInputCell = useCallback(
+  const PlayerNumInputCell = useMemo(
     () =>
       (
         <label
@@ -134,7 +135,7 @@ export function StartUp({
         playerTable={playerNames}
         playerCell={PlayerCell}
         centerCell={PlayerInputCenterCell}
-        LTCell={PlayerNumInputCell()}
+        LTCell={PlayerNumInputCell}
       />
     </React.Fragment>
   );
