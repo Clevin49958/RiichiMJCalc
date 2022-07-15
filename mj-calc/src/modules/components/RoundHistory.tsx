@@ -1,12 +1,12 @@
 import { PlayerList } from "../types/Player";
-import { DrawRecord, Record } from "../types/Record";
+import { DrawRecord, GameRecord } from "../types/Record";
 import { getWind } from "../util/Wind";
 
 export default function RoundHistory({
   records,
   players,
 }: {
-  records: Record[];
+  records: GameRecord[];
   players: PlayerList;
 }) {
   return (

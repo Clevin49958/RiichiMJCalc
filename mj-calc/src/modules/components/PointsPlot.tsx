@@ -1,6 +1,6 @@
 import { Line } from "react-chartjs-2";
 import { PlayerList } from "../types/Player";
-import { Record } from "../types/Record";
+import { GameRecord } from "../types/Record";
 import {
   Chart as ChartJS,
   LineElement,
@@ -34,7 +34,7 @@ const COLOR_CODES = [
   [153, 102, 255],
 ];
 
-function getPointsLabel({ wind, round, honba }: GameStatus | Record) {
+function getPointsLabel({ wind, round, honba }: GameStatus | GameRecord) {
   if (round === 1 && honba === 0) {
     return `${getWind(wind)}`;
   }
@@ -50,7 +50,7 @@ export function PointsPlot({
   gameStatus,
 }: {
   players: PlayerList;
-  gameRecord: Record[];
+  gameRecord: GameRecord[];
   gameStatus: GameStatus;
 }) {
   const n = players.length;

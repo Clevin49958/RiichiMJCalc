@@ -2,7 +2,7 @@ import GameContext from "../context/GameContext";
 import { GameStatus } from "../types/GameStatus";
 import GameEntity from "../types/GameEntity";
 import { PlayerList } from "../types/Player";
-import { Record } from "../types/Record";
+import { GameRecord } from "../types/Record";
 import { useContext } from "react";
 import { GameSetting } from "../types/GameSetting";
 import GameSettingContext from "../context/GameSettingContext";
@@ -11,7 +11,7 @@ export function generateResult(
   gameStatus: GameStatus,
   gameSetting: GameSetting,
   players: PlayerList,
-  records: Record[]
+  records: GameRecord[]
 ) {
   const result: GameEntity = {
     endTime: new Date(),
