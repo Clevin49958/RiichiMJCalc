@@ -143,8 +143,9 @@ export function useGameManager() {
       resetWinState();
 
       return nextGameStatus(
-        endingType === "Win" ? winInfo.map((record) => record.winner) : null,
-        tenpai[getDealer(gameStatus, gameSetting)],
+        endingType === "Win"
+          ? { type: endingType, info: winInfo }
+          : { type: endingType, info: tenpai },
         gameStatus,
         gameSetting
       );

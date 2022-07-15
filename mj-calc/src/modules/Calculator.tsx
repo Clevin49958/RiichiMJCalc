@@ -19,6 +19,7 @@ import { useToggle } from "./hooks/useToggle";
 import { ResultInputContext } from "./context/ResultInputContext";
 import GameSettingContext from "./context/GameSettingContext";
 import { GameSetting } from "./types/GameSetting";
+import { EndingRecord } from "./types/Record";
 
 export function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
@@ -220,18 +221,20 @@ export function Calculator({
 }
 
 export function nextGameStatus(
-  winner: null | WindNumber[],
-  isDealerTenpai: boolean,
+  endingRecord: EndingRecord,
   gameStatus: GameStatus,
   gameSetting: GameSetting
 ) {
   // update honba
-  if (winner === null) {
+  if (endingRecord.type === "Draw") {
+    const isDealerTenpai =
+      endingRecord.info[getDealer(gameStatus, gameSetting)];
     gameStatus.honba += 1;
     if (!isDealerTenpai) {
       incrementRound(gameStatus, gameSetting);
     }
   } else {
+    const winner = endingRecord.info.map((record) => record.winner);
     if (includes(winner, getDealer(gameStatus, gameSetting))) {
       gameStatus.honba += 1;
     } else {
