@@ -102,7 +102,10 @@ export function Calculator({
             <span
               className={`${tabletopMode ? "fs-1" : ""}`}
               style={{
-                color: getDealer(gameStatus) === player.seating ? "red" : "",
+                color:
+                  getDealer(gameStatus, gameSetting) === player.seating
+                    ? "red"
+                    : "",
               }}
             >
               {player.name}
@@ -129,7 +132,7 @@ export function Calculator({
         </div>
       );
     },
-    [gameStatus, orientation, tabletopMode, togglePlayerRichii]
+    [gameSetting, gameStatus, orientation, tabletopMode, togglePlayerRichii]
   );
 
   const rewindButton = useMemo(
@@ -229,7 +232,7 @@ export function nextGameStatus(
       incrementRound(gameStatus, gameSetting);
     }
   } else {
-    if (includes(winner, getDealer(gameStatus))) {
+    if (includes(winner, getDealer(gameStatus, gameSetting))) {
       gameStatus.honba += 1;
     } else {
       incrementRound(gameStatus, gameSetting);

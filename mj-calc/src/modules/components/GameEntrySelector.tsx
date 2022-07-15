@@ -1,12 +1,11 @@
-import React, { Dispatch, SetStateAction, useContext, useMemo } from "react";
+import { Dispatch, SetStateAction, useMemo } from "react";
 import PlayerTable from "./PlayerTable";
 import { PlayerList, Player } from "../types/Player";
 import { WindNumber } from "../util/Wind";
 import { DropdownEntry } from "./DropdownEntry";
 import { ExportResult } from "./SaveResult";
 import { WinRecord } from "../types/Record";
-import { DEFAULT_FAN, DEFAULT_FU, DEFAULT_PLAYER } from "../util/Constants";
-import GameContext from "../context/GameContext";
+import { DEFAULT_WIN_INFO } from "../util/Constants";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 
 interface GameEntrySelectorProps {
@@ -34,7 +33,6 @@ export function GameEntrySelector({
   isReady,
   onNextGame,
 }: GameEntrySelectorProps) {
-  const gameContext = useContext(GameContext);
   const fans = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 26, 39, 52, 65, 78];
   const fus = [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110];
 
@@ -210,9 +208,7 @@ export function GameEntrySelector({
                     setWinInfo([
                       ...winInfo,
                       {
-                        fan: DEFAULT_FAN,
-                        fu: DEFAULT_FU,
-                        winner: DEFAULT_PLAYER(gameContext.gameStatus),
+                        ...DEFAULT_WIN_INFO,
                         dealIn: winInfo[0].dealIn,
                       },
                     ])

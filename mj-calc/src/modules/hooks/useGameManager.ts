@@ -1,4 +1,4 @@
-import { omit, pick } from "lodash";
+import { pick } from "lodash";
 import { useCallback, useContext } from "react";
 import { Record } from "../types/Record";
 import GameContext from "../context/GameContext";
@@ -89,7 +89,6 @@ export function useGameManager() {
         );
 
         return {
-          numPlayers: numPlayers,
           ...pick(lastRecord, "wind", "round", "honba", "richiiStick"),
           richii: [...lastRecord.richii],
         };
@@ -103,6 +102,7 @@ export function useGameManager() {
       }
       return newRecords;
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     setGameRecord,
     setGameStatus,
@@ -117,7 +117,7 @@ export function useGameManager() {
     setGameStatus((gameStatus) => {
       let deltas: number[];
       if (endingType === "Win") {
-        deltas = getDeltaWithWinner(winInfo, gameStatus);
+        deltas = getDeltaWithWinner(winInfo, gameStatus, gameSetting);
       } else {
         deltas = getDeltaWithoutWinner(tenpai);
       }
@@ -140,11 +140,11 @@ export function useGameManager() {
         });
       }
 
-      resetWinState(gameStatus);
+      resetWinState();
 
       return nextGameStatus(
         endingType === "Win" ? winInfo.map((record) => record.winner) : null,
-        tenpai[getDealer(gameStatus)],
+        tenpai[getDealer(gameStatus, gameSetting)],
         gameStatus,
         gameSetting
       );
