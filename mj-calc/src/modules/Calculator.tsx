@@ -181,8 +181,8 @@ export function Calculator({
           playerTable={playersScoreView}
           playerCell={PlayerInfoCell}
           centerCell={() => GameStatusCenterCell(gameStatus)}
-          RBCell={rewindButton}
-          LTCell={toggleTabletopModeButton}
+          RBCell={viewOnly ? <></> : rewindButton}
+          LTCell={viewOnly ? <></> : toggleTabletopModeButton}
           tableTopMode={tabletopMode}
         />
         {!tabletopMode && (
