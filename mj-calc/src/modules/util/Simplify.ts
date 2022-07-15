@@ -2,7 +2,7 @@ import { nextGameStatus } from "../Calculator";
 import GameEntity from "../types/GameEntity";
 import { GameSetting } from "../types/GameSetting";
 import { GameStatus, RichiiList } from "../types/GameStatus";
-import { Player } from "../types/Player";
+import { Player, PlayerList } from "../types/Player";
 import { EndingRecord, GameRecord } from "../types/Record";
 import { STARTING_POINT } from "./Constants";
 import { getDeltas } from "./Score";
@@ -11,7 +11,7 @@ import { WindNumber } from "./Wind";
 export interface MiniGameEntity {
   settings: GameSetting;
   endTime: Date;
-  players: string[];
+  players: { name: string; score: number }[];
   records: { richii: string; type: "Win" | "Draw"; info: string }[];
 }
 
@@ -20,7 +20,10 @@ export function minify(gameEntity: GameEntity): MiniGameEntity {
   const minified = {
     settings,
     endTime,
-    players: players.map((player) => player.name),
+    players: players.map((player) => ({
+      name: player.name,
+      score: player.score,
+    })),
     records: records.map((record) => ({
       richii: JSON.stringify(record.richii),
       type: record.type,
@@ -34,14 +37,14 @@ export function bloatGameStatus(minified: MiniGameEntity): GameEntity {
   const {
     settings: gameSettings,
     endTime,
-    players: playerNames,
+    players: playersFinal,
     records: miniRecords,
   } = minified;
 
-  const players = playerNames.map<Player>((name, index) => ({
+  const players = playersFinal.map<Player>((player, index) => ({
     seating: index as WindNumber,
-    name,
-    score: STARTING_POINT[4 - playerNames.length],
+    name: player.name,
+    score: STARTING_POINT[4 - playersFinal.length],
   }));
 
   let gameStatus: GameStatus = {
@@ -49,7 +52,7 @@ export function bloatGameStatus(minified: MiniGameEntity): GameEntity {
     round: 1,
     honba: 0,
     richiiStick: 0,
-    richii: Array(playerNames.length).fill(false),
+    richii: Array(playersFinal.length).fill(false),
   };
 
   const records: GameRecord[] = miniRecords.map((record) => {
