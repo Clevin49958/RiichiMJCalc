@@ -17,6 +17,8 @@ import { StickIconSize } from "./util/Constants";
 import { useGameManager } from "./hooks/useGameManager";
 import { useToggle } from "./hooks/useToggle";
 import { ResultInputContext } from "./context/ResultInputContext";
+import GameSettingContext from "./context/GameSettingContext";
+import { GameSetting } from "./types/GameSetting";
 
 export function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
@@ -38,7 +40,8 @@ export function Calculator({
 }) {
   // Game state objects
   const { gameStatus, players, records: gameRecord } = useContext(GameContext);
-  const n = gameStatus.numPlayers;
+  const gameSetting = useContext(GameSettingContext);
+  const { numPlayers: n } = gameSetting;
 
   // New result input
   const { winInfo, setWinInfo, tenpai, setTenpai, endingType, setEndingType } =
@@ -99,7 +102,10 @@ export function Calculator({
             <span
               className={`${tabletopMode ? "fs-1" : ""}`}
               style={{
-                color: getDealer(gameStatus) === player.seating ? "red" : "",
+                color:
+                  getDealer(gameStatus, gameSetting) === player.seating
+                    ? "red"
+                    : "",
               }}
             >
               {player.name}
@@ -126,7 +132,7 @@ export function Calculator({
         </div>
       );
     },
-    [gameStatus, orientation, tabletopMode, togglePlayerRichii]
+    [gameSetting, gameStatus, orientation, tabletopMode, togglePlayerRichii]
   );
 
   const rewindButton = useMemo(
@@ -175,8 +181,8 @@ export function Calculator({
           playerTable={playersScoreView}
           playerCell={PlayerInfoCell}
           centerCell={() => GameStatusCenterCell(gameStatus)}
-          RBCell={rewindButton}
-          LTCell={toggleTabletopModeButton}
+          RBCell={viewOnly ? <></> : rewindButton}
+          LTCell={viewOnly ? <></> : toggleTabletopModeButton}
           tableTopMode={tabletopMode}
         />
         {!tabletopMode && (
@@ -216,25 +222,26 @@ export function Calculator({
 export function nextGameStatus(
   winner: null | WindNumber[],
   isDealerTenpai: boolean,
-  gameStatus: GameStatus
+  gameStatus: GameStatus,
+  gameSetting: GameSetting
 ) {
   // update honba
   if (winner === null) {
     gameStatus.honba += 1;
     if (!isDealerTenpai) {
-      incrementRound(gameStatus);
+      incrementRound(gameStatus, gameSetting);
     }
   } else {
-    if (includes(winner, getDealer(gameStatus))) {
+    if (includes(winner, getDealer(gameStatus, gameSetting))) {
       gameStatus.honba += 1;
     } else {
-      incrementRound(gameStatus);
+      incrementRound(gameStatus, gameSetting);
       gameStatus.honba = 0;
     }
     gameStatus.richiiStick = 0;
   }
   // update richii state
-  gameStatus.richii = Array(gameStatus.numPlayers).fill(false);
+  gameStatus.richii = Array(gameSetting.numPlayers).fill(false);
 
   return { ...gameStatus };
 }

@@ -1,4 +1,4 @@
-import { omit, pick } from "lodash";
+import { pick } from "lodash";
 import { useCallback, useContext } from "react";
 import { Record } from "../types/Record";
 import GameContext from "../context/GameContext";
@@ -13,8 +13,12 @@ import {
 } from "../util/Score";
 import { WindNumber } from "../util/Wind";
 import { nextGameStatus } from "../Calculator";
+import GameSettingContext from "../context/GameSettingContext";
 
 export function useGameManager() {
+  const gameSetting = useContext(GameSettingContext);
+  const { numPlayers } = gameSetting;
+
   const {
     setGameStatus,
     setPlayers,
@@ -85,7 +89,6 @@ export function useGameManager() {
         );
 
         return {
-          numPlayers: gameStatus.numPlayers,
           ...pick(lastRecord, "wind", "round", "honba", "richiiStick"),
           richii: [...lastRecord.richii],
         };
@@ -99,11 +102,13 @@ export function useGameManager() {
       }
       return newRecords;
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     setGameRecord,
     setGameStatus,
     setEndingType,
     setPlayers,
+    numPlayers,
     setWinInfo,
     setTenpai,
   ]);
@@ -112,14 +117,14 @@ export function useGameManager() {
     setGameStatus((gameStatus) => {
       let deltas: number[];
       if (endingType === "Win") {
-        deltas = getDeltaWithWinner(winInfo, gameStatus);
+        deltas = getDeltaWithWinner(winInfo, gameStatus, gameSetting);
       } else {
         deltas = getDeltaWithoutWinner(tenpai);
       }
       setPlayers((players) => applyScoreChange(players, deltas));
       const record: Omit<Record, "info" | "type"> = {
         deltas,
-        ...omit(gameStatus, "numPlayers"),
+        ...gameStatus,
       };
       if (endingType === "Win") {
         pushRecord({
@@ -135,16 +140,18 @@ export function useGameManager() {
         });
       }
 
-      resetWinState(gameStatus);
+      resetWinState();
 
       return nextGameStatus(
         endingType === "Win" ? winInfo.map((record) => record.winner) : null,
-        tenpai[getDealer(gameStatus)],
-        gameStatus
+        tenpai[getDealer(gameStatus, gameSetting)],
+        gameStatus,
+        gameSetting
       );
     });
   }, [
     endingType,
+    gameSetting,
     pushRecord,
     resetWinState,
     setGameStatus,
@@ -152,6 +159,7 @@ export function useGameManager() {
     tenpai,
     winInfo,
   ]);
+
   return {
     togglePlayerRichii,
     rewind,

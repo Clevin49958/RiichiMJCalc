@@ -1,3 +1,4 @@
+import { GameSetting } from "../types/GameSetting";
 import { GameStatus } from "../types/GameStatus";
 import { PlayerList } from "../types/Player";
 import { WinRecord } from "../types/Record";
@@ -14,8 +15,8 @@ export function roundPoints(pts: number) {
   return Math.ceil(pts / 100) * 100;
 }
 
-export function getDealer(gameStatus: GameStatus) {
-  return ((gameStatus.round - 1) % gameStatus.numPlayers) as WindNumber;
+export function getDealer(gameStatus: GameStatus, gameSetting: GameSetting) {
+  return ((gameStatus.round - 1) % gameSetting.numPlayers) as WindNumber;
 }
 
 function getBasePoint(fan: number, fu: number) {
@@ -38,10 +39,11 @@ function getDeltaForTsumo(
   basePoint: number,
   dealer: WindNumber,
   seating: WindNumber,
-  gameStatus: GameStatus
+  gameStatus: GameStatus,
+  gameSetting: GameSetting
 ) {
   const honba = gameStatus.honba;
-  const nP = gameStatus.numPlayers;
+  const nP = gameSetting.numPlayers;
   const deltas = Array(nP).fill(0);
   const honbaPts = 100 * honba;
   if (dealer === seating) {
@@ -68,10 +70,11 @@ function getDeltaForRon(
   dealer: WindNumber,
   seating: WindNumber,
   winFrom: WindNumber,
-  gameStatus: GameStatus
+  gameStatus: GameStatus,
+  gameSetting: GameSetting
 ) {
   const honba = gameStatus.honba;
-  const nP = gameStatus.numPlayers;
+  const nP = gameSetting.numPlayers;
   const deltas = Array(nP).fill(0);
   const multiplier = dealer === seating ? 6 : 4;
   const score = roundPoints(multiplier * basePoint + 300 * honba);
@@ -80,54 +83,73 @@ function getDeltaForRon(
   return deltas;
 }
 
-function getDeltaOneWinner(record: WinRecord, gameStatus: GameStatus) {
+function getDeltaOneWinner(
+  record: WinRecord,
+  gameStatus: GameStatus,
+  gameSetting: GameSetting
+) {
   const { fan, fu, winner, dealIn: winFrom } = record;
   const isTsumo = winFrom === winner;
-  const dealer = getDealer(gameStatus);
+  const dealer = getDealer(gameStatus, gameSetting);
   const basePoint = getBasePoint(fan, fu);
   let deltas: number[];
   // 2 player Tsumo is treated as the other player deal in
   // because there's no Tsumo reduction as in 3p
   if (isTsumo) {
-    if (gameStatus.numPlayers === 2) {
+    if (gameSetting.numPlayers === 2) {
       deltas = getDeltaForRon(
         basePoint,
         dealer,
         winner,
         (1 - winner) as WindNumber,
-        gameStatus
+        gameStatus,
+        gameSetting
       );
     } else {
-      deltas = getDeltaForTsumo(basePoint, dealer, winner, gameStatus);
+      deltas = getDeltaForTsumo(
+        basePoint,
+        dealer,
+        winner,
+        gameStatus,
+        gameSetting
+      );
     }
   } else {
-    deltas = getDeltaForRon(basePoint, dealer, winner, winFrom!, gameStatus);
+    deltas = getDeltaForRon(
+      basePoint,
+      dealer,
+      winner,
+      winFrom,
+      gameStatus,
+      gameSetting
+    );
   }
   return deltas;
 }
 
 export function getDeltaWithWinner(
   records: WinRecord[],
-  gameStatus: GameStatus
+  gameStatus: GameStatus,
+  gameSetting: GameSetting
 ) {
   const deltaArr = records.map((record) =>
-    getDeltaOneWinner(record, gameStatus)
+    getDeltaOneWinner(record, gameStatus, gameSetting)
   );
 
   // sum all deltas
   const deltas = deltaArr.reduce(
     (prev, curr) => prev.map((val, idx) => val + curr[idx]),
-    Array(gameStatus.numPlayers).fill(0)
+    Array(gameSetting.numPlayers).fill(0)
   );
   // richii stick
   // The RHS of the one who deal in gets richii stick
   const dealIn = records[0].dealIn;
   const winners = records.map((record) =>
     record.winner < dealIn
-      ? record.winner + gameStatus.numPlayers
+      ? record.winner + gameSetting.numPlayers
       : record.winner
   );
-  const getter = (Math.min(...winners) % gameStatus.numPlayers) as WindNumber;
+  const getter = (Math.min(...winners) % gameSetting.numPlayers) as WindNumber;
   deltas[getter] += gameStatus.richiiStick * 1000;
 
   return deltas;

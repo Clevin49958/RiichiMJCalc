@@ -1,3 +1,4 @@
+import { GameSetting } from "./GameSetting";
 import { GameStatus } from "./GameStatus";
 import { PlayerList } from "./Player";
 import { Record } from "./Record";
@@ -6,6 +7,7 @@ import { Record } from "./Record";
  * it could be dumped and exported as json directly
  */
 export default interface GameEntity {
+  settings: GameSetting;
   endTime: Date;
   gameStatus: GameStatus;
   players: PlayerList;
