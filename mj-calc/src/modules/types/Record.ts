@@ -24,4 +24,4 @@ export type EndingRecord = {
     }
 );
 
-export type Record = EndingRecord & Omit<GameStatus, "numPlayers">;
+export type Record = EndingRecord & GameStatus;

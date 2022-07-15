@@ -13,8 +13,12 @@ import {
 } from "../util/Score";
 import { WindNumber } from "../util/Wind";
 import { nextGameStatus } from "../Calculator";
+import GameSettingContext from "../context/GameSettingContext";
 
 export function useGameManager() {
+  const gameSetting = useContext(GameSettingContext);
+  const { numPlayers } = gameSetting;
+
   const {
     setGameStatus,
     setPlayers,
@@ -85,7 +89,7 @@ export function useGameManager() {
         );
 
         return {
-          numPlayers: gameStatus.numPlayers,
+          numPlayers: numPlayers,
           ...pick(lastRecord, "wind", "round", "honba", "richiiStick"),
           richii: [...lastRecord.richii],
         };
@@ -104,6 +108,7 @@ export function useGameManager() {
     setGameStatus,
     setEndingType,
     setPlayers,
+    numPlayers,
     setWinInfo,
     setTenpai,
   ]);
@@ -119,7 +124,7 @@ export function useGameManager() {
       setPlayers((players) => applyScoreChange(players, deltas));
       const record: Omit<Record, "info" | "type"> = {
         deltas,
-        ...omit(gameStatus, "numPlayers"),
+        ...gameStatus,
       };
       if (endingType === "Win") {
         pushRecord({
@@ -140,11 +145,13 @@ export function useGameManager() {
       return nextGameStatus(
         endingType === "Win" ? winInfo.map((record) => record.winner) : null,
         tenpai[getDealer(gameStatus)],
-        gameStatus
+        gameStatus,
+        gameSetting
       );
     });
   }, [
     endingType,
+    gameSetting,
     pushRecord,
     resetWinState,
     setGameStatus,
@@ -152,6 +159,7 @@ export function useGameManager() {
     tenpai,
     winInfo,
   ]);
+
   return {
     togglePlayerRichii,
     rewind,

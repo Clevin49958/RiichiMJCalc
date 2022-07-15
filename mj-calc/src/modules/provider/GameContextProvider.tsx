@@ -1,4 +1,4 @@
-import { ReactNode, useMemo, useState } from "react";
+import { ReactNode, useContext, useMemo, useState } from "react";
 import {
   STARTING_HONBA,
   STARTING_POINT,
@@ -8,17 +8,19 @@ import { GameStatus } from "../types/GameStatus";
 import GameEntity from "../types/GameEntity";
 import { PlayerList } from "../types/Player";
 import { Record } from "../types/Record";
-import { NP, WindNumber } from "../util/Wind";
+import { WindNumber } from "../util/Wind";
 import GameContext from "../context/GameContext";
+import GameSettingContext from "../context/GameSettingContext";
 
 type GameContextProps = {
-  n: NP;
   playerNames: string[];
   state?: GameEntity;
   children: ReactNode;
 };
 
 export function GameContextProvider({ children, ...props }: GameContextProps) {
+  const { numPlayers } = useContext(GameSettingContext);
+
   let initialGameStatus: GameStatus;
   let initialPlayers: PlayerList;
   let initialRecord: Record[] = [];
@@ -28,15 +30,14 @@ export function GameContextProvider({ children, ...props }: GameContextProps) {
     initialRecord = props.state.records;
   } else {
     initialGameStatus = {
-      numPlayers: props.n,
       wind: STARTING_WIND,
       round: 1,
       honba: STARTING_HONBA,
       richiiStick: 0,
-      richii: Array(props.n).fill(false),
+      richii: Array(numPlayers).fill(false),
     };
-    const startingPoint = STARTING_POINT[4 - props.n];
-    initialPlayers = (Array.from(Array(props.n).keys()) as WindNumber[]).map(
+    const startingPoint = STARTING_POINT[4 - numPlayers];
+    initialPlayers = (Array.from(Array(numPlayers).keys()) as WindNumber[]).map(
       (seating) => ({
         name: props.playerNames[seating],
         seating,

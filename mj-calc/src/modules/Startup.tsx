@@ -7,6 +7,7 @@ import GameEntity from "./types/GameEntity";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { GameContextProvider } from "./provider/GameContextProvider";
 import { ResultInputContextProvider } from "./provider/ResultInputContextProvider";
+import { GameSettingContextProvider } from "./provider/GameSettingContextProvider";
 
 const DEFAULT_N_PLAYERS = 4;
 
@@ -35,15 +36,16 @@ export default function Startup() {
   );
 
   return gameReady ? (
-    <GameContextProvider
-      n={numPlayers}
-      playerNames={playerNames.slice(0, numPlayers)}
-      state={viewFile}
-    >
-      <ResultInputContextProvider>
-        <Calculator viewOnly={viewOnly} onNextGame={onNextGame} />
-      </ResultInputContextProvider>
-    </GameContextProvider>
+    <GameSettingContextProvider numPlayers={numPlayers}>
+      <GameContextProvider
+        playerNames={playerNames.slice(0, numPlayers)}
+        state={viewFile}
+      >
+        <ResultInputContextProvider>
+          <Calculator viewOnly={viewOnly} onNextGame={onNextGame} />
+        </ResultInputContextProvider>
+      </GameContextProvider>
+    </GameSettingContextProvider>
   ) : (
     <>
       <div className="d-flex flex-column align-items-center">

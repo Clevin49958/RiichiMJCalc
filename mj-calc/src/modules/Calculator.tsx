@@ -17,6 +17,8 @@ import { StickIconSize } from "./util/Constants";
 import { useGameManager } from "./hooks/useGameManager";
 import { useToggle } from "./hooks/useToggle";
 import { ResultInputContext } from "./context/ResultInputContext";
+import GameSettingContext from "./context/GameSettingContext";
+import { GameSetting } from "./types/GameSetting";
 
 export function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
@@ -38,7 +40,8 @@ export function Calculator({
 }) {
   // Game state objects
   const { gameStatus, players, records: gameRecord } = useContext(GameContext);
-  const n = gameStatus.numPlayers;
+  const gameSetting = useContext(GameSettingContext);
+  const { numPlayers: n } = gameSetting;
 
   // New result input
   const { winInfo, setWinInfo, tenpai, setTenpai, endingType, setEndingType } =
@@ -216,25 +219,26 @@ export function Calculator({
 export function nextGameStatus(
   winner: null | WindNumber[],
   isDealerTenpai: boolean,
-  gameStatus: GameStatus
+  gameStatus: GameStatus,
+  gameSetting: GameSetting
 ) {
   // update honba
   if (winner === null) {
     gameStatus.honba += 1;
     if (!isDealerTenpai) {
-      incrementRound(gameStatus);
+      incrementRound(gameStatus, gameSetting);
     }
   } else {
     if (includes(winner, getDealer(gameStatus))) {
       gameStatus.honba += 1;
     } else {
-      incrementRound(gameStatus);
+      incrementRound(gameStatus, gameSetting);
       gameStatus.honba = 0;
     }
     gameStatus.richiiStick = 0;
   }
   // update richii state
-  gameStatus.richii = Array(gameStatus.numPlayers).fill(false);
+  gameStatus.richii = Array(gameSetting.numPlayers).fill(false);
 
   return { ...gameStatus };
 }
