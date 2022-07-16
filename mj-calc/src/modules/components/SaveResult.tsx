@@ -69,13 +69,16 @@ export function ExportResult() {
             records
           );
           console.log(result);
-          const resp = await fetch("", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(result),
-          });
+          const resp = await fetch(
+            "https://uva4irj949.execute-api.us-east-2.amazonaws.com/save-game",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(result),
+            }
+          );
           console.log(resp.json());
         }}
       >

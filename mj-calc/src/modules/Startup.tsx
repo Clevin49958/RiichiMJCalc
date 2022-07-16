@@ -8,6 +8,7 @@ import { useLocalStorage } from "./hooks/useLocalStorage";
 import { GameContextProvider } from "./provider/GameContextProvider";
 import { ResultInputContextProvider } from "./provider/ResultInputContextProvider";
 import { GameSettingContextProvider } from "./provider/GameSettingContextProvider";
+import { bloatGameStatus, MiniGameEntity } from "./util/Simplify";
 
 const DEFAULT_N_PLAYERS = 4;
 
@@ -73,9 +74,9 @@ export default function Startup() {
               fileReader.onload = (event) => {
                 const stringContent = event.target?.result?.toString() ?? "";
                 try {
-                  const json = JSON.parse(stringContent);
+                  const json = JSON.parse(stringContent) as MiniGameEntity;
                   // TODO: Maybe verify for json content?
-                  setViewFile(json!);
+                  setViewFile(bloatGameStatus(json));
                   setViewOnly(true);
                   setNamesReady(true);
                   console.log(json);
