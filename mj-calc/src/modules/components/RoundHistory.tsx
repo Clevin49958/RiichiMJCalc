@@ -82,7 +82,7 @@ export default function RoundHistory({
             <div className="card-body">
               <h5 className="card-header">
                 {getWind(record.wind)} {record.round} &nbsp;&nbsp;
-                {record.honba} honba (Repeat Counter)
+                {record.honba} honba
               </h5>
               <div className="container round-entry">{content}</div>
             </div>
