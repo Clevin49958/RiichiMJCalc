@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { includes, maxBy } from "lodash";
 
 import PlayerTable from "./components/PlayerTable";
@@ -49,6 +49,17 @@ export function Calculator({
     useContext(ResultInputContext);
 
   const { togglePlayerRichii, rewind, saveEntry } = useGameManager();
+
+  // media query
+  const [matches, setMatches] = useState(
+    window.matchMedia("(min-width: 1400px)").matches
+  );
+
+  useEffect(() => {
+    window
+      .matchMedia("(min-width: 1400px)")
+      .addEventListener("change", (e) => setMatches(e.matches));
+  }, []);
 
   // Display
   const [displayDelta, setDisplayDelta] = useState(-1);
@@ -179,6 +190,54 @@ export function Calculator({
     onNextGame(newPlayerNames);
   }, [n, onNextGame, players]);
 
+  // big screen grid layout
+  if (matches) {
+    return (
+      <div className={`p-0 container${tabletopMode ? "-fluid" : ""}`}>
+        <div className="row">
+          <PlayerTable
+            playerTable={playersScoreView}
+            playerCell={PlayerInfoCell}
+            centerCell={() => GameStatusCenterCell(gameStatus)}
+            RBCell={viewOnly ? <></> : rewindButton}
+            LTCell={viewOnly ? <></> : toggleTabletopModeButton}
+            tableTopMode={tabletopMode}
+          />
+          {!tabletopMode && (
+            <div className="row mt-4">
+              <div className="col col-6">
+                {viewOnly || (
+                  <GameEntrySelector
+                    endingType={endingType}
+                    setEndingType={setEndingType}
+                    players={players}
+                    winInfo={winInfo}
+                    setWinInfo={setWinInfo}
+                    tenpai={tenpai}
+                    setTenpai={setTenpai}
+                    saveEntry={saveEntry}
+                    isReady={true}
+                    onNextGame={onNextGameMemo}
+                  />
+                )}
+                <RoundHistory records={gameRecord} players={players} />
+              </div>
+              <div className="col col-6">
+                <FinalPoints />
+                <PointsPlot
+                  players={players}
+                  gameRecord={gameRecord}
+                  gameStatus={gameStatus}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // small screen list layout
   return (
     <div className={`p-0 container${tabletopMode ? "-fluid" : ""}`}>
       <div className="d-flex flex-column">
