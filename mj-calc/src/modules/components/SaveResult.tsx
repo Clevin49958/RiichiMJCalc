@@ -3,7 +3,7 @@ import { GameStatus } from "../types/GameStatus";
 import GameEntity from "../types/GameEntity";
 import { PlayerList } from "../types/Player";
 import { GameRecord } from "../types/Record";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { GameSetting } from "../types/GameSetting";
 import GameSettingContext from "../context/GameSettingContext";
 import { minify } from "../util/Simplify";
@@ -40,6 +40,7 @@ export function saveJson(result: { endTime: Date }) {
 export function ExportResult() {
   const { gameStatus, players, records } = useContext(GameContext);
   const gameSetting = useContext(GameSettingContext);
+  const [buttonColor, setButtonColor] = useState("primary");
 
   return (
     <>
@@ -60,7 +61,10 @@ export function ExportResult() {
       </button>
       <button
         type="button"
-        className="btn btn-primary"
+        className={`btn btn-${buttonColor}`}
+        style={{
+          transition: "all 1s ease-in",
+        }}
         onClick={async (_event) => {
           const result = generateResult(
             gameStatus,
@@ -69,7 +73,7 @@ export function ExportResult() {
             records
           );
           console.log(result);
-          const resp = await fetch(
+          await fetch(
             "https://uva4irj949.execute-api.us-east-2.amazonaws.com/save-game",
             {
               method: "POST",
@@ -78,8 +82,10 @@ export function ExportResult() {
               },
               body: JSON.stringify(result),
             }
-          );
-          console.log(resp.json());
+          )
+            .then((val) => console.log(val.json()))
+            .then(() => setButtonColor("success"))
+            .catch(() => setButtonColor("warning"));
         }}
       >
         Save to database

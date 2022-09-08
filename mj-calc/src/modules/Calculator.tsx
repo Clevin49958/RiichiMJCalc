@@ -85,6 +85,10 @@ export function Calculator({
           }`}
           style={{
             transform: `rotate(${angle * 90}deg)`,
+            transition: `0.8s ease-in-out`,
+            msTransform: `rotate(${angle * 90}deg)`,
+            WebkitTransform: `rotate(${angle * 90}deg)`,
+            WebkitTransition: "0.8s ease-in-out",
             height: tabletopMode ? "33.3vh" : undefined,
             width: tabletopMode
               ? angle % 2 === 1
