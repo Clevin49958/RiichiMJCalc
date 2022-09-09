@@ -1,6 +1,6 @@
 import { pick } from "lodash";
 import { useCallback, useContext } from "react";
-import { Record } from "../types/Record";
+import { GameRecord } from "../types/Record";
 import GameContext from "../context/GameContext";
 import { ResultInputContext } from "../context/ResultInputContext";
 import { RichiiList } from "../types/GameStatus";
@@ -60,7 +60,7 @@ export function useGameManager() {
   );
 
   const pushRecord = useCallback(
-    (record: Record) => {
+    (record: GameRecord) => {
       setGameRecord((gameRecord) => [...gameRecord, record]);
     },
     [setGameRecord]
@@ -122,7 +122,7 @@ export function useGameManager() {
         deltas = getDeltaWithoutWinner(tenpai);
       }
       setPlayers((players) => applyScoreChange(players, deltas));
-      const record: Omit<Record, "info" | "type"> = {
+      const record: Omit<GameRecord, "info" | "type"> = {
         deltas,
         ...gameStatus,
       };
@@ -143,8 +143,9 @@ export function useGameManager() {
       resetWinState();
 
       return nextGameStatus(
-        endingType === "Win" ? winInfo.map((record) => record.winner) : null,
-        tenpai[getDealer(gameStatus, gameSetting)],
+        endingType === "Win"
+          ? { type: endingType, info: winInfo }
+          : { type: endingType, info: tenpai },
         gameStatus,
         gameSetting
       );

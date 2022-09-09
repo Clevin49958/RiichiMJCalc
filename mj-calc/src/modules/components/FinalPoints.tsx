@@ -1,5 +1,5 @@
 import GameContext from "../context/GameContext";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Select from "react-select/";
 import { STARTING_POINT } from "../util/Constants";
 import GameSettingContext from "../context/GameSettingContext";
@@ -51,6 +51,15 @@ export default function FinalPoints() {
   const [umaOption, setUmaOption] = useState(umaPresets[0]);
   const [okaOption, setOkaOption] = useState(okaPresets[0]);
 
+  const mediaMatch = window.matchMedia("(min-width: 576px)");
+  const [matches, setMatches] = useState(mediaMatch.matches);
+
+  useEffect(() => {
+    window
+      .matchMedia("(min-width: 576px)")
+      .addEventListener("change", (e) => setMatches(e.matches));
+  }, []);
+
   const sortedPlayers = [...players].sort(
     (playerA, playerB) => playerB.score - playerA.score
   );
@@ -66,7 +75,11 @@ export default function FinalPoints() {
       <div className="card-body">
         <div className="container-fluid">
           <div className="row">
-            <div className="my-2 col col-6 col-lg-2">
+            <div
+              className={`col col-sm-3 d-flex flex-${
+                matches ? "column" : "row"
+              } justify-content-around my-2`}
+            >
               <label>
                 <div className="mb-1">Uma preset:</div>
                 <Select<Uma>
@@ -75,9 +88,7 @@ export default function FinalPoints() {
                   onChange={(uma) => setUmaOption(uma!)}
                 />
               </label>
-            </div>
-            {okaPresets.length > 1 && (
-              <div className="my-2 col col-6 col-lg-2">
+              {okaPresets.length > 1 && (
                 <label>
                   <div className="mb-1">Oka preset:</div>
                   <Select<Oka>
@@ -86,11 +97,10 @@ export default function FinalPoints() {
                     onChange={(oka) => setOkaOption(oka!)}
                   />
                 </label>
-              </div>
-            )}
-            <div
-              className={`col col-12 col-lg-${okaPresets.length > 1 ? 8 : 10}`}
-            >
+              )}
+            </div>
+
+            <div className="col col-sm-9 my-2">
               <table className="table table-striped table-bordered mx-3">
                 <thead className="table-primary">
                   <tr>

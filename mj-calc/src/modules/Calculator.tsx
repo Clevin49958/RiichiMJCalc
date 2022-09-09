@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { includes, maxBy } from "lodash";
 
 import PlayerTable from "./components/PlayerTable";
@@ -19,6 +19,7 @@ import { useToggle } from "./hooks/useToggle";
 import { ResultInputContext } from "./context/ResultInputContext";
 import GameSettingContext from "./context/GameSettingContext";
 import { GameSetting } from "./types/GameSetting";
+import { EndingRecord } from "./types/Record";
 
 export function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
@@ -48,6 +49,17 @@ export function Calculator({
     useContext(ResultInputContext);
 
   const { togglePlayerRichii, rewind, saveEntry } = useGameManager();
+
+  // media query
+  const [matches, setMatches] = useState(
+    window.matchMedia("(min-width: 1400px)").matches
+  );
+
+  useEffect(() => {
+    window
+      .matchMedia("(min-width: 1400px)")
+      .addEventListener("change", (e) => setMatches(e.matches));
+  }, []);
 
   // Display
   const [displayDelta, setDisplayDelta] = useState(-1);
@@ -84,6 +96,10 @@ export function Calculator({
           }`}
           style={{
             transform: `rotate(${angle * 90}deg)`,
+            transition: `0.8s ease-in-out`,
+            msTransform: `rotate(${angle * 90}deg)`,
+            WebkitTransform: `rotate(${angle * 90}deg)`,
+            WebkitTransition: "0.8s ease-in-out",
             height: tabletopMode ? "33.3vh" : undefined,
             width: tabletopMode
               ? angle % 2 === 1
@@ -174,6 +190,54 @@ export function Calculator({
     onNextGame(newPlayerNames);
   }, [n, onNextGame, players]);
 
+  // big screen grid layout
+  if (matches) {
+    return (
+      <div className={`p-0 container${tabletopMode ? "-fluid" : ""}`}>
+        <div className="row">
+          <PlayerTable
+            playerTable={playersScoreView}
+            playerCell={PlayerInfoCell}
+            centerCell={() => GameStatusCenterCell(gameStatus)}
+            RBCell={viewOnly ? <></> : rewindButton}
+            LTCell={viewOnly ? <></> : toggleTabletopModeButton}
+            tableTopMode={tabletopMode}
+          />
+          {!tabletopMode && (
+            <div className="row mt-4">
+              <div className="col col-6">
+                {viewOnly || (
+                  <GameEntrySelector
+                    endingType={endingType}
+                    setEndingType={setEndingType}
+                    players={players}
+                    winInfo={winInfo}
+                    setWinInfo={setWinInfo}
+                    tenpai={tenpai}
+                    setTenpai={setTenpai}
+                    saveEntry={saveEntry}
+                    isReady={true}
+                    onNextGame={onNextGameMemo}
+                  />
+                )}
+                <RoundHistory records={gameRecord} players={players} />
+              </div>
+              <div className="col col-6">
+                <FinalPoints />
+                <PointsPlot
+                  players={players}
+                  gameRecord={gameRecord}
+                  gameStatus={gameStatus}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // small screen list layout
   return (
     <div className={`p-0 container${tabletopMode ? "-fluid" : ""}`}>
       <div className="d-flex flex-column">
@@ -220,18 +284,20 @@ export function Calculator({
 }
 
 export function nextGameStatus(
-  winner: null | WindNumber[],
-  isDealerTenpai: boolean,
+  endingRecord: EndingRecord,
   gameStatus: GameStatus,
   gameSetting: GameSetting
 ) {
   // update honba
-  if (winner === null) {
+  if (endingRecord.type === "Draw") {
+    const isDealerTenpai =
+      endingRecord.info[getDealer(gameStatus, gameSetting)];
     gameStatus.honba += 1;
     if (!isDealerTenpai) {
       incrementRound(gameStatus, gameSetting);
     }
   } else {
+    const winner = endingRecord.info.map((record) => record.winner);
     if (includes(winner, getDealer(gameStatus, gameSetting))) {
       gameStatus.honba += 1;
     } else {

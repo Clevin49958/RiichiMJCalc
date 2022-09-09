@@ -1,7 +1,7 @@
 import { GameSetting } from "../types/GameSetting";
 import { GameStatus } from "../types/GameStatus";
 import { PlayerList } from "../types/Player";
-import { WinRecord } from "../types/Record";
+import { EndingRecord, WinRecord } from "../types/Record";
 import { WindNumber } from "./Wind";
 
 const NOTEN_BAPPU = {
@@ -137,7 +137,7 @@ export function getDeltaWithWinner(
   );
 
   // sum all deltas
-  const deltas = deltaArr.reduce(
+  const deltas = deltaArr.reduce<number[]>(
     (prev, curr) => prev.map((val, idx) => val + curr[idx]),
     Array(gameSetting.numPlayers).fill(0)
   );
@@ -161,13 +161,25 @@ export function getDeltaWithoutWinner(isTenPai: boolean[]) {
 
   if (nTenpai === 0 || nTenpai === isTenPai.length) {
     // array of 0s
-    return Array(isTenPai.length).fill(0);
+    return Array(isTenPai.length).fill(0) as number[];
   }
 
   const bappu = NOTEN_BAPPU[isTenPai.length.toString(10) as "2" | "3" | "4"];
   return isTenPai.map((value) => {
     return value ? bappu[isTenPai.length - nTenpai - 1] : -bappu[nTenpai - 1];
   });
+}
+
+export function getDeltas(
+  endingRecord: EndingRecord,
+  gameStatus: GameStatus,
+  gameSetting: GameSetting
+) {
+  if (endingRecord.type === "Win") {
+    return getDeltaWithWinner(endingRecord.info, gameStatus, gameSetting);
+  } else {
+    return getDeltaWithoutWinner(endingRecord.info);
+  }
 }
 
 export function applyScoreChange(
