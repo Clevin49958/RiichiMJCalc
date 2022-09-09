@@ -4,8 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MjCalcApi", "MjCalcApi\MjCalcApi.csproj", "{44CBEC3F-484A-4B42-8F9E-1E9A88B977E4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EC171CDC-9C33-4F03-9EA2-6C2A0E942DAD} = {EC171CDC-9C33-4F03-9EA2-6C2A0E942DAD}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{EC171CDC-9C33-4F03-9EA2-6C2A0E942DAD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MjCalcApi.Domain", "Domain\MjCalcApi.Domain.csproj", "{EC171CDC-9C33-4F03-9EA2-6C2A0E942DAD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

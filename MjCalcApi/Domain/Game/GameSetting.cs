@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Model
+﻿
+namespace MjCalcApi.Domain.Game
 {
-    internal class GameSetting
+    public class GameSetting
     {
         public int Id { get; set; }
         public int NumPlayers { get; set; }

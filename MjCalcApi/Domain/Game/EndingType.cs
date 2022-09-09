@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Game
+namespace MjCalcApi.Domain.Game
 {
-    internal enum EndingType
+    public enum EndingType
     {
         Win,
         Draw
