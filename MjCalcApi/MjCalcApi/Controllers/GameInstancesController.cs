@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MjCalcApi.Domain.Data;
 using MjCalcApi.Domain.Game;
@@ -26,7 +26,7 @@ namespace MjCalcApi.Controllers
             {
                 return NotFound();
             }
-            return await _context.Games.ToListAsync();
+            return await _context.Games.Include(game => game.Setting).Include(game => game.Players).ToListAsync();
         }
 
 
@@ -38,7 +38,11 @@ namespace MjCalcApi.Controllers
             {
                 return NotFound();
             }
-            var gameInstance = await _context.Games.FindAsync(id);
+            var gameInstance = await _context.Games
+                .Include(game => game.Setting)
+                .Include(game => game.Records)
+                .Include(game => game.Players)
+                .SingleOrDefaultAsync(game => game.Id == id);
 
             if (gameInstance == null)
             {
@@ -46,6 +50,37 @@ namespace MjCalcApi.Controllers
             }
 
             return gameInstance;
+        }
+
+        // POST: api/game
+        [HttpPost]
+        public async Task<ActionResult<GameInstance>> PostGameInstance(GameInstanceDTO gameInstanceDTO)
+        {
+            var players = gameInstanceDTO.Players.Select(player => new Player 
+            { 
+                Name = player.Name, Score = player.Score 
+            }).ToList();
+
+            var records = gameInstanceDTO.Records.Select(record => new Record
+            {
+                Info = record.Info,
+                EndingType = (EndingType)Enum.Parse(typeof(EndingType), record.type),
+                Richii = record.Richii,
+            }).ToList();
+
+            var setting = new GameSetting { NumPlayers = gameInstanceDTO.Settings.NumPlayers };
+            var time = DateTime.Parse(gameInstanceDTO.EndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
+            var gameInstance = new GameInstance
+            {
+                EndingTime = time,
+                Players = players,
+                Records = records,
+                Setting = setting,
+            };
+            _context.Games.Add(gameInstance);
+
+            await _context.SaveChangesAsync();
+            return CreatedAtAction("GetGames", gameInstance);
         }
     }
 }
