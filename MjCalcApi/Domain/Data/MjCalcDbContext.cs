@@ -8,7 +8,7 @@ using MjCalcApi.Domain.Game;
 
 namespace MjCalcApi.Domain.Data
 {
-    internal class MjCalcDbContext:DbContext
+    public class MjCalcDbContext:DbContext
     {
         public MjCalcDbContext(DbContextOptions<MjCalcDbContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder builder)

@@ -9,5 +9,7 @@
 
         public DateTime EndingTime { get; set; } 
 
+        public ICollection<Record> Records { get; set; } = new List<Record>();
+
     }
 }
