@@ -1,5 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MjCalcApi.AppServices.ICustomServices;
 using MjCalcApi.Domain.Data;
 using MjCalcApi.Domain.Game;
 using MjCalcApi.Domain.Game.DTO;
@@ -11,11 +12,13 @@ namespace MjCalcApi.Controllers
     [Route("[controller]")]
     public class GameController : ControllerBase
     {
+        private readonly ICustomService<GameInstance> _customService;
         private readonly MjCalcDbContext _context;
 
-        public GameController(MjCalcDbContext context)
+        public GameController(ICustomService<GameInstance> customService, MjCalcDbContext context)
         {
             _context = context;
+            _customService = customService;
         }
 
         // GET: api/game
