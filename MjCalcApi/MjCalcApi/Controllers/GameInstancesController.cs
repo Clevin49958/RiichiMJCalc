@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MjCalcApi.Domain.Data;
 using MjCalcApi.Domain.Game;
@@ -56,27 +56,7 @@ namespace MjCalcApi.Controllers
         [HttpPost]
         public async Task<ActionResult<GameInstance>> PostGameInstance(GameInstanceDTO gameInstanceDTO)
         {
-            var players = gameInstanceDTO.Players.Select(player => new Player 
-            { 
-                Name = player.Name, Score = player.Score 
-            }).ToList();
-
-            var records = gameInstanceDTO.Records.Select(record => new Record
-            {
-                Info = record.Info,
-                EndingType = (EndingType)Enum.Parse(typeof(EndingType), record.type),
-                Richii = record.Richii,
-            }).ToList();
-
-            var setting = new GameSetting { NumPlayers = gameInstanceDTO.Settings.NumPlayers };
-            var time = DateTime.Parse(gameInstanceDTO.EndTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
-            var gameInstance = new GameInstance
-            {
-                EndingTime = time,
-                Players = players,
-                Records = records,
-                Setting = setting,
-            };
+            var gameInstance = new GameInstance(gameInstanceDTO);
             _context.Games.Add(gameInstance);
 
             await _context.SaveChangesAsync();
