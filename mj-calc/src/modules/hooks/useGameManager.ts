@@ -7,7 +7,6 @@ import { RichiiList } from "../types/GameStatus";
 import { PlayerList } from "../types/Player";
 import {
   applyScoreChange,
-  getDealer,
   getDeltaWithoutWinner,
   getDeltaWithWinner,
 } from "../util/Score";

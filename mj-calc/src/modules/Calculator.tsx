@@ -3,7 +3,7 @@ import { includes, maxBy } from "lodash";
 
 import PlayerTable from "./components/PlayerTable";
 import { PlayerList, Player } from "./types/Player";
-import { getWind, WindNumber } from "./util/Wind";
+import { getWind } from "./util/Wind";
 import { incrementRound } from "./util/GameStatus";
 import { GameStatus } from "./types/GameStatus";
 import { getDealer } from "./util/Score";
