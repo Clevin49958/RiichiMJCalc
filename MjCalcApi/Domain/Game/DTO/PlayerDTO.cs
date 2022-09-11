@@ -8,7 +8,7 @@ namespace MjCalcApi.Domain.Game.DTO
 {
     public class PlayerDTO
     {
-        public string Name { get; set; } = default!;
+        public string Name { get; set; } = string.Empty;
         public int Score { get; set; }
     }
 }

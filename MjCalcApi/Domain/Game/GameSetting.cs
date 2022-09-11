@@ -7,6 +7,8 @@ namespace MjCalcApi.Domain.Game
     {
         public int NumPlayers { get; set; }
 
+        public GameSetting() { }
+
         public GameSetting(GameSettingDTO dto)
         {
             NumPlayers = dto.NumPlayers;

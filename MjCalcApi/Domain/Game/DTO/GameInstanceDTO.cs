@@ -10,7 +10,7 @@ namespace MjCalcApi.Domain.Game.DTO
     {
         public ICollection<PlayerDTO> Players { get; set; } = new List<PlayerDTO>();
 
-        public GameSettingDTO Settings { get; set; } = default!;
+        public GameSettingDTO Settings { get; set; } = new GameSettingDTO();
 
         public string EndTime { get; set; } = "1970-01-01T00:00:00.000Z";
 

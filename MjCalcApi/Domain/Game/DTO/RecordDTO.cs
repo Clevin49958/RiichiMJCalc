@@ -8,10 +8,10 @@ namespace MjCalcApi.Domain.Game.DTO
 {
     public class RecordDTO
     {
-        public bool[] Richii = new bool[4];
+        public string Richii = string.Empty;
 
-        public string type { get; set; }
+        public string type { get; set; } = "Win";
 
-        public string Info { get; set; } = default!;
+        public string Info { get; set; } = string.Empty;
     }
 }

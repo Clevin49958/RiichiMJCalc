@@ -6,11 +6,13 @@ namespace MjCalcApi.Domain.Game
 {
     public class Record : BaseEntity
     {
-        public bool[] Richii = new bool[4];
+        public string Richii = string.Empty;
 
         public EndingType EndingType { get; set; }
 
-        public string Info { get; set; } = default!;
+        public string Info { get; set; } = string.Empty;
+
+        public Record() { }
 
         public Record (RecordDTO dto)
         {

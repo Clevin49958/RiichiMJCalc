@@ -6,12 +6,13 @@ namespace MjCalcApi.Domain.Game
     {
         public ICollection<Player> Players { get; set; } = new List<Player>();
 
-        public GameSetting Setting { get; set; } = default!;
+        public GameSetting Setting { get; set; } = new GameSetting();
 
         public DateTime EndingTime { get; set; } 
 
         public ICollection<Record> Records { get; set; } = new List<Record>();
         
+        public GameInstance() { }
         public GameInstance(GameInstanceDTO dto)
         {
             Players = dto.Players.Select(player => new Player(player)).ToList();
