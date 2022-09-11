@@ -73,16 +73,13 @@ export function ExportResult() {
             records
           );
           console.log(result);
-          await fetch(
-            "https://uva4irj949.execute-api.us-east-2.amazonaws.com/save-game",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(result),
-            }
-          )
+          await fetch("https://richiimj.azurewebsites.net/game", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(result),
+          })
             .then((val) => console.log(val.json()))
             .then(() => setButtonColor("success"))
             .catch(() => setButtonColor("warning"));
