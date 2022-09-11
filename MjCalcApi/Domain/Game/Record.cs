@@ -6,7 +6,7 @@ namespace MjCalcApi.Domain.Game
 {
     public class Record : BaseEntity
     {
-        public string Richii = string.Empty;
+        public string Richii { get; set; } = string.Empty;
 
         public EndingType EndingType { get; set; }
 

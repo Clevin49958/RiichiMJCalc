@@ -8,7 +8,7 @@ namespace MjCalcApi.Domain.Game.DTO
 {
     public class RecordDTO
     {
-        public string Richii = string.Empty;
+        public string Richii { get; set; } = string.Empty;
 
         public string type { get; set; } = "Win";
 
