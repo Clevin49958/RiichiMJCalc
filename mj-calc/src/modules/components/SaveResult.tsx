@@ -74,7 +74,7 @@ export function ExportResult() {
           );
           console.log(result);
           await fetch(
-            "https://uva4irj949.execute-api.us-east-2.amazonaws.com/save-game",
+            "https://richiimj.azurewebsites.net/game",
             {
               method: "POST",
               headers: {

@@ -56,5 +56,8 @@
     "@types/react-select": "^5.0.1",
     "eslint": "^8.18.0",
     "prettier": "2.6.2"
+  },
+  "engines": {
+    "npm": ">=7.0.0"
   }
 }
