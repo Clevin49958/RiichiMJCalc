@@ -13,56 +13,43 @@ namespace MjCalcApi.Controllers
     public class GameController : ControllerBase
     {
         private readonly ICustomService<GameInstance> _customService;
-        private readonly MjCalcDbContext _context;
 
-        public GameController(ICustomService<GameInstance> customService, MjCalcDbContext context)
+        public GameController(ICustomService<GameInstance> customService)
         {
-            _context = context;
             _customService = customService;
         }
 
         // GET: api/game
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GameInstance>>> GetGames()
+        public ActionResult<IEnumerable<GameInstance>> GetGames()
         {
-            if (_context.Games == null)
+            var list = _customService.GetAll().ToList();
+            if (list.Count == 0)
             {
                 return NotFound();
             }
-            return await _context.Games.Include(game => game.Setting).Include(game => game.Players).ToListAsync();
+            return list;
         }
 
 
         // GET: api/game/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<GameInstance>> GetGame(int id)
+        public ActionResult<GameInstance> GetGame(int id)
         {
-            if (_context.Games == null)
+            var game = _customService.Get(id);
+            if (game == null)
             {
                 return NotFound();
             }
-            var gameInstance = await _context.Games
-                .Include(game => game.Setting)
-                .Include(game => game.Records)
-                .Include(game => game.Players)
-                .SingleOrDefaultAsync(game => game.Id == id);
-
-            if (gameInstance == null)
-            {
-                return NotFound();
-            }
-
-            return gameInstance;
+            return Ok(game);
         }
 
         // POST: api/game
         [HttpPost]
-        public async Task<ActionResult<GameInstance>> PostGameInstance(GameInstanceDTO gameInstanceDTO)
+        public ActionResult<GameInstance> PostGameInstance(GameInstanceDTO gameInstanceDTO)
         {
             var gameInstance = new GameInstance(gameInstanceDTO);
-            _context.Games.Add(gameInstance);
-
-            await _context.SaveChangesAsync();
+            _customService.Insert(gameInstance);
             return CreatedAtAction("GetGames", gameInstance);
         }
     }
