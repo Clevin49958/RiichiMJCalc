@@ -10,7 +10,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MjCalcApi", "MjCalcApi\MjCa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MjCalcApi.Domain", "Domain\MjCalcApi.Domain.csproj", "{EC171CDC-9C33-4F03-9EA2-6C2A0E942DAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MjCalcApi.AppServices", "MjCalcApi.AppServices\MjCalcApi.AppServices.csproj", "{C4E98D12-8E4A-49E5-BBE9-01F2DB8C0C2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MjCalcApi.AppServices", "MjCalcApi.AppServices\MjCalcApi.AppServices.csproj", "{C4E98D12-8E4A-49E5-BBE9-01F2DB8C0C2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{DE157720-27F5-471F-ACAD-CDFB68E2F68F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +32,10 @@ Global
 		{C4E98D12-8E4A-49E5-BBE9-01F2DB8C0C2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4E98D12-8E4A-49E5-BBE9-01F2DB8C0C2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4E98D12-8E4A-49E5-BBE9-01F2DB8C0C2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE157720-27F5-471F-ACAD-CDFB68E2F68F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE157720-27F5-471F-ACAD-CDFB68E2F68F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE157720-27F5-471F-ACAD-CDFB68E2F68F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE157720-27F5-471F-ACAD-CDFB68E2F68F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
