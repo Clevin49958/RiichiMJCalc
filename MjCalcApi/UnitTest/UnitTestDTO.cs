@@ -3,7 +3,7 @@ using MjCalcApi.Domain.Game.DTO;
 
 namespace UnitTest
 {
-    public class Tests
+    public class UnitTestDTO
     {
         private GameSettingDTO settingDTO;
         private PlayerDTO[] playerDTOs;

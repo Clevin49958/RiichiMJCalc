@@ -1,4 +1,5 @@
-﻿using MjCalcApi.AppServices.ICustomServices;
+﻿using Microsoft.EntityFrameworkCore;
+using MjCalcApi.AppServices.ICustomServices;
 using MjCalcApi.AppServices.IRepository;
 using MjCalcApi.Domain.Game;
 using MjCalcApi.Domain.Game.DTO;
@@ -39,7 +40,11 @@ namespace MjCalcApi.AppServices.CustomServices
         {
             try
             {
-                var obj = _Repository.Get(Id);
+                var obj = _Repository.GetDb()
+                .Include(game => game.Setting)
+                .Include(game => game.Records)
+                .Include(game => game.Players)
+				.SingleOrDefault(game => game.Id == Id);
                 if (obj != null)
                 {
                     return obj;
@@ -59,7 +64,10 @@ namespace MjCalcApi.AppServices.CustomServices
         {
             try
             {
-                var obj = _Repository.GetAll();
+                GameInstance[] obj = _Repository.GetDb()
+                    .Include(game => game.Setting)
+                    .Include(game => game.Players)
+                    .ToArray();
                 if (obj != null)
                 {
                     return obj;
