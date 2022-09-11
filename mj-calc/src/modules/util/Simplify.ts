@@ -2,7 +2,7 @@ import { nextGameStatus } from "../Calculator";
 import GameEntity from "../types/GameEntity";
 import { GameSetting } from "../types/GameSetting";
 import { GameStatus, RichiiList } from "../types/GameStatus";
-import { Player, PlayerList } from "../types/Player";
+import { Player } from "../types/Player";
 import { EndingRecord, GameRecord } from "../types/Record";
 import { STARTING_POINT } from "./Constants";
 import { getDeltas } from "./Score";
