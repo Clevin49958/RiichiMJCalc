@@ -1,4 +1,5 @@
-﻿using MjCalcApi.Domain.Game;
+﻿using Microsoft.EntityFrameworkCore;
+using MjCalcApi.Domain.Game;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,9 @@ namespace MjCalcApi.AppServices.IRepository
     public interface IRepository<T> where T : BaseEntity
     {
         IEnumerable<T> GetAll();
-        T Get(int Id);
+        T? Get(int Id);
+
+        DbSet<T> GetDb();
         void Insert(T entity);
         void Update(T entity);
         void Delete(T entity);
