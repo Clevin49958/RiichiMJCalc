@@ -79,8 +79,10 @@ export default function Startup() {
                   setViewFile(bloatGameStatus(json));
                   setViewOnly(true);
                   setNamesReady(true);
+                  // eslint-disable-next-line no-console
                   console.log(json);
                 } catch (error) {
+                  // eslint-disable-next-line no-alert
                   alert("Failed to parse result file.");
                 }
               };

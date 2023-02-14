@@ -1,10 +1,9 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { includes, maxBy } from "lodash";
+import { maxBy } from "lodash";
 
 import PlayerTable from "./components/PlayerTable";
 import { PlayerList, Player } from "./types/Player";
 import { getWind } from "./util/Wind";
-import { incrementRound } from "./util/GameStatus";
 import { GameStatus } from "./types/GameStatus";
 import { getDealer } from "./util/Score";
 import { HonbaStick, RichiiStick } from "./Icons";
@@ -18,8 +17,6 @@ import { useGameManager } from "./hooks/useGameManager";
 import { useToggle } from "./hooks/useToggle";
 import { ResultInputContext } from "./context/ResultInputContext";
 import GameSettingContext from "./context/GameSettingContext";
-import { GameSetting } from "./types/GameSetting";
-import { EndingRecord } from "./types/Record";
 
 export function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
@@ -96,7 +93,7 @@ export function Calculator({
           }`}
           style={{
             transform: `rotate(${angle * 90}deg)`,
-            transition: `0.8s ease-in-out`,
+            transition: "0.8s ease-in-out",
             msTransform: `rotate(${angle * 90}deg)`,
             WebkitTransform: `rotate(${angle * 90}deg)`,
             WebkitTransition: "0.8s ease-in-out",
@@ -216,7 +213,7 @@ export function Calculator({
                     tenpai={tenpai}
                     setTenpai={setTenpai}
                     saveEntry={saveEntry}
-                    isReady={true}
+                    isReady
                     onNextGame={onNextGameMemo}
                   />
                 )}
@@ -263,7 +260,7 @@ export function Calculator({
                     tenpai={tenpai}
                     setTenpai={setTenpai}
                     saveEntry={saveEntry}
-                    isReady={true}
+                    isReady
                     onNextGame={onNextGameMemo}
                   />
                 </div>
@@ -281,33 +278,4 @@ export function Calculator({
       </div>
     </div>
   );
-}
-
-export function nextGameStatus(
-  endingRecord: EndingRecord,
-  gameStatus: GameStatus,
-  gameSetting: GameSetting
-) {
-  // update honba
-  if (endingRecord.type === "Draw") {
-    const isDealerTenpai =
-      endingRecord.info[getDealer(gameStatus, gameSetting)];
-    gameStatus.honba += 1;
-    if (!isDealerTenpai) {
-      incrementRound(gameStatus, gameSetting);
-    }
-  } else {
-    const winner = endingRecord.info.map((record) => record.winner);
-    if (includes(winner, getDealer(gameStatus, gameSetting))) {
-      gameStatus.honba += 1;
-    } else {
-      incrementRound(gameStatus, gameSetting);
-      gameStatus.honba = 0;
-    }
-    gameStatus.richiiStick = 0;
-  }
-  // update richii state
-  gameStatus.richii = Array(gameSetting.numPlayers).fill(false);
-
-  return { ...gameStatus };
 }

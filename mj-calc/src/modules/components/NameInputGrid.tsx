@@ -7,10 +7,13 @@ import React, {
   useRef,
   useState,
 } from "react";
-import PlayerTable from "./PlayerTable";
-import { NP, WindNumber } from "../util/Wind";
 import Select from "react-select/";
+import Image from "next/image";
+
+import { NP, WindNumber } from "../util/Wind";
 import { ArrayType } from "../util/CustomType";
+
+import PlayerTable from "./PlayerTable";
 
 function PlayerInputCell({
   seating,
@@ -35,6 +38,7 @@ function PlayerInputCell({
   return (
     <input
       aria-label="Player Name"
+      autoComplete="off"
       className="form-control table-item-player-number"
       key={seating}
       onChange={(event) => {
@@ -125,8 +129,8 @@ export function NameInputGrid({
   );
 
   return (
-    <React.Fragment>
-      <img
+    <>
+      <Image
         src="/Header.jpg"
         alt=""
         style={{ maxHeight: "100%", maxWidth: "100%" }}
@@ -141,6 +145,6 @@ export function NameInputGrid({
           LTCell={PlayerNumInputCell}
         />
       </div>
-    </React.Fragment>
+    </>
   );
 }

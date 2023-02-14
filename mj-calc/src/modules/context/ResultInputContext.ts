@@ -1,5 +1,5 @@
-import React from "react";
-import { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction } from "react";
+
 import { WinRecord } from "../types/Record";
 
 interface ResultInputContextType {

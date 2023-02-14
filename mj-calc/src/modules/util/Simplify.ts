@@ -1,9 +1,10 @@
-import { nextGameStatus } from "../Calculator";
 import GameEntity from "../types/GameEntity";
 import { GameSetting } from "../types/GameSetting";
 import { GameStatus, RichiiList } from "../types/GameStatus";
 import { Player } from "../types/Player";
 import { EndingRecord, GameRecord } from "../types/Record";
+
+import { nextGameStatus } from "./GameStatus";
 import { STARTING_POINT } from "./Constants";
 import { getDeltas } from "./Score";
 import { WindNumber } from "./Wind";

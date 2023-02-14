@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { GameSetting } from "../types/GameSetting";
 import { GameStatus } from "../types/GameStatus";
 import { PlayerList } from "../types/Player";
 import { EndingRecord, WinRecord } from "../types/Record";
+
 import { WindNumber } from "./Wind";
 
 const NOTEN_BAPPU = {
@@ -20,7 +22,7 @@ export function getDealer(gameStatus: GameStatus, gameSetting: GameSetting) {
 }
 
 function getBasePoint(fan: number, fu: number) {
-  let base = Math.pow(2, fan + 2) * fu;
+  let base = 2 ** (fan + 2) * fu;
   if (fan >= 13) {
     base = (fan / 13) * 8000;
   } else if (fan >= 11) {
@@ -44,7 +46,7 @@ function getDeltaForTsumo(
 ) {
   const honba = gameStatus.honba;
   const nP = gameSetting.numPlayers;
-  const deltas = Array(nP).fill(0);
+  const deltas: number[] = Array(nP).fill(0);
   const honbaPts = 100 * honba;
   if (dealer === seating) {
     const delta = roundPoints(basePoint * 2 + honbaPts);

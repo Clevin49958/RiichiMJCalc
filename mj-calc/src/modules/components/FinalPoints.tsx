@@ -1,6 +1,8 @@
-import GameContext from "../context/GameContext";
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useContext, useEffect, useState } from "react";
 import Select from "react-select/";
+
+import GameContext from "../context/GameContext";
 import { STARTING_POINT } from "../util/Constants";
 import GameSettingContext from "../context/GameSettingContext";
 

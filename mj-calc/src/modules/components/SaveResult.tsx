@@ -1,9 +1,10 @@
+import { useContext, useState } from "react";
+
 import GameContext from "../context/GameContext";
 import { GameStatus } from "../types/GameStatus";
 import GameEntity from "../types/GameEntity";
 import { PlayerList } from "../types/Player";
 import { GameRecord } from "../types/Record";
-import { useContext, useState } from "react";
 import { GameSetting } from "../types/GameSetting";
 import GameSettingContext from "../context/GameSettingContext";
 import { minify } from "../util/Simplify";
@@ -26,7 +27,7 @@ export function generateResult(
 
 export function saveJson(result: { endTime: Date }) {
   const strContent = JSON.stringify(result, null, 2);
-  const filename = result.endTime.toLocaleTimeString() + ".json";
+  const filename = `${result.endTime.toLocaleTimeString()}.json`;
   const fileContent = new Blob([strContent], { type: "json" });
 
   const link = document.createElement("a");

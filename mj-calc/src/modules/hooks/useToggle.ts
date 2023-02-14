@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 
 // Source: https://usehooks.com/useToggle/
-export const useToggle = (initialState: boolean = false): [boolean, any] => {
+export const useToggle = (initialState: false): [boolean, () => void] => {
   // Initialize the state
   const [state, setState] = useState<boolean>(initialState);
   // Define and memorize toggler function in case we pass down the comopnent,

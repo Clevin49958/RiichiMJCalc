@@ -1,4 +1,5 @@
 import { ReactNode, useContext, useMemo, useState } from "react";
+
 import {
   STARTING_HONBA,
   STARTING_POINT,
@@ -12,11 +13,11 @@ import { WindNumber } from "../util/Wind";
 import GameContext from "../context/GameContext";
 import GameSettingContext from "../context/GameSettingContext";
 
-type GameContextProps = {
+interface GameContextProps {
   playerNames: string[];
   state?: GameEntity;
   children: ReactNode;
-};
+}
 
 export function GameContextProvider({ children, ...props }: GameContextProps) {
   const { numPlayers } = useContext(GameSettingContext);

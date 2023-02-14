@@ -1,4 +1,5 @@
 import { useContext, useMemo, useState, useCallback } from "react";
+
 import GameSettingContext from "../context/GameSettingContext";
 import { ResultInputContext } from "../context/ResultInputContext";
 import { WinRecord } from "../types/Record";

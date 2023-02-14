@@ -63,7 +63,7 @@ export default function RoundHistory({
               <div className="col col-9">
                 {displayTenpai &&
                   players.map((player, idx) => (
-                    <div className="row" key={idx}>
+                    <div className="row" key={player.seating}>
                       <div className="col col-8">{player.name}</div>
                       {/* TODO: format negative numbers */}
                       <div className="col col-4">

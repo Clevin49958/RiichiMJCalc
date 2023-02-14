@@ -1,5 +1,6 @@
 import { pick } from "lodash";
 import { useCallback, useContext } from "react";
+
 import { GameRecord } from "../types/Record";
 import GameContext from "../context/GameContext";
 import { ResultInputContext } from "../context/ResultInputContext";
@@ -11,8 +12,8 @@ import {
   getDeltaWithWinner,
 } from "../util/Score";
 import { WindNumber } from "../util/Wind";
-import { nextGameStatus } from "../Calculator";
 import GameSettingContext from "../context/GameSettingContext";
+import { nextGameStatus } from "../util/GameStatus";
 
 export function useGameManager() {
   const gameSetting = useContext(GameSettingContext);

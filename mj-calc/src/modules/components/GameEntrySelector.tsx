@@ -1,12 +1,14 @@
 import { Dispatch, SetStateAction, useMemo } from "react";
-import PlayerTable from "./PlayerTable";
+import { OverlayTrigger, Popover } from "react-bootstrap";
+
 import { PlayerList, Player } from "../types/Player";
 import { WindNumber } from "../util/Wind";
-import { DropdownEntry } from "./DropdownEntry";
-import { ExportResult } from "./SaveResult";
 import { WinRecord } from "../types/Record";
 import { DEFAULT_WIN_INFO } from "../util/Constants";
-import { OverlayTrigger, Popover } from "react-bootstrap";
+
+import PlayerTable from "./PlayerTable";
+import { DropdownEntry } from "./DropdownEntry";
+import { ExportResult } from "./SaveResult";
 
 interface GameEntrySelectorProps {
   endingType: string;
@@ -225,7 +227,7 @@ export function GameEntrySelector({
                     setWinInfo(winInfo.filter((_info, index) => index !== idx))
                   }
                 >
-                  <i className="fa-solid fa-circle-xmark"></i>
+                  <i className="fa-solid fa-circle-xmark" />
                 </button>
               )}
             </div>
@@ -243,22 +245,20 @@ export function GameEntrySelector({
           <PlayerTable
             playerTable={players}
             playerCell={function (player: Player): JSX.Element {
-              const id = `tenpai-check-${player.seating}`;
               return (
                 <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id={id}
-                    checked={tenpai[player.seating]}
-                    onChange={(_) => {
-                      const newTenpai = [...tenpai];
-                      newTenpai[player.seating] = !newTenpai[player.seating];
-                      setTenpai(newTenpai);
-                    }}
-                  />
-                  <label className="form-check-label" htmlFor={id}>
+                  <label className="form-check-label">
                     {player.name}
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      checked={tenpai[player.seating]}
+                      onChange={(_) => {
+                        const newTenpai = [...tenpai];
+                        newTenpai[player.seating] = !newTenpai[player.seating];
+                        setTenpai(newTenpai);
+                      }}
+                    />
                   </label>
                 </div>
               );

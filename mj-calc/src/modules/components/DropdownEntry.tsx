@@ -24,7 +24,7 @@ export function DropdownEntry<T extends string | number>({
   }
   return (
     <label>
-      <span>{label}: </span>
+      {label}:
       <Select<OptionType>
         value={options.find((obj) => obj.value === value)}
         options={options}

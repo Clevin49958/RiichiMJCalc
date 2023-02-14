@@ -1,6 +1,4 @@
 import { Line } from "react-chartjs-2";
-import { PlayerList } from "../types/Player";
-import { GameRecord } from "../types/Record";
 import {
   Chart as ChartJS,
   LineElement,
@@ -12,6 +10,9 @@ import {
   PointElement,
 } from "chart.js";
 import annotationPlugin from "chartjs-plugin-annotation";
+
+import { PlayerList } from "../types/Player";
+import { GameRecord } from "../types/Record";
 import { GameStatus } from "../types/GameStatus";
 import { getWind } from "../util/Wind";
 import { STARTING_POINT } from "../util/Constants";
@@ -118,7 +119,7 @@ export function PointsPlot({
           stepSize: 2500,
         },
         grid: {
-          color: function (context: any) {
+          color(context: any) {
             if (context.tick.value > 25000) {
               // green
               return "rgba(75, 192, 192, 0.5)";
@@ -156,7 +157,7 @@ export function PointsPlot({
   return (
     <div className="card mt-2">
       <div className="card-body">
-        <Line options={options} data={data}></Line>
+        <Line options={options} data={data} />
       </div>
     </div>
   );
