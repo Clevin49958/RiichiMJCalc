@@ -7,6 +7,7 @@
     "plugin:@shopify/typescript",
     "plugin:@shopify/typescript-type-checking",
     "plugin:@shopify/react",
+    "plugin:@next/next/recommended",
     "prettier"
   ],
   "parser": "@typescript-eslint/parser",
@@ -16,16 +17,16 @@
     },
     "ecmaVersion": "latest",
     "sourceType": "module",
-    "project": "mj-calc/tsconfig.json"
+    "project": "tsconfig.json"
   },
-  "plugins": [
-    "react-hooks"
-  ],
+  "plugins": ["react-hooks"],
   "rules": {
     // Conflicts with Prettier
     "@shopify/binary-assignment-parens": "off",
     // Personal preference - allows conditional rendering inside JSX
     "@shopify/jsx-no-complex-expressions": "off",
+    // Personal preference
+    "@shopify/strict-component-boundaries": "off",
     // Temporarily disabled - this should be enforced when we take
     // internationalisation into account
     "@shopify/jsx-no-hardcoded-content": "off",
@@ -35,10 +36,7 @@
     "@typescript-eslint/naming-convention": "warn",
     "camelcase": "error",
     "spaced-comment": "error",
-    "quotes": [
-      "error",
-      "double"
-    ],
+    "quotes": ["error", "double"],
     "no-duplicate-imports": "error",
     "react/jsx-key": "warn",
     // Conflicts with Prettier
@@ -49,8 +47,15 @@
     "react-hooks/exhaustive-deps": "warn"
   },
   "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
     "import/resolver": {
-      "typescript": {}
+      "typescript": {
+        "alwaysTryTypes": true, // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
+
+        "project": "mj-calc"
+      }
     }
   }
 }

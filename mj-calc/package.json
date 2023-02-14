@@ -45,6 +45,7 @@
     ]
   },
   "devDependencies": {
+    "@next/eslint-plugin-next": "^13.1.6",
     "@shopify/eslint-plugin": "^42.0.1",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^13.4.0",
@@ -56,6 +57,7 @@
     "@types/react-dom": "^18.0.10",
     "@types/react-select": "^5.0.1",
     "eslint": "^8.18.0",
+    "eslint-import-resolver-typescript": "^3.5.3",
     "prettier": "2.6.2",
     "prisma": "^4.10.1"
   },
