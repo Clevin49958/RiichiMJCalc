@@ -59,7 +59,7 @@ export function ExportResult() {
       >
         Export results
       </button>
-      <button
+      {/* <button
         type="button"
         className={`btn btn-${buttonColor}`}
         style={{
@@ -73,20 +73,40 @@ export function ExportResult() {
             records
           );
           console.log(result);
-          await fetch("https://richiimj.azurewebsites.net/game", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(result),
-          })
-            .then((val) => console.log(val.json()))
-            .then(() => setButtonColor("success"))
-            .catch(() => setButtonColor("warning"));
+          // await fetch("https://richiimj.azurewebsites.net/game", {
+          //   method: "POST",
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //   },
+          //   body: JSON.stringify(result),
+          // })
+          //   .then((val) => console.log(val.json()))
+          //   .then(() => setButtonColor("success"))
+          //   .catch(() => setButtonColor("warning"));
+          // await prisma.game.create({
+          //   data: {
+          //     endTime: new Date(),
+          //     playerGameScores: {
+          //       create: result.players.map((player) => ({
+          //         playerName: player.name,
+          //         score: player.score,
+          //       })),
+          //     },
+          //     gameSetting: {
+          //       create: {
+          //         ...result.settings,
+          //         gameMode: "ranking",
+          //       },
+          //     },
+          //     records: {
+          //       create: result.records
+          //     }
+          //   },
+          // });
         }}
       >
         Save to database
-      </button>
+      </button> */}
     </>
   );
 }
