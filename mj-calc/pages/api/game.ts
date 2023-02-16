@@ -10,7 +10,8 @@ const createHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     data: {
       endTime: new Date(),
       playerGameScores: {
-        create: newGame.players.map((player) => ({
+        create: newGame.players.map((player, idx) => ({
+          seating: idx,
           playerName: player.name,
           score: player.score,
         })),
