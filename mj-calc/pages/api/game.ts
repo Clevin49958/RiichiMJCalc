@@ -1,18 +1,22 @@
 import { Game } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../prisma/client";
+import { MiniGameEntity } from "../../src/modules/util/Simplify";
 
 const createHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const newGame = req.body;
+  const newGame: MiniGameEntity = req.body;
 
   const game = await prisma.game.create({
     data: {
       endTime: new Date(),
       playerGameScores: {
-        create: newGame.playerGameScores,
+        create: newGame.players.map((player) => ({
+          playerName: player.name,
+          score: player.score,
+        })),
       },
       gameSetting: {
-        create: newGame.gameSetting,
+        create: newGame.settings,
       },
 
       records: {

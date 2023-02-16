@@ -18,7 +18,7 @@ export default function Startup() {
 
   const [playerNames, setPlayerNames] = useLocalStorage<string[]>(
     "names",
-    (Array.from(Array(DEFAULT_N_PLAYERS).keys()) as WindNumber[]).map(getWind)
+    (Array.from(Array(DEFAULT_N_PLAYERS).keys()) as WindNumber[]).map(getWind),
   );
 
   const [namesReady, setNamesReady] = useState(false);
@@ -33,11 +33,11 @@ export default function Startup() {
       setPlayerNames(names);
       setNamesReady(false);
     },
-    [setPlayerNames]
+    [setPlayerNames],
   );
 
   return gameReady ? (
-    <GameSettingContextProvider numPlayers={numPlayers}>
+    <GameSettingContextProvider setting={{ numPlayers, gameMode: "default" }}>
       <GameContextProvider
         playerNames={playerNames.slice(0, numPlayers)}
         state={viewFile}

@@ -79,19 +79,7 @@ export function ExportResult() {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              endTime: new Date(),
-              playerGameScores: result.players.map((player) => ({
-                playerName: player.name,
-                score: player.score,
-              })),
-
-              gameSetting: {
-                ...result.settings,
-                gameMode: "default",
-              },
-              records: result.records,
-            }),
+            body: JSON.stringify(result),
           })
             .then((val) => console.log(val.json()))
             .then(() => setButtonColor("success"))
