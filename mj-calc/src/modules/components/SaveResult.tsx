@@ -66,22 +66,20 @@ export function ExportResult() {
         style={{
           transition: "all 1s ease-in",
         }}
-        onClick={async (_event) => {
+        onClick={(_event) => {
           const result = generateResult(
             gameStatus,
             gameSetting,
             players,
             records,
           );
-          console.log(result);
-          await fetch("/api/game", {
+          fetch("/api/game", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify(result),
           })
-            .then((val) => console.log(val.json()))
             .then(() => setButtonColor("success"))
             .catch(() => setButtonColor("warning"));
         }}

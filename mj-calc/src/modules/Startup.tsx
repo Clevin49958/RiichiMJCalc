@@ -9,6 +9,7 @@ import { GameContextProvider } from "./provider/GameContextProvider";
 import { ResultInputContextProvider } from "./provider/ResultInputContextProvider";
 import { GameSettingContextProvider } from "./provider/GameSettingContextProvider";
 import { bloatGameStatus, MiniGameEntity } from "./util/Simplify";
+import Header from "./components/Header";
 
 const DEFAULT_N_PLAYERS = 4;
 
@@ -50,6 +51,7 @@ export default function Startup() {
   ) : (
     <>
       <div className="d-flex flex-column align-items-center">
+        <Header />
         <NameInputGrid
           numPlayers={numPlayers}
           playerNames={playerNames}

@@ -8,13 +8,11 @@ import React, {
   useState,
 } from "react";
 import Select from "react-select/";
-import Image from "next/image";
 
 import { NP, WindNumber } from "../util/Wind";
 import { ArrayType } from "../util/CustomType";
 
 import PlayerTable from "./PlayerTable";
-import headerImage from "../../../public/Header.jpg";
 
 function PlayerInputCell({
   seating,
@@ -95,7 +93,7 @@ export function NameInputGrid({
         />
       </div>
     ),
-    [numPlayers, setPlayerNames]
+    [numPlayers, setPlayerNames],
   );
 
   const PlayerNumInputCell = useMemo(
@@ -116,7 +114,7 @@ export function NameInputGrid({
                 ({
                   value: count,
                   label: count,
-                } as { value: NP; label: NP })
+                } as { value: NP; label: NP }),
             )}
             value={{
               value: numPlayers,
@@ -126,19 +124,11 @@ export function NameInputGrid({
           />
         </label>
       ) as JSX.Element,
-    [numPlayers, setNumPlayers]
+    [numPlayers, setNumPlayers],
   );
 
   return (
     <>
-      <Image
-        src={headerImage}
-        alt=""
-        height={300}
-        width={480}
-        style={{ maxHeight: "100%", maxWidth: "100%" }}
-        className="mb-4"
-      />
       <h1 style={{ textAlign: "center" }}>Please enter players&apos; names</h1>
       <div style={{ maxWidth: "510px" }}>
         <PlayerTable<string>

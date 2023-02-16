@@ -1,5 +1,5 @@
-import { Game } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
+
 import { prisma } from "../../prisma/client";
 import { MiniGameEntity } from "../../src/modules/util/Simplify";
 
