@@ -14,6 +14,7 @@ import { NP, WindNumber } from "../util/Wind";
 import { ArrayType } from "../util/CustomType";
 
 import PlayerTable from "./PlayerTable";
+import headerImage from "../../../public/Header.jpg";
 
 function PlayerInputCell({
   seating,
@@ -131,8 +132,10 @@ export function NameInputGrid({
   return (
     <>
       <Image
-        src="/Header.jpg"
+        src={headerImage}
         alt=""
+        height={300}
+        width={480}
         style={{ maxHeight: "100%", maxWidth: "100%" }}
         className="mb-4"
       />
