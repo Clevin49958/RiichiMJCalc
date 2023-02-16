@@ -13,7 +13,7 @@ export function generateResult(
   gameStatus: GameStatus,
   gameSetting: GameSetting,
   players: PlayerList,
-  records: GameRecord[]
+  records: GameRecord[],
 ) {
   const result: GameEntity = {
     endTime: new Date(),
@@ -53,14 +53,14 @@ export function ExportResult() {
             gameStatus,
             gameSetting,
             players,
-            records
+            records,
           );
           saveJson(result);
         }}
       >
         Export results
       </button>
-      {/* <button
+      <button
         type="button"
         className={`btn btn-${buttonColor}`}
         style={{
@@ -71,43 +71,35 @@ export function ExportResult() {
             gameStatus,
             gameSetting,
             players,
-            records
+            records,
           );
           console.log(result);
-          // await fetch("https://richiimj.azurewebsites.net/game", {
-          //   method: "POST",
-          //   headers: {
-          //     "Content-Type": "application/json",
-          //   },
-          //   body: JSON.stringify(result),
-          // })
-          //   .then((val) => console.log(val.json()))
-          //   .then(() => setButtonColor("success"))
-          //   .catch(() => setButtonColor("warning"));
-          // await prisma.game.create({
-          //   data: {
-          //     endTime: new Date(),
-          //     playerGameScores: {
-          //       create: result.players.map((player) => ({
-          //         playerName: player.name,
-          //         score: player.score,
-          //       })),
-          //     },
-          //     gameSetting: {
-          //       create: {
-          //         ...result.settings,
-          //         gameMode: "ranking",
-          //       },
-          //     },
-          //     records: {
-          //       create: result.records
-          //     }
-          //   },
-          // });
+          await fetch("/api/game", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              endTime: new Date(),
+              playerGameScores: result.players.map((player) => ({
+                playerName: player.name,
+                score: player.score,
+              })),
+
+              gameSetting: {
+                ...result.settings,
+                gameMode: "default",
+              },
+              records: result.records,
+            }),
+          })
+            .then((val) => console.log(val.json()))
+            .then(() => setButtonColor("success"))
+            .catch(() => setButtonColor("warning"));
         }}
       >
         Save to database
-      </button> */}
+      </button>
     </>
   );
 }
