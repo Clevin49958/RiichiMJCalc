@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 
 // Source: https://usehooks.com/useToggle/
 const useToggle = (initialState: false): [boolean, () => void] => {

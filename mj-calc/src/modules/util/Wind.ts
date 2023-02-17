@@ -20,6 +20,7 @@ export function getWind(windNum: WindNumber) {
     case 3:
       return "北";
     default: {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       const _exhaustiveCheck: never = windNum;
       return _exhaustiveCheck;
     }

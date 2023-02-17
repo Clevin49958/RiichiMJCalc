@@ -1,4 +1,5 @@
 import { Line } from "react-chartjs-2";
+import React from "react";
 import {
   Chart as ChartJS,
   LineElement,
@@ -25,7 +26,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  annotationPlugin
+  annotationPlugin,
 );
 
 const COLOR_CODES = [
@@ -45,10 +46,10 @@ function getPointsLabel({ wind, round, honba }: GameStatus | GameRecord) {
   return `${getWind(wind)}${round}-${honba}`;
 }
 
-export function PointsPlot({
+export default function PointsPlot({
   players,
   gameRecord,
-  gameStatus,
+  gameStatus: _gameStatus,
 }: {
   players: PlayerList;
   gameRecord: GameRecord[];
@@ -89,7 +90,7 @@ export function PointsPlot({
   // Wind region (starting index)
   const regions = gameRecord
     .map((record, index, array) =>
-      index === 0 || record.wind !== array[index - 1].wind ? index + 1 : -1
+      index === 0 || record.wind !== array[index - 1].wind ? index + 1 : -1,
     )
     .filter((idx) => idx !== -1);
   const annotations = Object.fromEntries(
@@ -103,7 +104,7 @@ export function PointsPlot({
         borderColor: "rgba(255, 99, 132, 0.6)",
         borderWidth: 2,
       },
-    ])
+    ]),
   );
 
   // options
@@ -123,9 +124,11 @@ export function PointsPlot({
             if (context.tick.value > 25000) {
               // green
               return "rgba(75, 192, 192, 0.5)";
-            } else if (context.tick.value === 25000) {
+            }
+            if (context.tick.value === 25000) {
               return "#000000";
-            } else if (context.tick.value >= 0) {
+            }
+            if (context.tick.value >= 0) {
               // orange
               return "rgba(255, 159, 64, 0.5)";
             }

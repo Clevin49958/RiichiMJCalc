@@ -1,7 +1,7 @@
 import React from "react";
 import Select from "react-select";
 
-export function DropdownEntry<T extends string | number>({
+export default function DropdownEntry<T extends string | number>({
   label,
   labels,
   values,

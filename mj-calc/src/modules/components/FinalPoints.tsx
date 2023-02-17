@@ -65,12 +65,8 @@ export default function FinalPoints() {
   const sortedPlayers = [...players].sort(
     (playerA, playerB) => playerB.score - playerA.score,
   );
-  const rawPoints = sortedPlayers.map((player) => {
-    return (player.score - startingPoint) / 1000;
-  });
-  const finalPoints = rawPoints.map((pt, idx) => {
-    return pt + umaOption.uma[idx] + okaOption.oka[idx];
-  });
+  const rawPoints = sortedPlayers.map((player) => (player.score - startingPoint) / 1000);
+  const finalPoints = rawPoints.map((pt, idx) => pt + umaOption.uma[idx] + okaOption.oka[idx]);
   return (
     <div className="card">
       <div className="card-header">Final points: </div>

@@ -19,7 +19,10 @@ interface GameContextProps {
   children: ReactNode;
 }
 
-export function GameContextProvider({ children, ...props }: GameContextProps) {
+export default function GameContextProvider({
+  children,
+  ...props
+}: GameContextProps) {
   const { numPlayers } = useContext(GameSettingContext);
 
   let initialGameStatus: GameStatus;

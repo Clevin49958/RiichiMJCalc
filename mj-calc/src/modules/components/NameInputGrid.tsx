@@ -55,7 +55,7 @@ function PlayerInputCell({
     />
   );
 }
-export function NameInputGrid({
+export default function NameInputGrid({
   numPlayers,
   playerNames,
   setNumPlayers,
@@ -68,8 +68,8 @@ export function NameInputGrid({
   setPlayerNames: Dispatch<SetStateAction<string[]>>;
   setNamesReady: Dispatch<SetStateAction<boolean>>;
 }) {
-  const PlayerInputCenterCell = () => {
-    return (
+  const PlayerInputCenterCell = useCallback(
+    () => (
       <button
         type="button"
         className="btn btn-primary"
@@ -79,8 +79,9 @@ export function NameInputGrid({
       >
         Game start!
       </button>
-    );
-  };
+    ),
+    [setNamesReady],
+  );
 
   const PlayerCell = useCallback(
     (player: string, seating: WindNumber) => (

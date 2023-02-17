@@ -14,14 +14,14 @@ import { GameStatus } from "./types/GameStatus";
 import { getDealer } from "./util/Score";
 import { HonbaStick, RichiiStick } from "./Icons";
 import RoundHistory from "./components/RoundHistory";
-import { GameEntrySelector } from "./components/GameEntrySelector";
+import GameEntrySelector from "./components/GameEntrySelector";
 import GameContext from "./context/GameContext";
 import FinalPoints from "./components/FinalPoints";
-import { PointsPlot } from "./components/PointsPlot";
+import PointsPlot from "./components/PointsPlot";
 import { StickIconSize } from "./util/Constants";
-import { useGameManager } from "./hooks/useGameManager";
-import { useToggle } from "./hooks/useToggle";
-import { ResultInputContext } from "./context/ResultInputContext";
+import useGameManager from "./hooks/useGameManager";
+import useToggle from "./hooks/useToggle";
+import ResultInputContext from "./context/ResultInputContext";
 import GameSettingContext from "./context/GameSettingContext";
 
 export function GameStatusCenterCell(gameStatus: GameStatus) {
@@ -35,7 +35,7 @@ export function GameStatusCenterCell(gameStatus: GameStatus) {
     </div>
   );
 }
-export function Calculator({
+export default function Calculator({
   viewOnly,
   onNextGame,
 }: {
@@ -82,7 +82,7 @@ export function Calculator({
 
   const PlayerInfoCell = useCallback(
     (player: Player) => {
-      const richii = gameStatus.richii;
+      const { richii } = gameStatus;
       const hasRichii = richii[player.seating];
 
       const angle =
@@ -202,8 +202,8 @@ export function Calculator({
             playerTable={playersScoreView}
             playerCell={PlayerInfoCell}
             centerCell={() => GameStatusCenterCell(gameStatus)}
-            RBCell={viewOnly ? <></> : rewindButton}
-            LTCell={viewOnly ? <></> : toggleTabletopModeButton}
+            RBCell={viewOnly ? undefined : rewindButton}
+            LTCell={viewOnly ? undefined : toggleTabletopModeButton}
             tableTopMode={tabletopMode}
           />
           {!tabletopMode && (
@@ -248,8 +248,8 @@ export function Calculator({
           playerTable={playersScoreView}
           playerCell={PlayerInfoCell}
           centerCell={() => GameStatusCenterCell(gameStatus)}
-          RBCell={viewOnly ? <></> : rewindButton}
-          LTCell={viewOnly ? <></> : toggleTabletopModeButton}
+          RBCell={viewOnly ? undefined : rewindButton}
+          LTCell={viewOnly ? undefined : toggleTabletopModeButton}
           tableTopMode={tabletopMode}
         />
         {!tabletopMode && (

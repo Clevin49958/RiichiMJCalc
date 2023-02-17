@@ -7,10 +7,10 @@ export default function PlayerTable<T = Player>({
   playerTable,
   playerCell,
   centerCell,
-  LTCell = <></>,
-  RTCell = <></>,
-  LBCell = <></>,
-  RBCell = <></>,
+  LTCell,
+  RTCell,
+  LBCell,
+  RBCell,
   tableTopMode,
 }: {
   playerTable: T[];

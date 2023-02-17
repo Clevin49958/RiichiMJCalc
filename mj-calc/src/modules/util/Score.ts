@@ -44,7 +44,7 @@ function getDeltaForTsumo(
   gameStatus: GameStatus,
   gameSetting: GameSetting
 ) {
-  const honba = gameStatus.honba;
+  const {honba} = gameStatus;
   const nP = gameSetting.numPlayers;
   const deltas: number[] = Array(nP).fill(0);
   const honbaPts = 100 * honba;
@@ -60,9 +60,7 @@ function getDeltaForTsumo(
         (index === dealer ? 2 : 1) * basePoint + honbaPts
       );
     }
-    deltas[seating] += -deltas.reduce((a, b) => {
-      return a + b;
-    }, 0);
+    deltas[seating] += -deltas.reduce((a, b) => a + b, 0);
   }
   return deltas;
 }
@@ -75,7 +73,7 @@ function getDeltaForRon(
   gameStatus: GameStatus,
   gameSetting: GameSetting
 ) {
-  const honba = gameStatus.honba;
+  const {honba} = gameStatus;
   const nP = gameSetting.numPlayers;
   const deltas = Array(nP).fill(0);
   const multiplier = dealer === seating ? 6 : 4;
@@ -145,7 +143,7 @@ export function getDeltaWithWinner(
   );
   // richii stick
   // The RHS of the one who deal in gets richii stick
-  const dealIn = records[0].dealIn;
+  const {dealIn} = records[0];
   const winners = records.map((record) =>
     record.winner < dealIn
       ? record.winner + gameSetting.numPlayers
@@ -167,9 +165,7 @@ export function getDeltaWithoutWinner(isTenPai: boolean[]) {
   }
 
   const bappu = NOTEN_BAPPU[isTenPai.length.toString(10) as "2" | "3" | "4"];
-  return isTenPai.map((value) => {
-    return value ? bappu[isTenPai.length - nTenpai - 1] : -bappu[nTenpai - 1];
-  });
+  return isTenPai.map((value) => value ? bappu[isTenPai.length - nTenpai - 1] : -bappu[nTenpai - 1]);
 }
 
 export function getDeltas(
@@ -179,9 +175,9 @@ export function getDeltas(
 ) {
   if (endingRecord.type === "Win") {
     return getDeltaWithWinner(endingRecord.info, gameStatus, gameSetting);
-  } else {
+  } 
     return getDeltaWithoutWinner(endingRecord.info);
-  }
+  
 }
 
 export function applyScoreChange(

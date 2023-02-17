@@ -3,7 +3,7 @@ import { useCallback, useContext } from "react";
 
 import { GameRecord } from "../types/Record";
 import GameContext from "../context/GameContext";
-import { ResultInputContext } from "../context/ResultInputContext";
+import ResultInputContext from "../context/ResultInputContext";
 import { RichiiList } from "../types/GameStatus";
 import { PlayerList } from "../types/Player";
 import {

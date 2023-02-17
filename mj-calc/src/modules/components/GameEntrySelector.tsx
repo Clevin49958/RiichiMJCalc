@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useMemo } from "react";
+import React, { Dispatch, SetStateAction, useCallback, useMemo } from "react";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 
 import { PlayerList, Player } from "../types/Player";
@@ -7,7 +7,7 @@ import { WinRecord } from "../types/Record";
 import { DEFAULT_WIN_INFO } from "../util/Constants";
 
 import PlayerTable from "./PlayerTable";
-import { DropdownEntry } from "./DropdownEntry";
+import DropdownEntry from "./DropdownEntry";
 import { ExportResult } from "./SaveResult";
 
 interface GameEntrySelectorProps {
@@ -23,7 +23,7 @@ interface GameEntrySelectorProps {
   isReady: boolean;
 }
 
-export function GameEntrySelector({
+export default function GameEntrySelector({
   endingType,
   setEndingType,
   players,
@@ -102,6 +102,33 @@ export function GameEntrySelector({
       </Popover.Body>
     </Popover>
   );
+
+  const PlayerCell = useCallback(
+    (player: Player) => (
+      <div className="form-check">
+        <label className="form-check-label">
+          {player.name}
+          <input
+            className="form-check-input"
+            type="checkbox"
+            checked={tenpai[player.seating]}
+            onChange={(_) => {
+              const newTenpai = [...tenpai];
+              newTenpai[player.seating] = !newTenpai[player.seating];
+              setTenpai(newTenpai);
+            }}
+          />
+        </label>
+      </div>
+    ),
+    [setTenpai, tenpai],
+  );
+
+  const CenterCell = useCallback(
+    () => <span>Check all players that were tenpai.</span>,
+    [],
+  );
+
   return (
     <>
       <nav>
@@ -244,32 +271,8 @@ export function GameEntrySelector({
         >
           <PlayerTable
             playerTable={players}
-            playerCell={function (player: Player): JSX.Element {
-              return (
-                <div className="form-check">
-                  <label className="form-check-label">
-                    {player.name}
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      checked={tenpai[player.seating]}
-                      onChange={(_) => {
-                        const newTenpai = [...tenpai];
-                        newTenpai[player.seating] = !newTenpai[player.seating];
-                        setTenpai(newTenpai);
-                      }}
-                    />
-                  </label>
-                </div>
-              );
-            }}
-            centerCell={function (): JSX.Element {
-              return (
-                <>
-                  <span>Check all players that were tenpai.</span>
-                </>
-              );
-            }}
+            playerCell={PlayerCell}
+            centerCell={CenterCell}
           />
         </div>
       </div>

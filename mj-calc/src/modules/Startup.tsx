@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from "react";
 
 import { getWind, NP, WindNumber } from "./util/Wind";
-import { Calculator } from "./Calculator";
-import { NameInputGrid } from "./components/NameInputGrid";
+import Calculator from "./Calculator";
+import NameInputGrid from "./components/NameInputGrid";
 import GameEntity from "./types/GameEntity";
-import { useLocalStorage } from "./hooks/useLocalStorage";
-import { GameContextProvider } from "./provider/GameContextProvider";
-import { ResultInputContextProvider } from "./provider/ResultInputContextProvider";
-import { GameSettingContextProvider } from "./provider/GameSettingContextProvider";
+import useLocalStorage from "./hooks/useLocalStorage";
+import GameContextProvider from "./provider/GameContextProvider";
+import ResultInputContextProvider from "./provider/ResultInputContextProvider";
+import GameSettingContextProvider from "./provider/GameSettingContextProvider";
 import { bloatGameStatus, MiniGameEntity } from "./util/Simplify";
 import Header from "./components/Header";
 
