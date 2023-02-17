@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { NP } from "./Wind";
 
 export type ArrayType<N extends NP, V> = N extends 2

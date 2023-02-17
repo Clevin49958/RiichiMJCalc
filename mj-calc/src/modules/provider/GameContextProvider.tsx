@@ -1,4 +1,5 @@
-import { ReactNode, useContext, useMemo, useState } from "react";
+import React, { ReactNode, useContext, useMemo, useState } from "react";
+
 import {
   STARTING_HONBA,
   STARTING_POINT,
@@ -7,23 +8,26 @@ import {
 import { GameStatus } from "../types/GameStatus";
 import GameEntity from "../types/GameEntity";
 import { PlayerList } from "../types/Player";
-import { Record } from "../types/Record";
+import { GameRecord } from "../types/Record";
 import { WindNumber } from "../util/Wind";
 import GameContext from "../context/GameContext";
 import GameSettingContext from "../context/GameSettingContext";
 
-type GameContextProps = {
+interface GameContextProps {
   playerNames: string[];
   state?: GameEntity;
   children: ReactNode;
-};
+}
 
-export function GameContextProvider({ children, ...props }: GameContextProps) {
+export default function GameContextProvider({
+  children,
+  ...props
+}: GameContextProps) {
   const { numPlayers } = useContext(GameSettingContext);
 
   let initialGameStatus: GameStatus;
   let initialPlayers: PlayerList;
-  let initialRecord: Record[] = [];
+  let initialRecord: GameRecord[] = [];
   if (props.state) {
     initialGameStatus = props.state.gameStatus;
     initialPlayers = props.state.players;
@@ -42,7 +46,7 @@ export function GameContextProvider({ children, ...props }: GameContextProps) {
         name: props.playerNames[seating],
         seating,
         score: startingPoint,
-      })
+      }),
     );
   }
 
@@ -50,7 +54,7 @@ export function GameContextProvider({ children, ...props }: GameContextProps) {
 
   const [players, setPlayers] = useState<PlayerList>(initialPlayers);
 
-  const [gameRecord, setGameRecord] = useState<Record[]>(initialRecord);
+  const [gameRecord, setGameRecord] = useState<GameRecord[]>(initialRecord);
 
   const gameContext = useMemo(
     () => ({
@@ -61,7 +65,7 @@ export function GameContextProvider({ children, ...props }: GameContextProps) {
       records: gameRecord,
       setRecords: setGameRecord,
     }),
-    [gameStatus, players, gameRecord]
+    [gameStatus, players, gameRecord],
   );
   return (
     <GameContext.Provider value={gameContext}>{children}</GameContext.Provider>

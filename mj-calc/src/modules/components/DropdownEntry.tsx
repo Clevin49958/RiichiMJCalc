@@ -1,7 +1,7 @@
 import React from "react";
 import Select from "react-select";
 
-export function DropdownEntry<T extends string | number>({
+export default function DropdownEntry<T extends string | number>({
   label,
   labels,
   values,
@@ -24,7 +24,7 @@ export function DropdownEntry<T extends string | number>({
   }
   return (
     <label>
-      <span>{label}: </span>
+      {label}:
       <Select<OptionType>
         value={options.find((obj) => obj.value === value)}
         options={options}

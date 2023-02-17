@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 // Source: https://usehooks.com/useLocalStorage/
-export function useLocalStorage<T>(key: string, initialValue: T) {
+export default function useLocalStorage<T>(key: string, initialValue: T) {
   const initialValueRef = useRef(initialValue);
 
   // State to store our value
@@ -55,7 +55,7 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
         console.error(error);
       }
     },
-    [key]
+    [key],
   );
 
   const returnValue: [T, typeof setValue] = [storedValue, setValue];

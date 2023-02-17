@@ -1,5 +1,6 @@
-import { GameStatus } from "./GameStatus";
 import { WindNumber } from "../util/Wind";
+
+import { GameStatus } from "./GameStatus";
 
 export interface WinRecord {
   winner: WindNumber;
@@ -11,9 +12,7 @@ export interface WinRecord {
 
 export type DrawRecord = boolean[];
 
-export type EndingRecord = {
-  deltas: number[];
-} & (
+export type EndingRecord =
   | {
       info: WinRecord[];
       type: "Win";
@@ -21,7 +20,10 @@ export type EndingRecord = {
   | {
       info: DrawRecord;
       type: "Draw";
-    }
-);
+    };
 
-export type Record = EndingRecord & GameStatus;
+export type EndingRecordWithDeltas = {
+  deltas: number[];
+} & EndingRecord;
+
+export type GameRecord = EndingRecordWithDeltas & GameStatus;

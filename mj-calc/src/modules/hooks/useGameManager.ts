@@ -1,21 +1,21 @@
 import { pick } from "lodash";
 import { useCallback, useContext } from "react";
-import { Record } from "../types/Record";
+
+import { GameRecord } from "../types/Record";
 import GameContext from "../context/GameContext";
-import { ResultInputContext } from "../context/ResultInputContext";
+import ResultInputContext from "../context/ResultInputContext";
 import { RichiiList } from "../types/GameStatus";
 import { PlayerList } from "../types/Player";
 import {
   applyScoreChange,
-  getDealer,
   getDeltaWithoutWinner,
   getDeltaWithWinner,
 } from "../util/Score";
 import { WindNumber } from "../util/Wind";
-import { nextGameStatus } from "../Calculator";
 import GameSettingContext from "../context/GameSettingContext";
+import { nextGameStatus } from "../util/GameStatus";
 
-export function useGameManager() {
+export default function useGameManager() {
   const gameSetting = useContext(GameSettingContext);
   const { numPlayers } = gameSetting;
 
@@ -56,14 +56,14 @@ export function useGameManager() {
         };
       });
     },
-    [setGameStatus, setPlayers]
+    [setGameStatus, setPlayers],
   );
 
   const pushRecord = useCallback(
-    (record: Record) => {
+    (record: GameRecord) => {
       setGameRecord((gameRecord) => [...gameRecord, record]);
     },
-    [setGameRecord]
+    [setGameRecord],
   );
 
   const rewind = useCallback(() => {
@@ -83,9 +83,9 @@ export function useGameManager() {
           applyScoreChange(
             players,
             lastRecord.deltas.map(
-              (delta, index) => (gameStatus.richii[index] ? 1000 : 0) - delta
-            )
-          )
+              (delta, index) => (gameStatus.richii[index] ? 1000 : 0) - delta,
+            ),
+          ),
         );
 
         return {
@@ -122,7 +122,7 @@ export function useGameManager() {
         deltas = getDeltaWithoutWinner(tenpai);
       }
       setPlayers((players) => applyScoreChange(players, deltas));
-      const record: Omit<Record, "info" | "type"> = {
+      const record: Omit<GameRecord, "info" | "type"> = {
         deltas,
         ...gameStatus,
       };
@@ -143,10 +143,11 @@ export function useGameManager() {
       resetWinState();
 
       return nextGameStatus(
-        endingType === "Win" ? winInfo.map((record) => record.winner) : null,
-        tenpai[getDealer(gameStatus, gameSetting)],
+        endingType === "Win"
+          ? { type: endingType, info: winInfo }
+          : { type: endingType, info: tenpai },
         gameStatus,
-        gameSetting
+        gameSetting,
       );
     });
   }, [

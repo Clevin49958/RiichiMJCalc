@@ -1,6 +1,5 @@
 import { Line } from "react-chartjs-2";
-import { PlayerList } from "../types/Player";
-import { Record } from "../types/Record";
+import React from "react";
 import {
   Chart as ChartJS,
   LineElement,
@@ -12,6 +11,9 @@ import {
   PointElement,
 } from "chart.js";
 import annotationPlugin from "chartjs-plugin-annotation";
+
+import { PlayerList } from "../types/Player";
+import { GameRecord } from "../types/Record";
 import { GameStatus } from "../types/GameStatus";
 import { getWind } from "../util/Wind";
 import { STARTING_POINT } from "../util/Constants";
@@ -24,7 +26,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  annotationPlugin
+  annotationPlugin,
 );
 
 const COLOR_CODES = [
@@ -34,7 +36,7 @@ const COLOR_CODES = [
   [153, 102, 255],
 ];
 
-function getPointsLabel({ wind, round, honba }: GameStatus | Record) {
+function getPointsLabel({ wind, round, honba }: GameStatus | GameRecord) {
   if (round === 1 && honba === 0) {
     return `${getWind(wind)}`;
   }
@@ -44,13 +46,13 @@ function getPointsLabel({ wind, round, honba }: GameStatus | Record) {
   return `${getWind(wind)}${round}-${honba}`;
 }
 
-export function PointsPlot({
+export default function PointsPlot({
   players,
   gameRecord,
-  gameStatus,
+  gameStatus: _gameStatus,
 }: {
   players: PlayerList;
-  gameRecord: Record[];
+  gameRecord: GameRecord[];
   gameStatus: GameStatus;
 }) {
   const n = players.length;
@@ -88,7 +90,7 @@ export function PointsPlot({
   // Wind region (starting index)
   const regions = gameRecord
     .map((record, index, array) =>
-      index === 0 || record.wind !== array[index - 1].wind ? index + 1 : -1
+      index === 0 || record.wind !== array[index - 1].wind ? index + 1 : -1,
     )
     .filter((idx) => idx !== -1);
   const annotations = Object.fromEntries(
@@ -102,7 +104,7 @@ export function PointsPlot({
         borderColor: "rgba(255, 99, 132, 0.6)",
         borderWidth: 2,
       },
-    ])
+    ]),
   );
 
   // options
@@ -118,13 +120,15 @@ export function PointsPlot({
           stepSize: 2500,
         },
         grid: {
-          color: function (context: any) {
+          color(context: any) {
             if (context.tick.value > 25000) {
               // green
               return "rgba(75, 192, 192, 0.5)";
-            } else if (context.tick.value === 25000) {
+            }
+            if (context.tick.value === 25000) {
               return "#000000";
-            } else if (context.tick.value >= 0) {
+            }
+            if (context.tick.value >= 0) {
               // orange
               return "rgba(255, 159, 64, 0.5)";
             }
@@ -156,7 +160,7 @@ export function PointsPlot({
   return (
     <div className="card mt-2">
       <div className="card-body">
-        <Line options={options} data={data}></Line>
+        <Line options={options} data={data} />
       </div>
     </div>
   );

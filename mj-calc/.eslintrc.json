@@ -1,0 +1,90 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "airbnb",
+    "airbnb/hooks",
+    "airbnb-typescript",
+    "prettier",
+    "plugin:@next/next/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": "tsconfig.json"
+  },
+  // "plugins": ["react-hooks"],
+  "rules": {
+    "import/extensions": "off",
+    "@typescript-eslint/no-shadow": "off",
+    "react/require-default-props": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/destructuring-assignment": "off",
+    "no-param-reassign": "off",
+    "no-underscore-dangle": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "varsIgnorePattern": "_", "argsIgnorePattern": "^_" }
+    ],
+    "no-plusplus": "off",
+    // temporary
+    "jsx-a11y/no-static-element-interactions": "warn",
+    //   // Conflicts with Prettier
+    //   "@shopify/binary-assignment-parens": "off",
+    //   // Personal preference - allows conditional rendering inside JSX
+    //   "@shopify/jsx-no-complex-expressions": "off",
+    //   // Personal preference
+    //   "@shopify/strict-component-boundaries": "off",
+    //   // Temporarily disabled - this should be enforced when we take
+    //   // internationalisation into account
+    //   "@shopify/jsx-no-hardcoded-content": "off",
+    //   // Personal preference - _sometimes_ nesting ternaries is fine
+    "no-nested-ternary": "warn",
+    "id-length": "warn",
+    "no-warning-comments": "warn",
+    // Disabled in eslint:recommended
+    "jsx-a11y/control-has-associated-label": "off",
+    "jsx-a11y/label-has-associated-control": [
+      2,
+      {
+        "labelComponents": [],
+        "labelAttributes": ["label"],
+        "controlComponents": ["Select"],
+        "depth": 3
+      }
+    ],
+    //   // deprecated
+    //   "jsx-a11y/label-has-for": "off",
+    //   "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/naming-convention": "warn",
+    "camelcase": "error",
+    "spaced-comment": "error",
+    "quotes": ["error", "double"],
+    "no-duplicate-imports": "error",
+    "react/jsx-key": "warn"
+    //   // Conflicts with Prettier
+    //   "react/jsx-child-element-spacing": "off",
+    //   // Checks rules of Hooks
+    //   "react-hooks/rules-of-hooks": "error",
+    //   // Checks effect dependencies
+    //   "react-hooks/exhaustive-deps": "warn"
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true, // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
+
+        "project": "mj-calc"
+      }
+    }
+  }
+}

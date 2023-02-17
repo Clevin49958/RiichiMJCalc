@@ -1,6 +1,8 @@
-import GameContext from "../context/GameContext";
-import { useContext, useState } from "react";
+/* eslint-disable @typescript-eslint/naming-convention */
+import React, { useContext, useEffect, useState } from "react";
 import Select from "react-select/";
+
+import GameContext from "../context/GameContext";
 import { STARTING_POINT } from "../util/Constants";
 import GameSettingContext from "../context/GameSettingContext";
 
@@ -51,22 +53,31 @@ export default function FinalPoints() {
   const [umaOption, setUmaOption] = useState(umaPresets[0]);
   const [okaOption, setOkaOption] = useState(okaPresets[0]);
 
+  const mediaMatch = window.matchMedia("(min-width: 576px)");
+  const [matches, setMatches] = useState(mediaMatch.matches);
+
+  useEffect(() => {
+    window
+      .matchMedia("(min-width: 576px)")
+      .addEventListener("change", (e) => setMatches(e.matches));
+  }, []);
+
   const sortedPlayers = [...players].sort(
-    (playerA, playerB) => playerB.score - playerA.score
+    (playerA, playerB) => playerB.score - playerA.score,
   );
-  const rawPoints = sortedPlayers.map((player) => {
-    return (player.score - startingPoint) / 1000;
-  });
-  const finalPoints = rawPoints.map((pt, idx) => {
-    return pt + umaOption.uma[idx] + okaOption.oka[idx];
-  });
+  const rawPoints = sortedPlayers.map((player) => (player.score - startingPoint) / 1000);
+  const finalPoints = rawPoints.map((pt, idx) => pt + umaOption.uma[idx] + okaOption.oka[idx]);
   return (
     <div className="card">
       <div className="card-header">Final points: </div>
       <div className="card-body">
         <div className="container-fluid">
           <div className="row">
-            <div className="my-2 col col-6 col-lg-2">
+            <div
+              className={`col col-sm-3 d-flex flex-${
+                matches ? "column" : "row"
+              } justify-content-around my-2`}
+            >
               <label>
                 <div className="mb-1">Uma preset:</div>
                 <Select<Uma>
@@ -75,9 +86,7 @@ export default function FinalPoints() {
                   onChange={(uma) => setUmaOption(uma!)}
                 />
               </label>
-            </div>
-            {okaPresets.length > 1 && (
-              <div className="my-2 col col-6 col-lg-2">
+              {okaPresets.length > 1 && (
                 <label>
                   <div className="mb-1">Oka preset:</div>
                   <Select<Oka>
@@ -86,11 +95,10 @@ export default function FinalPoints() {
                     onChange={(oka) => setOkaOption(oka!)}
                   />
                 </label>
-              </div>
-            )}
-            <div
-              className={`col col-12 col-lg-${okaPresets.length > 1 ? 8 : 10}`}
-            >
+              )}
+            </div>
+
+            <div className="col col-sm-9 my-2">
               <table className="table table-striped table-bordered mx-3">
                 <thead className="table-primary">
                   <tr>

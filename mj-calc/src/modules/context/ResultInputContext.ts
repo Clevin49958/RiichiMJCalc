@@ -1,5 +1,5 @@
-import React from "react";
-import { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction } from "react";
+
 import { WinRecord } from "../types/Record";
 
 interface ResultInputContextType {
@@ -12,6 +12,8 @@ interface ResultInputContextType {
   resetWinState: () => void;
 }
 
-export const ResultInputContext = React.createContext<ResultInputContextType>(
-  {} as ResultInputContextType
+const ResultInputContext = React.createContext<ResultInputContextType>(
+  {} as ResultInputContextType,
 );
+
+export default ResultInputContext;

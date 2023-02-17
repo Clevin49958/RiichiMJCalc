@@ -1,17 +1,19 @@
+import React, { useContext, useState } from "react";
+
 import GameContext from "../context/GameContext";
 import { GameStatus } from "../types/GameStatus";
 import GameEntity from "../types/GameEntity";
 import { PlayerList } from "../types/Player";
-import { Record } from "../types/Record";
-import { useContext } from "react";
+import { GameRecord } from "../types/Record";
 import { GameSetting } from "../types/GameSetting";
 import GameSettingContext from "../context/GameSettingContext";
+import { minify } from "../util/Simplify";
 
 export function generateResult(
   gameStatus: GameStatus,
   gameSetting: GameSetting,
   players: PlayerList,
-  records: Record[]
+  records: GameRecord[],
 ) {
   const result: GameEntity = {
     endTime: new Date(),
@@ -20,12 +22,12 @@ export function generateResult(
     players,
     records,
   };
-  return result;
+  return minify(result);
 }
 
-export function saveJson(result: GameEntity) {
+export function saveJson(result: { endTime: Date }) {
   const strContent = JSON.stringify(result, null, 2);
-  const filename = result.endTime.toLocaleTimeString() + ".json";
+  const filename = `${result.endTime.toLocaleTimeString()}.json`;
   const fileContent = new Blob([strContent], { type: "json" });
 
   const link = document.createElement("a");
@@ -39,9 +41,10 @@ export function saveJson(result: GameEntity) {
 export function ExportResult() {
   const { gameStatus, players, records } = useContext(GameContext);
   const gameSetting = useContext(GameSettingContext);
+  const [buttonColor, setButtonColor] = useState("primary");
 
   return (
-    <div className="d-flex align-items-center">
+    <>
       <button
         type="button"
         className="btn btn-primary"
@@ -50,13 +53,39 @@ export function ExportResult() {
             gameStatus,
             gameSetting,
             players,
-            records
+            records,
           );
           saveJson(result);
         }}
       >
         Export results
       </button>
-    </div>
+      <button
+        type="button"
+        className={`btn btn-${buttonColor}`}
+        style={{
+          transition: "all 1s ease-in",
+        }}
+        onClick={(_event) => {
+          const result = generateResult(
+            gameStatus,
+            gameSetting,
+            players,
+            records,
+          );
+          fetch("/api/game", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(result),
+          })
+            .then(() => setButtonColor("success"))
+            .catch(() => setButtonColor("warning"));
+        }}
+      >
+        Save to database
+      </button>
+    </>
   );
 }

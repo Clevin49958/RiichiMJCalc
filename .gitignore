@@ -128,5 +128,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# react
-mj-calc/node_modules
+# vscode
+.vscode/

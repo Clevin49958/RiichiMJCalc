@@ -7,10 +7,12 @@ import React, {
   useRef,
   useState,
 } from "react";
-import PlayerTable from "./PlayerTable";
-import { NP, WindNumber } from "../util/Wind";
 import Select from "react-select/";
+
+import { NP, WindNumber } from "../util/Wind";
 import { ArrayType } from "../util/CustomType";
+
+import PlayerTable from "./PlayerTable";
 
 function PlayerInputCell({
   seating,
@@ -35,6 +37,7 @@ function PlayerInputCell({
   return (
     <input
       aria-label="Player Name"
+      autoComplete="off"
       className="form-control table-item-player-number"
       key={seating}
       onChange={(event) => {
@@ -52,7 +55,7 @@ function PlayerInputCell({
     />
   );
 }
-export function NameInputGrid({
+export default function NameInputGrid({
   numPlayers,
   playerNames,
   setNumPlayers,
@@ -65,8 +68,8 @@ export function NameInputGrid({
   setPlayerNames: Dispatch<SetStateAction<string[]>>;
   setNamesReady: Dispatch<SetStateAction<boolean>>;
 }) {
-  const PlayerInputCenterCell = () => {
-    return (
+  const PlayerInputCenterCell = useCallback(
+    () => (
       <button
         type="button"
         className="btn btn-primary"
@@ -76,8 +79,9 @@ export function NameInputGrid({
       >
         Game start!
       </button>
-    );
-  };
+    ),
+    [setNamesReady],
+  );
 
   const PlayerCell = useCallback(
     (player: string, seating: WindNumber) => (
@@ -90,7 +94,7 @@ export function NameInputGrid({
         />
       </div>
     ),
-    [numPlayers, setPlayerNames]
+    [numPlayers, setPlayerNames],
   );
 
   const PlayerNumInputCell = useMemo(
@@ -111,7 +115,7 @@ export function NameInputGrid({
                 ({
                   value: count,
                   label: count,
-                } as { value: NP; label: NP })
+                } as { value: NP; label: NP }),
             )}
             value={{
               value: numPlayers,
@@ -121,17 +125,11 @@ export function NameInputGrid({
           />
         </label>
       ) as JSX.Element,
-    [numPlayers, setNumPlayers]
+    [numPlayers, setNumPlayers],
   );
 
   return (
-    <React.Fragment>
-      <img
-        src="/Header.jpg"
-        alt=""
-        style={{ maxHeight: "100%", maxWidth: "100%" }}
-        className="mb-4"
-      />
+    <>
       <h1 style={{ textAlign: "center" }}>Please enter players&apos; names</h1>
       <div style={{ maxWidth: "510px" }}>
         <PlayerTable<string>
@@ -141,6 +139,6 @@ export function NameInputGrid({
           LTCell={PlayerNumInputCell}
         />
       </div>
-    </React.Fragment>
+    </>
   );
 }

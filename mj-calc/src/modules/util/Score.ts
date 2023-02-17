@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { GameSetting } from "../types/GameSetting";
 import { GameStatus } from "../types/GameStatus";
 import { PlayerList } from "../types/Player";
-import { WinRecord } from "../types/Record";
+import { EndingRecord, WinRecord } from "../types/Record";
+
 import { WindNumber } from "./Wind";
 
 const NOTEN_BAPPU = {
@@ -20,7 +22,7 @@ export function getDealer(gameStatus: GameStatus, gameSetting: GameSetting) {
 }
 
 function getBasePoint(fan: number, fu: number) {
-  let base = Math.pow(2, fan + 2) * fu;
+  let base = 2 ** (fan + 2) * fu;
   if (fan >= 13) {
     base = (fan / 13) * 8000;
   } else if (fan >= 11) {
@@ -42,9 +44,9 @@ function getDeltaForTsumo(
   gameStatus: GameStatus,
   gameSetting: GameSetting
 ) {
-  const honba = gameStatus.honba;
+  const {honba} = gameStatus;
   const nP = gameSetting.numPlayers;
-  const deltas = Array(nP).fill(0);
+  const deltas: number[] = Array(nP).fill(0);
   const honbaPts = 100 * honba;
   if (dealer === seating) {
     const delta = roundPoints(basePoint * 2 + honbaPts);
@@ -58,9 +60,7 @@ function getDeltaForTsumo(
         (index === dealer ? 2 : 1) * basePoint + honbaPts
       );
     }
-    deltas[seating] += -deltas.reduce((a, b) => {
-      return a + b;
-    }, 0);
+    deltas[seating] += -deltas.reduce((a, b) => a + b, 0);
   }
   return deltas;
 }
@@ -73,7 +73,7 @@ function getDeltaForRon(
   gameStatus: GameStatus,
   gameSetting: GameSetting
 ) {
-  const honba = gameStatus.honba;
+  const {honba} = gameStatus;
   const nP = gameSetting.numPlayers;
   const deltas = Array(nP).fill(0);
   const multiplier = dealer === seating ? 6 : 4;
@@ -137,13 +137,13 @@ export function getDeltaWithWinner(
   );
 
   // sum all deltas
-  const deltas = deltaArr.reduce(
+  const deltas = deltaArr.reduce<number[]>(
     (prev, curr) => prev.map((val, idx) => val + curr[idx]),
     Array(gameSetting.numPlayers).fill(0)
   );
   // richii stick
   // The RHS of the one who deal in gets richii stick
-  const dealIn = records[0].dealIn;
+  const {dealIn} = records[0];
   const winners = records.map((record) =>
     record.winner < dealIn
       ? record.winner + gameSetting.numPlayers
@@ -161,13 +161,23 @@ export function getDeltaWithoutWinner(isTenPai: boolean[]) {
 
   if (nTenpai === 0 || nTenpai === isTenPai.length) {
     // array of 0s
-    return Array(isTenPai.length).fill(0);
+    return Array(isTenPai.length).fill(0) as number[];
   }
 
   const bappu = NOTEN_BAPPU[isTenPai.length.toString(10) as "2" | "3" | "4"];
-  return isTenPai.map((value) => {
-    return value ? bappu[isTenPai.length - nTenpai - 1] : -bappu[nTenpai - 1];
-  });
+  return isTenPai.map((value) => value ? bappu[isTenPai.length - nTenpai - 1] : -bappu[nTenpai - 1]);
+}
+
+export function getDeltas(
+  endingRecord: EndingRecord,
+  gameStatus: GameStatus,
+  gameSetting: GameSetting
+) {
+  if (endingRecord.type === "Win") {
+    return getDeltaWithWinner(endingRecord.info, gameStatus, gameSetting);
+  } 
+    return getDeltaWithoutWinner(endingRecord.info);
+  
 }
 
 export function applyScoreChange(
