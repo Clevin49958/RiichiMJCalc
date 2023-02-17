@@ -13,7 +13,7 @@ export interface MiniGameEntity {
   startTime?: Date;
   settings: GameSetting;
   endTime: Date;
-  players: { playerName: string; score: number; seating: number }[];
+  players: { name: string; score: number; seating: number }[];
   records: { richii: string; type: EndingType; info: string }[];
 }
 
@@ -23,7 +23,7 @@ export function minify(gameEntity: GameEntity): MiniGameEntity {
     settings,
     endTime,
     players: players.map((player, idx) => ({
-      playerName: player.name,
+      name: player.name,
       score: player.score,
       seating: idx,
     })),
@@ -46,7 +46,7 @@ export function bloatGameStatus(minified: MiniGameEntity): GameEntity {
 
   const players = playersFinal.map<Player>((player) => ({
     seating: player.seating as WindNumber,
-    name: player.playerName,
+    name: player.name,
     score: STARTING_POINT[4 - playersFinal.length],
   }));
 

@@ -9,8 +9,8 @@ const createHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const game = await prisma.game.create({
     data: {
       startTime: newGame.startTime,
-      endTime: new Date(),
-      playerGameScores: {
+      endTime: newGame.endTime,
+      players: {
         create: newGame.players,
       },
       gameSetting: {
