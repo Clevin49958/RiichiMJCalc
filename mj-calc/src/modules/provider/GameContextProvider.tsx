@@ -1,4 +1,4 @@
-import { ReactNode, useContext, useMemo, useState } from "react";
+import React, { ReactNode, useContext, useMemo, useState } from "react";
 
 import {
   STARTING_HONBA,
@@ -19,7 +19,10 @@ interface GameContextProps {
   children: ReactNode;
 }
 
-export function GameContextProvider({ children, ...props }: GameContextProps) {
+export default function GameContextProvider({
+  children,
+  ...props
+}: GameContextProps) {
   const { numPlayers } = useContext(GameSettingContext);
 
   let initialGameStatus: GameStatus;
@@ -43,7 +46,7 @@ export function GameContextProvider({ children, ...props }: GameContextProps) {
         name: props.playerNames[seating],
         seating,
         score: startingPoint,
-      })
+      }),
     );
   }
 
@@ -62,7 +65,7 @@ export function GameContextProvider({ children, ...props }: GameContextProps) {
       records: gameRecord,
       setRecords: setGameRecord,
     }),
-    [gameStatus, players, gameRecord]
+    [gameStatus, players, gameRecord],
   );
   return (
     <GameContext.Provider value={gameContext}>{children}</GameContext.Provider>

@@ -1,11 +1,17 @@
+import Image from "next/image";
+import React from "react";
+
+import { HeaderImage } from "../../../public";
+
 export default function Header() {
   return (
-    <img
+    <Image
+      src={HeaderImage}
       alt=""
-      src="/Header.jpg"
+      height={300}
+      width={480}
       style={{ maxHeight: "100%", maxWidth: "100%" }}
-      mb-2
+      className="mb-4"
     />
   );
-  // return <div />;
 }

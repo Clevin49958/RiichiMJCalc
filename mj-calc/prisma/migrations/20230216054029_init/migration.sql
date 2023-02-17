@@ -19,6 +19,7 @@ CREATE TABLE "PlayerGameScore" (
     "playerName" TEXT NOT NULL,
     "score" INTEGER NOT NULL,
     "gameId" INTEGER NOT NULL,
+    "seating" INTEGER NOT NULL,
 
     PRIMARY KEY ("gameId", "playerName"),
     CONSTRAINT "PlayerGameScore_gameId_fkey" FOREIGN KEY ("gameId") REFERENCES "Game" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
@@ -39,3 +40,6 @@ CREATE UNIQUE INDEX "GameSetting_gameId_key" ON "GameSetting"("gameId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "PlayerGameScore_gameId_playerName_key" ON "PlayerGameScore"("gameId", "playerName");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "PlayerGameScore_gameId_seating_key" ON "PlayerGameScore"("gameId", "seating");

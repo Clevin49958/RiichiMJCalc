@@ -1,14 +1,15 @@
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import { getWind, NP, WindNumber } from "./util/Wind";
-import { Calculator } from "./Calculator";
-import { NameInputGrid } from "./components/NameInputGrid";
+import Calculator from "./Calculator";
+import NameInputGrid from "./components/NameInputGrid";
 import GameEntity from "./types/GameEntity";
-import { useLocalStorage } from "./hooks/useLocalStorage";
-import { GameContextProvider } from "./provider/GameContextProvider";
-import { ResultInputContextProvider } from "./provider/ResultInputContextProvider";
-import { GameSettingContextProvider } from "./provider/GameSettingContextProvider";
+import useLocalStorage from "./hooks/useLocalStorage";
+import GameContextProvider from "./provider/GameContextProvider";
+import ResultInputContextProvider from "./provider/ResultInputContextProvider";
+import GameSettingContextProvider from "./provider/GameSettingContextProvider";
 import { bloatGameStatus, MiniGameEntity } from "./util/Simplify";
+import Header from "./components/Header";
 
 const DEFAULT_N_PLAYERS = 4;
 
@@ -18,7 +19,7 @@ export default function Startup() {
 
   const [playerNames, setPlayerNames] = useLocalStorage<string[]>(
     "names",
-    (Array.from(Array(DEFAULT_N_PLAYERS).keys()) as WindNumber[]).map(getWind)
+    (Array.from(Array(DEFAULT_N_PLAYERS).keys()) as WindNumber[]).map(getWind),
   );
 
   const [namesReady, setNamesReady] = useState(false);
@@ -33,11 +34,11 @@ export default function Startup() {
       setPlayerNames(names);
       setNamesReady(false);
     },
-    [setPlayerNames]
+    [setPlayerNames],
   );
 
   return gameReady ? (
-    <GameSettingContextProvider numPlayers={numPlayers}>
+    <GameSettingContextProvider setting={{ numPlayers, gameMode: "default" }}>
       <GameContextProvider
         playerNames={playerNames.slice(0, numPlayers)}
         state={viewFile}
@@ -50,6 +51,7 @@ export default function Startup() {
   ) : (
     <>
       <div className="d-flex flex-column align-items-center">
+        <Header />
         <NameInputGrid
           numPlayers={numPlayers}
           playerNames={playerNames}

@@ -1,4 +1,10 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { maxBy } from "lodash";
 
 import PlayerTable from "./components/PlayerTable";
@@ -8,14 +14,14 @@ import { GameStatus } from "./types/GameStatus";
 import { getDealer } from "./util/Score";
 import { HonbaStick, RichiiStick } from "./Icons";
 import RoundHistory from "./components/RoundHistory";
-import { GameEntrySelector } from "./components/GameEntrySelector";
+import GameEntrySelector from "./components/GameEntrySelector";
 import GameContext from "./context/GameContext";
 import FinalPoints from "./components/FinalPoints";
-import { PointsPlot } from "./components/PointsPlot";
+import PointsPlot from "./components/PointsPlot";
 import { StickIconSize } from "./util/Constants";
-import { useGameManager } from "./hooks/useGameManager";
-import { useToggle } from "./hooks/useToggle";
-import { ResultInputContext } from "./context/ResultInputContext";
+import useGameManager from "./hooks/useGameManager";
+import useToggle from "./hooks/useToggle";
+import ResultInputContext from "./context/ResultInputContext";
 import GameSettingContext from "./context/GameSettingContext";
 
 export function GameStatusCenterCell(gameStatus: GameStatus) {
@@ -29,7 +35,7 @@ export function GameStatusCenterCell(gameStatus: GameStatus) {
     </div>
   );
 }
-export function Calculator({
+export default function Calculator({
   viewOnly,
   onNextGame,
 }: {
@@ -49,7 +55,7 @@ export function Calculator({
 
   // media query
   const [matches, setMatches] = useState(
-    window.matchMedia("(min-width: 1400px)").matches
+    window.matchMedia("(min-width: 1400px)").matches,
   );
 
   useEffect(() => {
@@ -76,7 +82,7 @@ export function Calculator({
 
   const PlayerInfoCell = useCallback(
     (player: Player) => {
-      const richii = gameStatus.richii;
+      const { richii } = gameStatus;
       const hasRichii = richii[player.seating];
 
       const angle =
@@ -145,7 +151,7 @@ export function Calculator({
         </div>
       );
     },
-    [gameSetting, gameStatus, orientation, tabletopMode, togglePlayerRichii]
+    [gameSetting, gameStatus, orientation, tabletopMode, togglePlayerRichii],
   );
 
   const rewindButton = useMemo(
@@ -160,7 +166,7 @@ export function Calculator({
         Rewind
       </button>
     ),
-    [gameRecord.length, rewind]
+    [gameRecord.length, rewind],
   );
 
   const toggleTabletopModeButton = useMemo(
@@ -174,7 +180,7 @@ export function Calculator({
         {tabletopMode ? "Tabletop mode" : "Display mode"}
       </button>
     ),
-    [toggleTabletopMode, tabletopMode]
+    [toggleTabletopMode, tabletopMode],
   );
 
   const onNextGameMemo = useCallback(() => {
@@ -182,7 +188,7 @@ export function Calculator({
       maxBy(players, (player) => player.score) ?? players[0]
     ).seating;
     const newPlayerNames = players.map(
-      (_player, idx, players) => players[(idx + highestPlayerIndex) % n].name
+      (_player, idx, players) => players[(idx + highestPlayerIndex) % n].name,
     );
     onNextGame(newPlayerNames);
   }, [n, onNextGame, players]);
@@ -196,8 +202,8 @@ export function Calculator({
             playerTable={playersScoreView}
             playerCell={PlayerInfoCell}
             centerCell={() => GameStatusCenterCell(gameStatus)}
-            RBCell={viewOnly ? <></> : rewindButton}
-            LTCell={viewOnly ? <></> : toggleTabletopModeButton}
+            RBCell={viewOnly ? undefined : rewindButton}
+            LTCell={viewOnly ? undefined : toggleTabletopModeButton}
             tableTopMode={tabletopMode}
           />
           {!tabletopMode && (
@@ -242,8 +248,8 @@ export function Calculator({
           playerTable={playersScoreView}
           playerCell={PlayerInfoCell}
           centerCell={() => GameStatusCenterCell(gameStatus)}
-          RBCell={viewOnly ? <></> : rewindButton}
-          LTCell={viewOnly ? <></> : toggleTabletopModeButton}
+          RBCell={viewOnly ? undefined : rewindButton}
+          LTCell={viewOnly ? undefined : toggleTabletopModeButton}
           tableTopMode={tabletopMode}
         />
         {!tabletopMode && (

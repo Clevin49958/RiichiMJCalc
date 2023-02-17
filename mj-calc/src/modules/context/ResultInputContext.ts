@@ -12,6 +12,8 @@ interface ResultInputContextType {
   resetWinState: () => void;
 }
 
-export const ResultInputContext = React.createContext<ResultInputContextType>(
-  {} as ResultInputContextType
+const ResultInputContext = React.createContext<ResultInputContextType>(
+  {} as ResultInputContextType,
 );
+
+export default ResultInputContext;

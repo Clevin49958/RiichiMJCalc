@@ -1,13 +1,7 @@
 import React from "react";
 
-import { NP } from "../util/Wind";
+import { GameSetting } from "../types/GameSetting";
 
-interface GameSettingContextType {
-  numPlayers: NP;
-}
-
-const GameSettingContext = React.createContext<GameSettingContextType>(
-  {} as GameSettingContextType
-);
+const GameSettingContext = React.createContext<GameSetting>({} as GameSetting);
 
 export default GameSettingContext;

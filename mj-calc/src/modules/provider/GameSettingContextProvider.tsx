@@ -1,26 +1,19 @@
-import { ReactNode, useMemo } from "react";
+import React, { ReactNode } from "react";
 
 import GameSettingContext from "../context/GameSettingContext";
-import { NP } from "../util/Wind";
+import { GameSetting } from "../types/GameSetting";
 
 interface GameSettingContextProps {
-  numPlayers: NP;
+  setting: GameSetting;
   children: ReactNode;
 }
 
-export function GameSettingContextProvider({
+export default function GameSettingContextProvider({
   children,
-  numPlayers,
+  setting,
 }: GameSettingContextProps) {
-  const gameSettingContext = useMemo(
-    () => ({
-      numPlayers,
-    }),
-    [numPlayers]
-  );
-
   return (
-    <GameSettingContext.Provider value={gameSettingContext}>
+    <GameSettingContext.Provider value={setting}>
       {children}
     </GameSettingContext.Provider>
   );

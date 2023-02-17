@@ -1,4 +1,4 @@
-export function triggerDownload(filename: string, href: string) {
+export default function triggerDownload(filename: string, href: string) {
   const link = document.createElement("a");
   link.href = href;
   link.download = filename;

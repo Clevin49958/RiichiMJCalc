@@ -32,9 +32,11 @@ model PlayerGameScore {
   score      Int
   gameId     Int
   game       Game   @relation(fields: [gameId], references: [id])
+  seating    Int
 
   @@id([gameId, playerName])
   @@unique([gameId, playerName])
+  @@unique([gameId, seating])
 }
 
 model Record {

@@ -1,3 +1,4 @@
+import React from "react";
 import { PlayerList } from "../types/Player";
 import { DrawRecord, GameRecord } from "../types/Record";
 import { getWind } from "../util/Wind";
