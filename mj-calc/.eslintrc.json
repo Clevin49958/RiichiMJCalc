@@ -3,13 +3,7 @@
     "browser": true,
     "es2021": true
   },
-  "extends": [
-    "plugin:@shopify/typescript",
-    "plugin:@shopify/typescript-type-checking",
-    "plugin:@shopify/react",
-    "plugin:@next/next/recommended",
-    "prettier"
-  ],
+  "extends": ["airbnb", "airbnb/hooks", "airbnb-typescript", "prettier"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -19,47 +13,48 @@
     "sourceType": "module",
     "project": "tsconfig.json"
   },
-  "plugins": ["react-hooks"],
+  // "plugins": ["react-hooks"],
   "rules": {
-    // Conflicts with Prettier
-    "@shopify/binary-assignment-parens": "off",
-    // Personal preference - allows conditional rendering inside JSX
-    "@shopify/jsx-no-complex-expressions": "off",
-    // Personal preference
-    "@shopify/strict-component-boundaries": "off",
-    // Temporarily disabled - this should be enforced when we take
-    // internationalisation into account
-    "@shopify/jsx-no-hardcoded-content": "off",
-    // Personal preference - _sometimes_ nesting ternaries is fine
-    "no-nested-ternary": "warn",
-    "id-length": "warn",
-    "no-warning-comments": "warn",
-    // Disabled in eslint:recommended
-    "jsx-a11y/control-has-associated-label": "off",
-    "jsx-a11y/label-has-associated-control": [
-      2,
-      {
-        "labelComponents": [],
-        "labelAttributes": ["label"],
-        "controlComponents": ["Select"],
-        "depth": 3
-      }
-    ],
-    // deprecated
-    "jsx-a11y/label-has-for": "off",
-    "react/react-in-jsx-scope": "off",
-    "@typescript-eslint/naming-convention": "warn",
-    "camelcase": "error",
-    "spaced-comment": "error",
-    "quotes": ["error", "double"],
-    "no-duplicate-imports": "error",
-    "react/jsx-key": "warn",
-    // Conflicts with Prettier
-    "react/jsx-child-element-spacing": "off",
-    // Checks rules of Hooks
-    "react-hooks/rules-of-hooks": "error",
-    // Checks effect dependencies
-    "react-hooks/exhaustive-deps": "warn"
+    "import/extensions": "off"
+    //   // Conflicts with Prettier
+    //   "@shopify/binary-assignment-parens": "off",
+    //   // Personal preference - allows conditional rendering inside JSX
+    //   "@shopify/jsx-no-complex-expressions": "off",
+    //   // Personal preference
+    //   "@shopify/strict-component-boundaries": "off",
+    //   // Temporarily disabled - this should be enforced when we take
+    //   // internationalisation into account
+    //   "@shopify/jsx-no-hardcoded-content": "off",
+    //   // Personal preference - _sometimes_ nesting ternaries is fine
+    //   "no-nested-ternary": "warn",
+    //   "id-length": "warn",
+    //   "no-warning-comments": "warn",
+    //   // Disabled in eslint:recommended
+    //   "jsx-a11y/control-has-associated-label": "off",
+    //   "jsx-a11y/label-has-associated-control": [
+    //     2,
+    //     {
+    //       "labelComponents": [],
+    //       "labelAttributes": ["label"],
+    //       "controlComponents": ["Select"],
+    //       "depth": 3
+    //     }
+    //   ],
+    //   // deprecated
+    //   "jsx-a11y/label-has-for": "off",
+    //   "react/react-in-jsx-scope": "off",
+    //   "@typescript-eslint/naming-convention": "warn",
+    //   "camelcase": "error",
+    //   "spaced-comment": "error",
+    //   "quotes": ["error", "double"],
+    //   "no-duplicate-imports": "error",
+    //   "react/jsx-key": "warn",
+    //   // Conflicts with Prettier
+    //   "react/jsx-child-element-spacing": "off",
+    //   // Checks rules of Hooks
+    //   "react-hooks/rules-of-hooks": "error",
+    //   // Checks effect dependencies
+    //   "react-hooks/exhaustive-deps": "warn"
   },
   "settings": {
     "import/parsers": {

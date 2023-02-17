@@ -46,7 +46,6 @@
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^13.1.6",
-    "@shopify/eslint-plugin": "^42.0.1",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^12.8.3",
@@ -56,12 +55,23 @@
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.10",
     "@types/react-select": "^5.0.1",
-    "eslint": "^8.18.0",
+    "@typescript-eslint/eslint-plugin": "^5.13.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.6.0",
     "eslint-import-resolver-typescript": "^3.5.3",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
     "prettier": "2.6.2",
     "prisma": "^4.10.1"
   },
   "engines": {
-    "npm": ">=7.0.0"
+    "npm": ">=7.0.0",
+    "node": ">=16.0.0"
   }
 }
