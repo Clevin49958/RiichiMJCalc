@@ -2,7 +2,7 @@ import GameEntity from "../types/GameEntity";
 import { GameSetting } from "../types/GameSetting";
 import { GameStatus, RichiiList } from "../types/GameStatus";
 import { Player } from "../types/Player";
-import { EndingRecord, GameRecord } from "../types/Record";
+import { EndingRecord, EndingType, GameRecord } from "../types/Record";
 
 import { nextGameStatus } from "./GameStatus";
 import { STARTING_POINT } from "./Constants";
@@ -10,10 +10,11 @@ import { getDeltas } from "./Score";
 import { WindNumber } from "./Wind";
 
 export interface MiniGameEntity {
+  startTime?: Date;
   settings: GameSetting;
   endTime: Date;
-  players: { name: string; score: number }[];
-  records: { richii: string; type: "Win" | "Draw"; info: string }[];
+  players: { playerName: string; score: number; seating: number }[];
+  records: { richii: string; type: EndingType; info: string }[];
 }
 
 export function minify(gameEntity: GameEntity): MiniGameEntity {
@@ -21,9 +22,10 @@ export function minify(gameEntity: GameEntity): MiniGameEntity {
   const minified = {
     settings,
     endTime,
-    players: players.map((player) => ({
-      name: player.name,
+    players: players.map((player, idx) => ({
+      playerName: player.name,
       score: player.score,
+      seating: idx,
     })),
     records: records.map((record) => ({
       richii: JSON.stringify(record.richii),
@@ -42,9 +44,9 @@ export function bloatGameStatus(minified: MiniGameEntity): GameEntity {
     records: miniRecords,
   } = minified;
 
-  const players = playersFinal.map<Player>((player, index) => ({
-    seating: index as WindNumber,
-    name: player.name,
+  const players = playersFinal.map<Player>((player) => ({
+    seating: player.seating as WindNumber,
+    name: player.playerName,
     score: STARTING_POINT[4 - playersFinal.length],
   }));
 
@@ -67,7 +69,7 @@ export function bloatGameStatus(minified: MiniGameEntity): GameEntity {
     gameStatus.richii = richii;
     gameStatus.richiiStick += richii.reduce<number>(
       (prev, curr) => prev + (curr ? 1 : 0),
-      0
+      0,
     );
     richii.forEach((richii, index) => {
       players[index].score -= richii ? 1000 : 0;

@@ -2,7 +2,7 @@ import React, { useContext, useMemo, useState, useCallback } from "react";
 
 import GameSettingContext from "../context/GameSettingContext";
 import ResultInputContext from "../context/ResultInputContext";
-import { WinRecord } from "../types/Record";
+import { EndingType, WinRecord } from "../types/Record";
 import { DEFAULT_WIN_INFO } from "../util/Constants";
 
 interface ResultInputContextProps {
@@ -19,7 +19,7 @@ export default function ResultInputContextProvider({
   const [tenpai, setTenpai] = useState<boolean[]>(
     Array(numPlayers).fill(false),
   );
-  const [endingType, setEndingType] = useState<"Win" | "Draw">("Win");
+  const [endingType, setEndingType] = useState<EndingType>("Win");
 
   const resetWinState = useCallback(() => {
     setWinInfo([{ ...DEFAULT_WIN_INFO }]);
