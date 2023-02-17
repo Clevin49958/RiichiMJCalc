@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 // Source: https://usehooks.com/useLocalStorage/
 export function useLocalStorage<T>(key: string, initialValue: T) {
@@ -55,7 +55,7 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
         console.error(error);
       }
     },
-    [key]
+    [key],
   );
 
   const returnValue: [T, typeof setValue] = [storedValue, setValue];

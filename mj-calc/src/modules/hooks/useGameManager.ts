@@ -15,7 +15,7 @@ import { WindNumber } from "../util/Wind";
 import GameSettingContext from "../context/GameSettingContext";
 import { nextGameStatus } from "../util/GameStatus";
 
-export function useGameManager() {
+export default function useGameManager() {
   const gameSetting = useContext(GameSettingContext);
   const { numPlayers } = gameSetting;
 
@@ -56,14 +56,14 @@ export function useGameManager() {
         };
       });
     },
-    [setGameStatus, setPlayers]
+    [setGameStatus, setPlayers],
   );
 
   const pushRecord = useCallback(
     (record: GameRecord) => {
       setGameRecord((gameRecord) => [...gameRecord, record]);
     },
-    [setGameRecord]
+    [setGameRecord],
   );
 
   const rewind = useCallback(() => {
@@ -83,9 +83,9 @@ export function useGameManager() {
           applyScoreChange(
             players,
             lastRecord.deltas.map(
-              (delta, index) => (gameStatus.richii[index] ? 1000 : 0) - delta
-            )
-          )
+              (delta, index) => (gameStatus.richii[index] ? 1000 : 0) - delta,
+            ),
+          ),
         );
 
         return {
@@ -147,7 +147,7 @@ export function useGameManager() {
           ? { type: endingType, info: winInfo }
           : { type: endingType, info: tenpai },
         gameStatus,
-        gameSetting
+        gameSetting,
       );
     });
   }, [

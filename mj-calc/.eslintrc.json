@@ -3,7 +3,13 @@
     "browser": true,
     "es2021": true
   },
-  "extends": ["airbnb", "airbnb/hooks", "airbnb-typescript", "prettier"],
+  "extends": [
+    "airbnb",
+    "airbnb/hooks",
+    "airbnb-typescript",
+    "prettier",
+    "plugin:@next/next/recommended"
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -15,7 +21,8 @@
   },
   // "plugins": ["react-hooks"],
   "rules": {
-    "import/extensions": "off"
+    "import/extensions": "off",
+    "@typescript-eslint/no-shadow": "off",
     //   // Conflicts with Prettier
     //   "@shopify/binary-assignment-parens": "off",
     //   // Personal preference - allows conditional rendering inside JSX
@@ -30,16 +37,16 @@
     //   "id-length": "warn",
     //   "no-warning-comments": "warn",
     //   // Disabled in eslint:recommended
-    //   "jsx-a11y/control-has-associated-label": "off",
-    //   "jsx-a11y/label-has-associated-control": [
-    //     2,
-    //     {
-    //       "labelComponents": [],
-    //       "labelAttributes": ["label"],
-    //       "controlComponents": ["Select"],
-    //       "depth": 3
-    //     }
-    //   ],
+    "jsx-a11y/control-has-associated-label": "off",
+    "jsx-a11y/label-has-associated-control": [
+      2,
+      {
+        "labelComponents": [],
+        "labelAttributes": ["label"],
+        "controlComponents": ["Select"],
+        "depth": 3
+      }
+    ]
     //   // deprecated
     //   "jsx-a11y/label-has-for": "off",
     //   "react/react-in-jsx-scope": "off",

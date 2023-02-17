@@ -1,4 +1,10 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { maxBy } from "lodash";
 
 import PlayerTable from "./components/PlayerTable";
@@ -49,7 +55,7 @@ export function Calculator({
 
   // media query
   const [matches, setMatches] = useState(
-    window.matchMedia("(min-width: 1400px)").matches
+    window.matchMedia("(min-width: 1400px)").matches,
   );
 
   useEffect(() => {
@@ -145,7 +151,7 @@ export function Calculator({
         </div>
       );
     },
-    [gameSetting, gameStatus, orientation, tabletopMode, togglePlayerRichii]
+    [gameSetting, gameStatus, orientation, tabletopMode, togglePlayerRichii],
   );
 
   const rewindButton = useMemo(
@@ -160,7 +166,7 @@ export function Calculator({
         Rewind
       </button>
     ),
-    [gameRecord.length, rewind]
+    [gameRecord.length, rewind],
   );
 
   const toggleTabletopModeButton = useMemo(
@@ -174,7 +180,7 @@ export function Calculator({
         {tabletopMode ? "Tabletop mode" : "Display mode"}
       </button>
     ),
-    [toggleTabletopMode, tabletopMode]
+    [toggleTabletopMode, tabletopMode],
   );
 
   const onNextGameMemo = useCallback(() => {
@@ -182,7 +188,7 @@ export function Calculator({
       maxBy(players, (player) => player.score) ?? players[0]
     ).seating;
     const newPlayerNames = players.map(
-      (_player, idx, players) => players[(idx + highestPlayerIndex) % n].name
+      (_player, idx, players) => players[(idx + highestPlayerIndex) % n].name,
     );
     onNextGame(newPlayerNames);
   }, [n, onNextGame, players]);

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import { getWind, NP, WindNumber } from "./util/Wind";
 import { Calculator } from "./Calculator";

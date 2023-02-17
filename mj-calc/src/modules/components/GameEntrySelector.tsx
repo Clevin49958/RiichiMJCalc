@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useMemo } from "react";
+import React, { Dispatch, SetStateAction, useMemo } from "react";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 
 import { PlayerList, Player } from "../types/Player";
@@ -71,7 +71,7 @@ export function GameEntrySelector({
         winInfo.map((info) => ({
           ...info,
           dealIn,
-        }))
+        })),
       );
     return [setFan, setFu, setWinner, setDealIn];
   }, [setWinInfo]);
@@ -194,7 +194,7 @@ export function GameEntrySelector({
                 <DropdownEntry
                   label="Deal in"
                   labels={players.map((p) =>
-                    p.seating === winInfo[0].winner ? "Tsumo" : p.name
+                    p.seating === winInfo[0].winner ? "Tsumo" : p.name,
                   )}
                   values={players.map((p) => p.seating)}
                   value={info.dealIn}

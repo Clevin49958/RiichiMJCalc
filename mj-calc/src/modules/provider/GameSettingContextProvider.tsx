@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 
 import GameSettingContext from "../context/GameSettingContext";
 import { GameSetting } from "../types/GameSetting";
@@ -8,7 +8,7 @@ interface GameSettingContextProps {
   children: ReactNode;
 }
 
-export function GameSettingContextProvider({
+export default function GameSettingContextProvider({
   children,
   setting,
 }: GameSettingContextProps) {
