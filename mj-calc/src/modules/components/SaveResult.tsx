@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 
+import { Prisma } from "@prisma/client";
 import GameContext from "../context/GameContext";
 import { GameStatus } from "../types/GameStatus";
 import GameEntity from "../types/GameEntity";
@@ -7,13 +8,30 @@ import { PlayerList } from "../types/Player";
 import { GameRecord } from "../types/Record";
 import { GameSetting } from "../types/GameSetting";
 import GameSettingContext from "../context/GameSettingContext";
-import { minify } from "../util/Simplify";
+import { MiniGameEntity, minify, prismafy } from "../util/Simplify";
 
 export function generateResult(
   gameStatus: GameStatus,
   gameSetting: GameSetting,
   players: PlayerList,
   records: GameRecord[],
+  target: "json",
+): MiniGameEntity;
+
+export function generateResult(
+  gameStatus: GameStatus,
+  gameSetting: GameSetting,
+  players: PlayerList,
+  records: GameRecord[],
+  target: "database",
+): Prisma.GameCreateInput;
+
+export function generateResult(
+  gameStatus: GameStatus,
+  gameSetting: GameSetting,
+  players: PlayerList,
+  records: GameRecord[],
+  target: "json" | "database",
 ) {
   const result: GameEntity = {
     endTime: new Date(),
@@ -22,7 +40,10 @@ export function generateResult(
     players,
     records,
   };
-  return minify(result);
+  if (target === "json") {
+    return minify(result);
+  }
+  return prismafy(result);
 }
 
 export function saveJson(result: { endTime: Date }) {
@@ -54,6 +75,7 @@ export function ExportResult() {
             gameSetting,
             players,
             records,
+            "json",
           );
           saveJson(result);
         }}
@@ -72,13 +94,14 @@ export function ExportResult() {
             gameSetting,
             players,
             records,
+            "database",
           );
           fetch("/api/game", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(result),
+            body: JSON.stringify({ data: result }),
           })
             .then(() => setButtonColor("success"))
             .catch(() => setButtonColor("warning"));

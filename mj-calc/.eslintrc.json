@@ -33,6 +33,7 @@
       { "varsIgnorePattern": "_", "argsIgnorePattern": "^_" }
     ],
     "no-plusplus": "off",
+    "import/prefer-default-export": "off",
     // temporary
     "jsx-a11y/no-static-element-interactions": "warn",
     //   // Conflicts with Prettier

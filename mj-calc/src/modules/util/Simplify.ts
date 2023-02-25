@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import GameEntity from "../types/GameEntity";
 import { GameSetting } from "../types/GameSetting";
 import { GameStatus, RichiiList } from "../types/GameStatus";
@@ -15,6 +16,29 @@ export interface MiniGameEntity {
   endTime: Date;
   players: { name: string; score: number; seating: number }[];
   records: { richii: string; type: EndingType; info: string }[];
+}
+
+export function prismafy(gameEntity: GameEntity): Prisma.GameCreateInput {
+  const { settings, endTime, players, records } = gameEntity;
+  const minified = {
+    gameSetting: { create: settings },
+    endTime,
+    players: {
+      create: players.map((player, idx) => ({
+        name: player.name,
+        score: player.score,
+        seating: idx,
+      })),
+    },
+    records: {
+      create: records.map((record) => ({
+        richii: JSON.stringify(record.richii),
+        type: record.type,
+        info: JSON.stringify(record.info),
+      })),
+    },
+  };
+  return minified;
 }
 
 export function minify(gameEntity: GameEntity): MiniGameEntity {
