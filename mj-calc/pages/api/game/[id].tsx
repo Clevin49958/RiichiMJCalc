@@ -1,9 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { z } from "zod";
 import { prisma } from "../../../prisma/client";
 
 const selectHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const urlParts = req.url!.split("/");
-  const id = parseInt(urlParts[urlParts.length - 1], 10);
+  const { id: idString } = req.query;
+  const idSchema = z.coerce.number();
+  const id = idSchema.parse(idString);
 
   const game = await prisma.game.findUnique({
     where: {
@@ -21,7 +23,7 @@ const selectHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 export default async function gameHandler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   switch (req.method) {
     case "GET":
