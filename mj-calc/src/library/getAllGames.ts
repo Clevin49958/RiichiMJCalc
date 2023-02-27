@@ -1,9 +1,8 @@
 import { merge } from "lodash";
 import { prisma } from "../../prisma/client";
-import { GameFindManySchema } from "../../prisma/generated/schemas/findManyGame.schema";
 
-export async function findAllPosts(
-  query: ReturnType<typeof GameFindManySchema.parse> = {}
+export async function getAllGames(
+  query: Parameters<typeof prisma.game.findMany>[0] = {}
 ) {
   const findGamesInput = merge(query, {
     include: {

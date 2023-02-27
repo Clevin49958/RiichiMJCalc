@@ -4,7 +4,7 @@ import { prisma } from "../../prisma/client";
 import { GameCreateOneSchema } from "../../prisma/generated/schemas/createOneGame.schema";
 import { coerceDate } from "../../src/modules/util/coerceInput";
 import { GameFindManySchema } from "../../prisma/generated/schemas/findManyGame.schema";
-import { findAllPosts } from "../../src/library/getAllPosts";
+import { getAllGames } from "../../src/library/getAllGames";
 
 const createHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const body = coerceDate(req.body, ["data.startTime", "data.endTime"]);
@@ -19,7 +19,7 @@ const createHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 const getHander = async (req: NextApiRequest, res: NextApiResponse) => {
   const parsedBody = GameFindManySchema.parse(req.body || {});
 
-  const games = await findAllPosts(parsedBody);
+  const games = await getAllGames(parsedBody);
 
   res.status(200).json(games);
 };

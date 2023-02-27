@@ -1,7 +1,7 @@
 import React from "react";
 import { InferGetStaticPropsType } from "next";
 import GameList from "../src/modules/components/GameList";
-import { findAllPosts } from "../src/library/getAllPosts";
+import { getAllGames } from "../src/library/getAllGames";
 
 export default function GameListPage({
   games,
@@ -10,7 +10,7 @@ export default function GameListPage({
 }
 
 export async function getStaticProps() {
-  const games = await findAllPosts();
+  const games = await getAllGames();
   return {
     props: {
       games,
