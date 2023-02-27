@@ -15,7 +15,7 @@ export function generateResult(
   gameSetting: GameSetting,
   players: PlayerList,
   records: GameRecord[],
-  target: "json",
+  target: "json"
 ): MiniGameEntity;
 
 export function generateResult(
@@ -23,7 +23,7 @@ export function generateResult(
   gameSetting: GameSetting,
   players: PlayerList,
   records: GameRecord[],
-  target: "database",
+  target: "database"
 ): Prisma.GameCreateInput;
 
 export function generateResult(
@@ -31,7 +31,7 @@ export function generateResult(
   gameSetting: GameSetting,
   players: PlayerList,
   records: GameRecord[],
-  target: "json" | "database",
+  target: "json" | "database"
 ) {
   const result: GameEntity = {
     endTime: new Date(),
@@ -75,7 +75,7 @@ export function ExportResult() {
             gameSetting,
             players,
             records,
-            "json",
+            "json"
           );
           saveJson(result);
         }}
@@ -94,9 +94,9 @@ export function ExportResult() {
             gameSetting,
             players,
             records,
-            "database",
+            "database"
           );
-          fetch("/api/game", {
+          fetch("/api/games", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

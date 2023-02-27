@@ -20,7 +20,7 @@ export default function GameList({
             <div className="card-body">
               <h5 className="card-header">
                 <Link
-                  href={`/game/${game.id}`}
+                  href={`/games/${game.id}`}
                 >{`Game on ${game.endTime.toLocaleString()}`}</Link>
               </h5>
               <div className="container round-entry">
