@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import Select from "react-select/";
 
 import GameContext from "../context/GameContext";
@@ -53,20 +53,24 @@ export default function FinalPoints() {
   const [umaOption, setUmaOption] = useState(umaPresets[0]);
   const [okaOption, setOkaOption] = useState(okaPresets[0]);
 
-  const mediaMatch = window.matchMedia("(min-width: 576px)");
-  const [matches, setMatches] = useState(mediaMatch.matches);
+  // const mediaMatch = window.matchMedia("(min-width: 576px)");
+  // const [matches, setMatches] = useState(mediaMatch.matches);
 
-  useEffect(() => {
-    window
-      .matchMedia("(min-width: 576px)")
-      .addEventListener("change", (e) => setMatches(e.matches));
-  }, []);
+  // useEffect(() => {
+  //   window
+  //     .matchMedia("(min-width: 576px)")
+  //     .addEventListener("change", (e) => setMatches(e.matches));
+  // }, []);
 
   const sortedPlayers = [...players].sort(
-    (playerA, playerB) => playerB.score - playerA.score,
+    (playerA, playerB) => playerB.score - playerA.score
   );
-  const rawPoints = sortedPlayers.map((player) => (player.score - startingPoint) / 1000);
-  const finalPoints = rawPoints.map((pt, idx) => pt + umaOption.uma[idx] + okaOption.oka[idx]);
+  const rawPoints = sortedPlayers.map(
+    (player) => (player.score - startingPoint) / 1000
+  );
+  const finalPoints = rawPoints.map(
+    (pt, idx) => pt + umaOption.uma[idx] + okaOption.oka[idx]
+  );
   return (
     <div className="card">
       <div className="card-header">Final points: </div>
@@ -75,7 +79,8 @@ export default function FinalPoints() {
           <div className="row">
             <div
               className={`col col-sm-3 d-flex flex-${
-                matches ? "column" : "row"
+                "column"
+                // matches ? "column" : "row"
               } justify-content-around my-2`}
             >
               <label>
