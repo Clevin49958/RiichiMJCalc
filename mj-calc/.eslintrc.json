@@ -19,6 +19,7 @@
     "sourceType": "module",
     "project": "tsconfig.json"
   },
+  "ignorePatterns": ["next.config.js"],
   // "plugins": ["react-hooks"],
   "rules": {
     "import/extensions": "off",
