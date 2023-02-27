@@ -33,6 +33,7 @@ CREATE TABLE "Record" (
     "richii" BOOLEAN[],
     "type" TEXT NOT NULL,
     "info" JSONB NOT NULL,
+    "deltas" INTEGER[],
     "gameId" INTEGER NOT NULL,
 
     CONSTRAINT "Record_pkey" PRIMARY KEY ("id")
@@ -40,9 +41,6 @@ CREATE TABLE "Record" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "GameSetting_gameId_key" ON "GameSetting"("gameId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "PlayerGameScore_gameId_playerName_key" ON "PlayerGameScore"("gameId", "playerName");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "PlayerGameScore_gameId_seating_key" ON "PlayerGameScore"("gameId", "seating");

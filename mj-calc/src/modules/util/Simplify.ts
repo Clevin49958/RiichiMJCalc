@@ -33,6 +33,7 @@ export function prismafy(gameEntity: GameEntity): Prisma.GameCreateInput {
       create: records.map((record) => ({
         richii: record.richii,
         type: record.type,
+        deltas: record.deltas,
         info: record.info as Prisma.InputJsonValue,
       })),
     },
@@ -92,7 +93,7 @@ export function bloatGameStatus(minified: MiniGameEntity): GameEntity {
     gameStatus.richii = richii;
     gameStatus.richiiStick += richii.reduce<number>(
       (prev, curr) => prev + (curr ? 1 : 0),
-      0,
+      0
     );
     richii.forEach((richii, index) => {
       players[index].score -= richii ? 1000 : 0;

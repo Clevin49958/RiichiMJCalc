@@ -44,10 +44,11 @@ model Player {
 }
 
 model Record {
-  id     Int    @id @default(autoincrement())
+  id     Int       @id @default(autoincrement())
   richii Boolean[]
   type   String
   info   Json
+  deltas Int[]
   gameId Int
-  game   Game   @relation(fields: [gameId], references: [id])
+  game   Game      @relation(fields: [gameId], references: [id])
 }
