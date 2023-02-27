@@ -3,7 +3,7 @@ import { OverlayTrigger, Popover } from "react-bootstrap";
 
 import { PlayerList, Player } from "../types/Player";
 import { WindNumber } from "../util/Wind";
-import { WinRecord } from "../types/Record";
+import { EndingType, WinRecord } from "../types/Record";
 import { DEFAULT_WIN_INFO } from "../util/Constants";
 
 import PlayerTable from "./PlayerTable";
@@ -12,7 +12,7 @@ import { ExportResult } from "./SaveResult";
 
 interface GameEntrySelectorProps {
   endingType: string;
-  setEndingType: Dispatch<SetStateAction<"Win" | "Draw">>;
+  setEndingType: Dispatch<SetStateAction<EndingType>>;
   players: PlayerList;
   winInfo: WinRecord[];
   setWinInfo: Dispatch<SetStateAction<WinRecord[]>>;

@@ -1,12 +1,12 @@
 import React, { Dispatch, SetStateAction } from "react";
 
-import { WinRecord } from "../types/Record";
+import { EndingType, WinRecord } from "../types/Record";
 
 interface ResultInputContextType {
   winInfo: WinRecord[];
   setWinInfo: Dispatch<SetStateAction<WinRecord[]>>;
-  endingType: "Win" | "Draw";
-  setEndingType: Dispatch<SetStateAction<"Win" | "Draw">>;
+  endingType: EndingType;
+  setEndingType: Dispatch<SetStateAction<EndingType>>;
   tenpai: boolean[];
   setTenpai: Dispatch<SetStateAction<boolean[]>>;
   resetWinState: () => void;

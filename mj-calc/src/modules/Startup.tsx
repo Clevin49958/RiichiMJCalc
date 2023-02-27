@@ -8,7 +8,7 @@ import useLocalStorage from "./hooks/useLocalStorage";
 import GameContextProvider from "./provider/GameContextProvider";
 import ResultInputContextProvider from "./provider/ResultInputContextProvider";
 import GameSettingContextProvider from "./provider/GameSettingContextProvider";
-import { bloatGameStatus, MiniGameEntity } from "./util/Simplify";
+import { bloatGameStatus, deepParseGameEntity } from "./util/Simplify";
 import Header from "./components/Header";
 
 const DEFAULT_N_PLAYERS = 4;
@@ -19,7 +19,7 @@ export default function Startup() {
 
   const [playerNames, setPlayerNames] = useLocalStorage<string[]>(
     "names",
-    (Array.from(Array(DEFAULT_N_PLAYERS).keys()) as WindNumber[]).map(getWind),
+    (Array.from(Array(DEFAULT_N_PLAYERS).keys()) as WindNumber[]).map(getWind)
   );
 
   const [namesReady, setNamesReady] = useState(false);
@@ -34,7 +34,7 @@ export default function Startup() {
       setPlayerNames(names);
       setNamesReady(false);
     },
-    [setPlayerNames],
+    [setPlayerNames]
   );
 
   return gameReady ? (
@@ -76,13 +76,13 @@ export default function Startup() {
               fileReader.onload = (event) => {
                 const stringContent = event.target?.result?.toString() ?? "";
                 try {
-                  const json = JSON.parse(stringContent) as MiniGameEntity;
+                  const miniGameStatus = deepParseGameEntity(stringContent);
                   // TODO: Maybe verify for json content?
-                  setViewFile(bloatGameStatus(json));
+                  setViewFile(bloatGameStatus(miniGameStatus));
                   setViewOnly(true);
                   setNamesReady(true);
                   // eslint-disable-next-line no-console
-                  console.log(json);
+                  console.log(miniGameStatus);
                 } catch (error) {
                   // eslint-disable-next-line no-alert
                   alert("Failed to parse result file.");

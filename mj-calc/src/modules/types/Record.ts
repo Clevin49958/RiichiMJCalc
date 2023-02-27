@@ -12,6 +12,8 @@ export interface WinRecord {
 
 export type DrawRecord = boolean[];
 
+export type EndingType = "Win" | "Draw";
+
 export type EndingRecord =
   | {
       info: WinRecord[];
