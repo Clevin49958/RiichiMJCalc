@@ -23,25 +23,24 @@ model GameSetting {
 }
 
 model Game {
-  id               Int               @id @default(autoincrement())
-  startTime        DateTime?
-  endTime          DateTime
-  players Player[]
-  records          Record[]
-  gameSetting      GameSetting?
+  id          Int          @id @default(autoincrement())
+  startTime   DateTime?
+  endTime     DateTime
+  players     Player[]
+  records     Record[]
+  gameSetting GameSetting?
 }
 
 model Player {
-  name String @map("playerName")
-  score      Int
-  gameId     Int
-  game       Game   @relation(fields: [gameId], references: [id])
-  seating    Int
+  name    String @map("playerName")
+  score   Int
+  gameId  Int
+  game    Game   @relation(fields: [gameId], references: [id])
+  seating Int
 
   @@id([gameId, name])
-  @@unique([gameId, name])
   @@unique([gameId, seating])
-	@@map("PlayerGameScore")
+  @@map("PlayerGameScore")
 }
 
 model Record {
