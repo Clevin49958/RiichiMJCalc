@@ -25,16 +25,15 @@ export function prismafy(gameEntity: GameEntity): Prisma.GameCreateInput {
     endTime,
     players: {
       create: players.map((player, idx) => ({
-        name: player.name,
-        score: player.score,
+        ...player,
         seating: idx,
       })),
     },
     records: {
       create: records.map((record) => ({
-        richii: JSON.stringify(record.richii),
+        richii: record.richii,
         type: record.type,
-        info: JSON.stringify(record.info),
+        info: record.info as Prisma.InputJsonValue,
       })),
     },
   };
