@@ -10,7 +10,7 @@ generator zod {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -46,9 +46,9 @@ model Player {
 
 model Record {
   id     Int    @id @default(autoincrement())
-  richii String
+  richii Boolean[]
   type   String
-  info   String
+  info   Json
   gameId Int
   game   Game   @relation(fields: [gameId], references: [id])
 }
