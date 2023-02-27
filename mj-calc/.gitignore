@@ -25,3 +25,6 @@ yarn-error.log*
 
 *.db
 *.db-journal
+
+# prisma zod generator
+/prisma/generated/

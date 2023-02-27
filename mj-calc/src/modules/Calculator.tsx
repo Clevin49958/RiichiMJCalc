@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useCallback, useContext, useMemo, useState } from "react";
 import { maxBy } from "lodash";
 
 import PlayerTable from "./components/PlayerTable";
@@ -53,16 +47,16 @@ export default function Calculator({
 
   const { togglePlayerRichii, rewind, saveEntry } = useGameManager();
 
-  // media query
-  const [matches, setMatches] = useState(
-    window.matchMedia("(min-width: 1400px)").matches,
-  );
+  // // media query
+  // const [matches, setMatches] = useState(
+  //   window.matchMedia("(min-width: 1400px)").matches
+  // );
 
-  useEffect(() => {
-    window
-      .matchMedia("(min-width: 1400px)")
-      .addEventListener("change", (e) => setMatches(e.matches));
-  }, []);
+  // useEffect(() => {
+  //   window
+  //     .matchMedia("(min-width: 1400px)")
+  //     .addEventListener("change", (e) => setMatches(e.matches));
+  // }, []);
 
   // Display
   const [displayDelta, setDisplayDelta] = useState(-1);
@@ -151,7 +145,7 @@ export default function Calculator({
         </div>
       );
     },
-    [gameSetting, gameStatus, orientation, tabletopMode, togglePlayerRichii],
+    [gameSetting, gameStatus, orientation, tabletopMode, togglePlayerRichii]
   );
 
   const rewindButton = useMemo(
@@ -166,7 +160,7 @@ export default function Calculator({
         Rewind
       </button>
     ),
-    [gameRecord.length, rewind],
+    [gameRecord.length, rewind]
   );
 
   const toggleTabletopModeButton = useMemo(
@@ -180,7 +174,7 @@ export default function Calculator({
         {tabletopMode ? "Tabletop mode" : "Display mode"}
       </button>
     ),
-    [toggleTabletopMode, tabletopMode],
+    [toggleTabletopMode, tabletopMode]
   );
 
   const onNextGameMemo = useCallback(() => {
@@ -188,57 +182,57 @@ export default function Calculator({
       maxBy(players, (player) => player.score) ?? players[0]
     ).seating;
     const newPlayerNames = players.map(
-      (_player, idx, players) => players[(idx + highestPlayerIndex) % n].name,
+      (_player, idx, players) => players[(idx + highestPlayerIndex) % n].name
     );
     onNextGame(newPlayerNames);
   }, [n, onNextGame, players]);
 
-  // big screen grid layout
-  if (matches) {
-    return (
-      <div className={`p-0 container${tabletopMode ? "-fluid" : ""}`}>
-        <div className="row">
-          <PlayerTable
-            playerTable={playersScoreView}
-            playerCell={PlayerInfoCell}
-            centerCell={() => GameStatusCenterCell(gameStatus)}
-            RBCell={viewOnly ? undefined : rewindButton}
-            LTCell={viewOnly ? undefined : toggleTabletopModeButton}
-            tableTopMode={tabletopMode}
-          />
-          {!tabletopMode && (
-            <div className="row mt-4">
-              <div className="col col-6">
-                {viewOnly || (
-                  <GameEntrySelector
-                    endingType={endingType}
-                    setEndingType={setEndingType}
-                    players={players}
-                    winInfo={winInfo}
-                    setWinInfo={setWinInfo}
-                    tenpai={tenpai}
-                    setTenpai={setTenpai}
-                    saveEntry={saveEntry}
-                    isReady
-                    onNextGame={onNextGameMemo}
-                  />
-                )}
-                <RoundHistory records={gameRecord} players={players} />
-              </div>
-              <div className="col col-6">
-                <FinalPoints />
-                <PointsPlot
-                  players={players}
-                  gameRecord={gameRecord}
-                  gameStatus={gameStatus}
-                />
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
+  // // big screen grid layout
+  // if (matches) {
+  //   return (
+  //     <div className={`p-0 container${tabletopMode ? "-fluid" : ""}`}>
+  //       <div className="row">
+  //         <PlayerTable
+  //           playerTable={playersScoreView}
+  //           playerCell={PlayerInfoCell}
+  //           centerCell={() => GameStatusCenterCell(gameStatus)}
+  //           RBCell={viewOnly ? undefined : rewindButton}
+  //           LTCell={viewOnly ? undefined : toggleTabletopModeButton}
+  //           tableTopMode={tabletopMode}
+  //         />
+  //         {!tabletopMode && (
+  //           <div className="row mt-4">
+  //             <div className="col col-6">
+  //               {viewOnly || (
+  //                 <GameEntrySelector
+  //                   endingType={endingType}
+  //                   setEndingType={setEndingType}
+  //                   players={players}
+  //                   winInfo={winInfo}
+  //                   setWinInfo={setWinInfo}
+  //                   tenpai={tenpai}
+  //                   setTenpai={setTenpai}
+  //                   saveEntry={saveEntry}
+  //                   isReady
+  //                   onNextGame={onNextGameMemo}
+  //                 />
+  //               )}
+  //               <RoundHistory records={gameRecord} players={players} />
+  //             </div>
+  //             <div className="col col-6">
+  //               <FinalPoints />
+  //               <PointsPlot
+  //                 players={players}
+  //                 gameRecord={gameRecord}
+  //                 gameStatus={gameStatus}
+  //               />
+  //             </div>
+  //           </div>
+  //         )}
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   // small screen list layout
   return (

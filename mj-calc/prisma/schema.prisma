@@ -5,8 +5,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator zod {
+  provider = "prisma-zod-generator"
+}
+
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -19,31 +23,32 @@ model GameSetting {
 }
 
 model Game {
-  id               Int               @id @default(autoincrement())
-  startTime        DateTime?
-  endTime          DateTime
-  playerGameScores PlayerGameScore[]
-  records          Record[]
-  gameSetting      GameSetting?
+  id          Int          @id @default(autoincrement())
+  startTime   DateTime?
+  endTime     DateTime
+  players     Player[]
+  records     Record[]
+  gameSetting GameSetting?
 }
 
-model PlayerGameScore {
-  playerName String
-  score      Int
-  gameId     Int
-  game       Game   @relation(fields: [gameId], references: [id])
-  seating    Int
+model Player {
+  name    String @map("playerName")
+  score   Int
+  gameId  Int
+  game    Game   @relation(fields: [gameId], references: [id])
+  seating Int
 
-  @@id([gameId, playerName])
-  @@unique([gameId, playerName])
+  @@id([gameId, name])
   @@unique([gameId, seating])
+  @@map("PlayerGameScore")
 }
 
 model Record {
-  id     Int    @id @default(autoincrement())
-  richii String
+  id     Int       @id @default(autoincrement())
+  richii Boolean[]
   type   String
-  info   String
+  info   Json
+  deltas Int[]
   gameId Int
-  game   Game   @relation(fields: [gameId], references: [id])
+  game   Game      @relation(fields: [gameId], references: [id])
 }
