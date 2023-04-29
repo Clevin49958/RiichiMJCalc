@@ -18,12 +18,21 @@ interface GameEntrySelectorProps {
   setWinInfo: Dispatch<SetStateAction<WinRecord[]>>;
   tenpai: boolean[];
   setTenpai: Dispatch<SetStateAction<boolean[]>>;
+}
+
+interface SaveRoundProps {
+  endingType: string;
+  setEndingType: Dispatch<SetStateAction<EndingType>>;
+  players: PlayerList;
+  winInfo: WinRecord[];
+  setWinInfo: Dispatch<SetStateAction<WinRecord[]>>;
+  tenpai: boolean[];
+  setTenpai: Dispatch<SetStateAction<boolean[]>>;
   saveEntry: () => void;
   onNextGame: () => void;
   isReady: boolean;
 }
-
-export default function GameEntrySelector({
+export function GameEntrySelector({
   endingType,
   setEndingType,
   players,
@@ -31,9 +40,6 @@ export default function GameEntrySelector({
   setWinInfo,
   tenpai,
   setTenpai,
-  saveEntry,
-  isReady,
-  onNextGame,
 }: GameEntrySelectorProps) {
   const fans = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 26, 39, 52, 65, 78];
   const fus = [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110];
@@ -71,37 +77,10 @@ export default function GameEntrySelector({
         winInfo.map((info) => ({
           ...info,
           dealIn,
-        })),
+        }))
       );
     return [setFan, setFu, setWinner, setDealIn];
   }, [setWinInfo]);
-
-  const popover = (
-    <Popover>
-      <Popover.Header as="h5">Confirmation</Popover.Header>
-      <Popover.Body>
-        <p>
-          Are you sure you want to start a new game? You won&apos;t be able to
-          recover them if you haven&apos;t save.
-        </p>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginTop: 15,
-          }}
-        >
-          <button
-            className="btn btn-success"
-            type="submit"
-            onClick={onNextGame}
-          >
-            Go!
-          </button>
-        </div>
-      </Popover.Body>
-    </Popover>
-  );
 
   const PlayerCell = useCallback(
     (player: Player) => (
@@ -121,12 +100,12 @@ export default function GameEntrySelector({
         </label>
       </div>
     ),
-    [setTenpai, tenpai],
+    [setTenpai, tenpai]
   );
 
   const CenterCell = useCallback(
     () => <span>Check all players that were tenpai.</span>,
-    [],
+    []
   );
 
   return (
@@ -221,7 +200,7 @@ export default function GameEntrySelector({
                 <DropdownEntry
                   label="Deal in"
                   labels={players.map((p) =>
-                    p.seating === winInfo[0].winner ? "Tsumo" : p.name,
+                    p.seating === winInfo[0].winner ? "Tsumo" : p.name
                   )}
                   values={players.map((p) => p.seating)}
                   value={info.dealIn}
@@ -276,6 +255,60 @@ export default function GameEntrySelector({
           />
         </div>
       </div>
+    </>
+  );
+}
+
+export default function SaveRound({
+  endingType,
+  setEndingType,
+  players,
+  winInfo,
+  setWinInfo,
+  tenpai,
+  setTenpai,
+  saveEntry,
+  isReady,
+  onNextGame,
+}: SaveRoundProps) {
+  const popover = (
+    <Popover>
+      <Popover.Header as="h5">Confirmation</Popover.Header>
+      <Popover.Body>
+        <p>
+          Are you sure you want to start a new game? You won&apos;t be able to
+          recover them if you haven&apos;t save.
+        </p>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginTop: 15,
+          }}
+        >
+          <button
+            className="btn btn-success"
+            type="submit"
+            onClick={onNextGame}
+          >
+            Go!
+          </button>
+        </div>
+      </Popover.Body>
+    </Popover>
+  );
+
+  return (
+    <>
+      <GameEntrySelector
+        endingType={endingType}
+        setEndingType={setEndingType}
+        players={players}
+        winInfo={winInfo}
+        setWinInfo={setWinInfo}
+        tenpai={tenpai}
+        setTenpai={setTenpai}
+      />
       <div className="d-flex flex-row mt-3 justify-content-around">
         <button
           className="btn btn-primary"

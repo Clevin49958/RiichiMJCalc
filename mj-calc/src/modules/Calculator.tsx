@@ -1,6 +1,8 @@
 import React, { useCallback, useContext, useMemo, useState } from "react";
 import { maxBy } from "lodash";
 
+import { OverlayTrigger, Popover } from "react-bootstrap";
+import { Placement } from "react-bootstrap/esm/types";
 import PlayerTable from "./components/PlayerTable";
 import { PlayerList, Player } from "./types/Player";
 import { getWind } from "./util/Wind";
@@ -8,7 +10,7 @@ import { GameStatus } from "./types/GameStatus";
 import { getDealer } from "./util/Score";
 import { HonbaStick, RichiiStick } from "./Icons";
 import RoundHistory from "./components/RoundHistory";
-import GameEntrySelector from "./components/GameEntrySelector";
+import SaveRound, { GameEntrySelector } from "./components/SaveRound";
 import GameContext from "./context/GameContext";
 import FinalPoints from "./components/FinalPoints";
 import PointsPlot from "./components/PointsPlot";
@@ -177,6 +179,54 @@ export default function Calculator({
     [toggleTabletopMode, tabletopMode]
   );
 
+  const scoreButton = ["top", "bottom"].map((position, idx) => (
+    <OverlayTrigger
+      trigger="click"
+      placement={position as Placement}
+      overlay={
+        <Popover>
+          <Popover.Body
+            style={{
+              transform: `rotate(${idx * 180}deg)`,
+            }}
+          >
+            <GameEntrySelector
+              endingType={endingType}
+              setEndingType={setEndingType}
+              players={players}
+              winInfo={winInfo}
+              setWinInfo={setWinInfo}
+              tenpai={tenpai}
+              setTenpai={setTenpai}
+            />
+            <div className="d-flex flex-row mt-3 justify-content-around">
+              <button
+                className="btn btn-primary"
+                type="button"
+                onClick={() => {
+                  saveEntry();
+                }}
+              >
+                Save entry
+              </button>
+            </div>
+          </Popover.Body>
+        </Popover>
+      }
+      key={position}
+    >
+      <button
+        type="submit"
+        className="btn btn-primary"
+        style={{
+          transform: `rotate(${idx * 180}deg)`,
+        }}
+      >
+        Save entry
+      </button>
+    </OverlayTrigger>
+  ));
+
   const onNextGameMemo = useCallback(() => {
     const highestPlayerIndex = (
       maxBy(players, (player) => player.score) ?? players[0]
@@ -244,6 +294,8 @@ export default function Calculator({
           centerCell={() => GameStatusCenterCell(gameStatus)}
           RBCell={viewOnly ? undefined : rewindButton}
           LTCell={viewOnly ? undefined : toggleTabletopModeButton}
+          LBCell={tabletopMode ? scoreButton[0] : undefined}
+          RTCell={tabletopMode ? scoreButton[1] : undefined}
           tableTopMode={tabletopMode}
         />
         {!tabletopMode && (
@@ -251,7 +303,7 @@ export default function Calculator({
             {viewOnly || (
               <div className="row">
                 <div className="col col-12">
-                  <GameEntrySelector
+                  <SaveRound
                     endingType={endingType}
                     setEndingType={setEndingType}
                     players={players}
