@@ -1,6 +1,10 @@
 import React, { Dispatch, SetStateAction, useCallback, useMemo } from "react";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { PlayerList, Player } from "../types/Player";
 import { WindNumber } from "../util/Wind";
 import { EndingType, WinRecord } from "../types/Record";
@@ -150,7 +154,10 @@ export function GameEntrySelector({
           aria-labelledby="nav-win-tab"
         >
           {winInfo.map((info, idx) => (
-            <div className="d-flex flex-row flex-wrap align-item-end">
+            <div
+              className="d-flex flex-row flex-wrap align-item-end"
+              key={info.winner}
+            >
               <DropdownEntry
                 label="Fan"
                 labels={fans.map((fan) => {
@@ -233,7 +240,7 @@ export function GameEntrySelector({
                     setWinInfo(winInfo.filter((_info, index) => index !== idx))
                   }
                 >
-                  <i className="fa-solid fa-circle-xmark" />
+                  <FontAwesomeIcon icon={faCircleXmark} />
                 </button>
               )}
             </div>
