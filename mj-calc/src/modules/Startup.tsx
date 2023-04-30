@@ -10,6 +10,7 @@ import ResultInputContextProvider from "./provider/ResultInputContextProvider";
 import GameSettingContextProvider from "./provider/GameSettingContextProvider";
 import { bloatGameStatus, deepParseGameEntity } from "./util/Simplify";
 import Header from "./components/Header";
+import MjNavBar from "./components/MjNavBar";
 
 const DEFAULT_N_PLAYERS = 4;
 
@@ -50,6 +51,7 @@ export default function Startup() {
     </GameSettingContextProvider>
   ) : (
     <>
+      <MjNavBar />
       <div className="d-flex flex-column align-items-center">
         <Header />
         <NameInputGrid

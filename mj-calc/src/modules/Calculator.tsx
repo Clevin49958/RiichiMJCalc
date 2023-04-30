@@ -19,6 +19,7 @@ import useGameManager from "./hooks/useGameManager";
 import useToggle from "./hooks/useToggle";
 import ResultInputContext from "./context/ResultInputContext";
 import GameSettingContext from "./context/GameSettingContext";
+import MjNavBar from "./components/MjNavBar";
 
 export function GameStatusCenterCell(gameStatus: GameStatus) {
   /** Display Current field wind and honba */
@@ -286,48 +287,51 @@ export default function Calculator({
 
   // small screen list layout
   return (
-    <div className={`p-0 container${tabletopMode ? "-fluid" : ""}`}>
-      <div className="d-flex flex-column">
-        <PlayerTable
-          playerTable={playersScoreView}
-          playerCell={PlayerInfoCell}
-          centerCell={() => GameStatusCenterCell(gameStatus)}
-          RBCell={viewOnly ? undefined : rewindButton}
-          LTCell={viewOnly ? undefined : toggleTabletopModeButton}
-          LBCell={tabletopMode ? scoreButton[0] : undefined}
-          RTCell={tabletopMode ? scoreButton[1] : undefined}
-          tableTopMode={tabletopMode}
-        />
-        {!tabletopMode && (
-          <>
-            {viewOnly || (
-              <div className="row">
-                <div className="col col-12">
-                  <SaveRound
-                    endingType={endingType}
-                    setEndingType={setEndingType}
-                    players={players}
-                    winInfo={winInfo}
-                    setWinInfo={setWinInfo}
-                    tenpai={tenpai}
-                    setTenpai={setTenpai}
-                    saveEntry={saveEntry}
-                    isReady
-                    onNextGame={onNextGameMemo}
-                  />
+    <>
+      {!tabletopMode && <MjNavBar />}
+      <div className={`p-0 container${tabletopMode ? "-fluid" : ""}`}>
+        <div className="d-flex flex-column">
+          <PlayerTable
+            playerTable={playersScoreView}
+            playerCell={PlayerInfoCell}
+            centerCell={() => GameStatusCenterCell(gameStatus)}
+            RBCell={viewOnly ? undefined : rewindButton}
+            LTCell={viewOnly ? undefined : toggleTabletopModeButton}
+            LBCell={tabletopMode ? scoreButton[0] : undefined}
+            RTCell={tabletopMode ? scoreButton[1] : undefined}
+            tableTopMode={tabletopMode}
+          />
+          {!tabletopMode && (
+            <>
+              {viewOnly || (
+                <div className="row">
+                  <div className="col col-12">
+                    <SaveRound
+                      endingType={endingType}
+                      setEndingType={setEndingType}
+                      players={players}
+                      winInfo={winInfo}
+                      setWinInfo={setWinInfo}
+                      tenpai={tenpai}
+                      setTenpai={setTenpai}
+                      saveEntry={saveEntry}
+                      isReady
+                      onNextGame={onNextGameMemo}
+                    />
+                  </div>
                 </div>
-              </div>
-            )}
-            <RoundHistory records={gameRecord} players={players} />
-            <FinalPoints />
-            <PointsPlot
-              players={players}
-              gameRecord={gameRecord}
-              gameStatus={gameStatus}
-            />
-          </>
-        )}
+              )}
+              <RoundHistory records={gameRecord} players={players} />
+              <FinalPoints />
+              <PointsPlot
+                players={players}
+                gameRecord={gameRecord}
+                gameStatus={gameStatus}
+              />
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

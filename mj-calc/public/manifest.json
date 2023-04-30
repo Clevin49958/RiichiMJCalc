@@ -3,11 +3,45 @@
   "name": "Richii Mahjong Calculator",
   "icons": [
     {
-      "src": "Header.ico",
-      "sizes": "256x160",
-      "type": "image/x-icon"
+      "src": "/logo-16x16.png",
+      "type": "image/png",
+      "sizes": "16x16"
     },
-
+    {
+      "src": "/logo-24x24.png",
+      "type": "image/png",
+      "sizes": "24x24"
+    },
+    {
+      "src": "/logo-32x32.png",
+      "type": "image/png",
+      "sizes": "32x32"
+    },
+    {
+      "src": "/logo-64x64.png",
+      "type": "image/png",
+      "sizes": "64x64"
+    },
+    {
+      "src": "/logo-96x96.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/logo-128x128.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "/logo-256x256.png",
+      "type": "image/png",
+      "sizes": "256x256"
+    },
+    {
+      "src": "/logo-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
     {
       "src": "Header.png",
       "type": "image/jpg",
