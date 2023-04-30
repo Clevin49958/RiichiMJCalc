@@ -12,7 +12,7 @@ export function getWind(windNum: WindNumber) {
    */
   switch (windNum) {
     case 0:
-      return "东";
+      return "東";
     case 1:
       return "南";
     case 2:
