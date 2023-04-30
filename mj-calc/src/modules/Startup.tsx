@@ -32,7 +32,11 @@ export default function Startup() {
 
   const onNextGame = useCallback(
     (names: string[]) => {
-      setPlayerNames(names);
+      setPlayerNames(
+        (Array.from(Array(DEFAULT_N_PLAYERS).keys()) as WindNumber[]).map(
+          (idx) => (idx < names.length ? names[idx] : getWind(idx))
+        )
+      );
       setNamesReady(false);
     },
     [setPlayerNames]
