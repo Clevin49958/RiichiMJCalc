@@ -10,7 +10,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Component {...pageProps} />
-
+      {/* <Script
+        src="https://kit.fontawesome.com/90005fdbae.js"
+        crossOrigin="anonymous"
+      /> */}
       <Analytics />
     </>
   );
