@@ -9,7 +9,7 @@ function richiiStick(props: SVGProps<SVGSVGElement>) {
         width="56"
         height="18"
         fill="white"
-        stroke="black"
+        strokeOpacity={0}
         rx="5"
       />{" "}
       <circle cx="28" cy="9" r="5" fill="red" />

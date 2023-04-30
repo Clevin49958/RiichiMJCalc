@@ -9,7 +9,7 @@ function HonbaStick(props: SVGProps<SVGSVGElement>) {
         width="56"
         height="18"
         fill="white"
-        stroke="black"
+        strokeOpacity={0}
         rx="5"
       />{" "}
       <circle cx="17.5" cy="5.5" r="2" fill="black" />{" "}
