@@ -14,21 +14,31 @@ import SaveRound, { GameEntrySelector } from "./components/SaveRound";
 import GameContext from "./context/GameContext";
 import FinalPoints from "./components/FinalPoints";
 import PointsPlot from "./components/PointsPlot";
-import { StickIconSize } from "./util/Constants";
+import { StickIconSize, TableTopStickIconSize } from "./util/Constants";
 import useGameManager from "./hooks/useGameManager";
 import useToggle from "./hooks/useToggle";
 import ResultInputContext from "./context/ResultInputContext";
 import GameSettingContext from "./context/GameSettingContext";
 import MjNavBar from "./components/MjNavBar";
 
-export function GameStatusCenterCell(gameStatus: GameStatus) {
+export function GameStatusCenterCell(
+  gameStatus: GameStatus,
+  tableTopMode: boolean
+) {
+  const size = tableTopMode ? TableTopStickIconSize : StickIconSize;
   /** Display Current field wind and honba */
   return (
-    <div className="no-select" style={{ textAlign: "center" }}>
+    <div
+      className="no-select"
+      style={{
+        textAlign: "center",
+        fontSize: tableTopMode ? "32px" : undefined,
+      }}
+    >
       {`${getWind(gameStatus.wind)} ${gameStatus.round}`} <br />
-      {`${gameStatus.honba}`} {HonbaStick(StickIconSize)}
+      {`${gameStatus.honba}`} {HonbaStick(size)}
       <br />
-      {`${gameStatus.richiiStick}`} {RichiiStick(StickIconSize)}
+      {`${gameStatus.richiiStick}`} {RichiiStick(size)}
     </div>
   );
 }
@@ -294,7 +304,7 @@ export default function Calculator({
           <PlayerTable
             playerTable={playersScoreView}
             playerCell={PlayerInfoCell}
-            centerCell={() => GameStatusCenterCell(gameStatus)}
+            centerCell={() => GameStatusCenterCell(gameStatus, tabletopMode)}
             RBCell={viewOnly ? undefined : rewindButton}
             LTCell={viewOnly ? undefined : toggleTabletopModeButton}
             LBCell={tabletopMode ? scoreButton[0] : undefined}
