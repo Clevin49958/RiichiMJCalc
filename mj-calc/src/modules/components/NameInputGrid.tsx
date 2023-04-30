@@ -9,7 +9,8 @@ import React, {
 } from "react";
 import Select from "react-select/";
 
-import { NP, WindNumber } from "../util/Wind";
+import { ReactSortable } from "react-sortablejs";
+import { NP, WindNumber, getWind } from "../util/Wind";
 import { ArrayType } from "../util/CustomType";
 
 import PlayerTable from "./PlayerTable";
@@ -80,12 +81,19 @@ export default function NameInputGrid({
         Game start!
       </button>
     ),
-    [setNamesReady],
+    [setNamesReady]
   );
 
   const PlayerCell = useCallback(
     (player: string, seating: WindNumber) => (
       <div className="m-3">
+        <p
+          style={{
+            color: seating === 0 ? "red" : "",
+          }}
+        >
+          {getWind(seating)}
+        </p>
         <PlayerInputCell
           seating={seating}
           player={player}
@@ -94,38 +102,42 @@ export default function NameInputGrid({
         />
       </div>
     ),
-    [numPlayers, setPlayerNames],
+    [numPlayers, setPlayerNames]
   );
 
   const PlayerNumInputCell = useMemo(
-    () =>
-      (
-        <label
-          style={{
-            display: "block",
-            marginLeft: "auto",
-            marginRight: "auto",
-            backgroundColor: "lightgrey",
+    () => (
+      <label
+        style={{
+          display: "block",
+          marginLeft: "auto",
+          marginRight: "auto",
+          backgroundColor: "lightgrey",
+        }}
+      >
+        Number of players:
+        <Select
+          options={[2, 3, 4].map(
+            (count) =>
+              ({
+                value: count,
+                label: count,
+              } as { value: NP; label: NP })
+          )}
+          value={{
+            value: numPlayers,
+            label: numPlayers,
           }}
-        >
-          Number of players:
-          <Select
-            options={[2, 3, 4].map(
-              (count) =>
-                ({
-                  value: count,
-                  label: count,
-                } as { value: NP; label: NP }),
-            )}
-            value={{
-              value: numPlayers,
-              label: numPlayers,
-            }}
-            onChange={(wrapper) => setNumPlayers(wrapper!.value)}
-          />
-        </label>
-      ) as JSX.Element,
-    [numPlayers, setNumPlayers],
+          onChange={(wrapper) => setNumPlayers(wrapper!.value)}
+        />
+      </label>
+    ),
+    [numPlayers, setNumPlayers]
+  );
+
+  const sortableNames = useMemo(
+    () => playerNames.map((name, id) => ({ id, name })),
+    [playerNames]
   );
 
   return (
@@ -139,6 +151,32 @@ export default function NameInputGrid({
           LTCell={PlayerNumInputCell}
         />
       </div>
+      <h5 className="mt-4">
+        Drag names to change relative order (
+        {(Array.from(Array(numPlayers).keys()) as WindNumber[])
+          .map(getWind)
+          .join(",")}
+        )
+      </h5>
+      <ReactSortable
+        className="d-flex flex-row mb-4"
+        group="name-input"
+        animation={200}
+        list={sortableNames}
+        setList={(newState) =>
+          setPlayerNames(newState.map((state) => state.name))
+        }
+      >
+        {sortableNames.map((item) => (
+          <div
+            style={{ backgroundColor: "lightgray" }}
+            className="m-1 p-3"
+            key={item.id}
+          >
+            {item.name}
+          </div>
+        ))}
+      </ReactSortable>
     </>
   );
 }
