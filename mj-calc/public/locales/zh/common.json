@@ -28,13 +28,12 @@
     "winner": "和了家选择",
     "exhaust": "流局",
     "kyokuTemp": "{{wind}}{{round}}  {{honba}} 本场",
-    "yakuman_one": "役满",
-    "yakuman_two": "两倍役满",
-    "yakuman_three": "三倍役满",
-    "yakuman_four": "四倍役满",
-    "yakuman_five": "五倍役满",
-    "yakuman_six": "六倍役满",
-    "yakuman_many": "很多倍役满"
+    "yakuman_1": "役满",
+    "yakuman_2": "两倍役满",
+    "yakuman_3": "三倍役满",
+    "yakuman_4": "四倍役满",
+    "yakuman_5": "五倍役满",
+    "yakuman_6": "六倍役满"
   },
   "players": {
     "num": "玩家人数:"

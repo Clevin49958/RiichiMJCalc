@@ -28,13 +28,12 @@
     "winner": "Winner",
     "exhaust": "Exhaustive draw",
     "kyokuTemp": "{{wind}}{{round}}  {{honba}} honba",
-    "yakuman_one": "Yakuman",
-    "yakuman_two": "Double Yakuman",
-    "yakuman_three": "Triple Yakuman",
-    "yakuman_four": "Quadraple Yakuman",
-    "yakuman_five": "Quintuple Yakuman",
-    "yakuman_six": "Sextuple Yakuman",
-    "yakuman_many": "Yakuman takusan"
+    "yakuman_1": "Yakuman",
+    "yakuman_2": "Double Yakuman",
+    "yakuman_3": "Triple Yakuman",
+    "yakuman_4": "Quadraple Yakuman",
+    "yakuman_5": "Quintuple Yakuman",
+    "yakuman_6": "Sextuple Yakuman"
   },
   "players": {
     "num": "Number of players:"
