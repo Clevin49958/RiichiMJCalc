@@ -5,6 +5,7 @@ import { OverlayTrigger, Popover } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from "next-i18next";
 import { PlayerList, Player } from "../types/Player";
 import { WindNumber } from "../util/Wind";
 import { EndingType, WinRecord } from "../types/Record";
@@ -45,6 +46,7 @@ export function GameEntrySelector({
   tenpai,
   setTenpai,
 }: GameEntrySelectorProps) {
+  const { t } = useTranslation("common");
   const fans = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 26, 39, 52, 65, 78];
   const fus = [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110];
 
@@ -108,8 +110,8 @@ export function GameEntrySelector({
   );
 
   const CenterCell = useCallback(
-    () => <span>Check all players that were tenpai.</span>,
-    []
+    () => <span>{t("prompt.tenpaiEntry")}</span>,
+    [t]
   );
 
   return (
@@ -127,7 +129,7 @@ export function GameEntrySelector({
             aria-selected="true"
             onClick={() => setEndingType("Win")}
           >
-            Win
+            {t("jargon.ron")}
           </button>
           <button
             className={`nav-link ${endingType === "Draw" ? "active" : ""}`}
@@ -140,7 +142,7 @@ export function GameEntrySelector({
             aria-selected="false"
             onClick={() => setEndingType("Draw")}
           >
-            Draw
+            {t("jargon.draw")}
           </button>
         </div>
       </nav>
@@ -159,28 +161,12 @@ export function GameEntrySelector({
               key={info.winner}
             >
               <DropdownEntry
-                label="Fan"
+                label={t("jargon.fan")}
                 labels={fans.map((fan) => {
                   if (fan % 13 === 0) {
-                    switch (fan / 13) {
-                      case 1:
-                        return "Yakuman";
-                      case 2:
-                        return "Double Yakuman";
-                      case 3:
-                        return "Triple Yakuman";
-                      case 4:
-                        return "Quadraple Yakuman";
-                      case 5:
-                        return "Quintuple Yakuman";
-                      case 6:
-                        return "Sextuple Yakuman";
-                      default:
-                        return "Yakuman takusan";
-                    }
-                  } else {
-                    return fan.toString();
+                    return t(`jargon.yakuman_${fan / 13}`);
                   }
+                  return fan.toString();
                 })}
                 values={fans}
                 value={info.fan}
@@ -188,7 +174,7 @@ export function GameEntrySelector({
               />
 
               <DropdownEntry
-                label="Fu"
+                label={t("jargon.fu")}
                 labels={fus}
                 values={fus}
                 value={info.fu}
@@ -196,7 +182,7 @@ export function GameEntrySelector({
               />
 
               <DropdownEntry
-                label="Winner"
+                label={t("jargon.winner")}
                 labels={players.map((p) => p.name)}
                 values={players.map((p) => p.seating)}
                 value={info.winner}
@@ -205,9 +191,9 @@ export function GameEntrySelector({
 
               {idx === 0 && (
                 <DropdownEntry
-                  label="Deal in"
+                  label={t("jargon.dealIn")}
                   labels={players.map((p) =>
-                    p.seating === winInfo[0].winner ? "Tsumo" : p.name
+                    p.seating === winInfo[0].winner ? t("jargon.tsumo") : p.name
                   )}
                   values={players.map((p) => p.seating)}
                   value={info.dealIn}
@@ -229,7 +215,7 @@ export function GameEntrySelector({
                     ])
                   }
                 >
-                  {winInfo.length === 1 ? "Double Ron!" : "Triple Ron!"}
+                  {winInfo.length === 1 ? t("jargon.ron2") : t("jargon.ron3")}
                 </button>
               )}
               {idx !== 0 && (
@@ -278,14 +264,12 @@ export default function SaveRound({
   isReady,
   onNextGame,
 }: SaveRoundProps) {
+  const { t } = useTranslation("common");
   const popover = (
     <Popover>
-      <Popover.Header as="h5">Confirmation</Popover.Header>
+      <Popover.Header as="h5">{t("label.confirmation")}</Popover.Header>
       <Popover.Body>
-        <p>
-          Are you sure you want to start a new game? You won&apos;t be able to
-          recover them if you haven&apos;t save.
-        </p>
+        <p>{t("prompt.nextGameConfirm")}</p>
         <div
           style={{
             display: "flex",
@@ -298,7 +282,7 @@ export default function SaveRound({
             type="submit"
             onClick={onNextGame}
           >
-            Go!
+            {t("prompt.nextGameConfirmed")}
           </button>
         </div>
       </Popover.Body>
@@ -325,12 +309,12 @@ export default function SaveRound({
           }}
           disabled={!isReady}
         >
-          Save entry
+          {t("save.kyoku")}
         </button>
         <ExportResult />
         <OverlayTrigger trigger="click" overlay={popover}>
           <button type="submit" className="btn btn-primary">
-            Next game!
+            {t("game.goNext")}
           </button>
         </OverlayTrigger>
       </div>
