@@ -1,7 +1,9 @@
 import { Navbar, Container, Nav } from "react-bootstrap";
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import logo from "../../../public/logo-32x32.ico";
+import LocaleSwitcher from "./LocaleSwitcher";
 
 export default function MjNavBar() {
   return (
@@ -14,8 +16,13 @@ export default function MjNavBar() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/">New Game</Nav.Link>
-            <Nav.Link href="/games">Past Games</Nav.Link>
+            <Link className="navbar-expand navbar-nav nav-link" href="/">
+              New Game
+            </Link>
+            <Link className="navbar-expand navbar-nav nav-link" href="/games">
+              Past Games
+            </Link>
+            <LocaleSwitcher />
           </Nav>
         </Navbar.Collapse>
       </Container>
