@@ -1,5 +1,9 @@
 {
   "version": "0.0.1",
+  "lang": {
+    "en": "English",
+    "zh": "中文"
+  },
   "brand": {
     "full": "Richii Mahjong Scorer",
     "short": "MJ Scorer"

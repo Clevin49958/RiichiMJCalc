@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/react";
 import "./_app.css";
 import "./_index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { appWithTranslation } from "next-i18next";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -19,4 +20,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default MyApp;
+export default appWithTranslation(MyApp);
