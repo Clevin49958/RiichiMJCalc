@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-
+import { useTranslation } from "next-i18next";
 import { getWind, NP, WindNumber } from "./util/Wind";
 import Calculator from "./Calculator";
 import NameInputGrid from "./components/NameInputGrid";
@@ -12,9 +12,11 @@ import { bloatGameStatus, deepParseGameEntity } from "./util/Simplify";
 import Header from "./components/Header";
 import MjNavBar from "./components/MjNavBar";
 
+
 const DEFAULT_N_PLAYERS = 4;
 
 export default function Startup() {
+  const { t } = useTranslation("common");
   // 3 or 4 players
   const [numPlayers, setNumPlayers] = useState<NP>(DEFAULT_N_PLAYERS);
 
@@ -68,7 +70,7 @@ export default function Startup() {
       </div>
       <div className="container" style={{ maxWidth: "380px" }}>
         <label className="form-label center-block" style={{ display: "block" }}>
-          <h5>View an exported game here:</h5>
+          <h5>{t("prompt.loadGame")}</h5>
           <input
             className="form-control"
             type="file"

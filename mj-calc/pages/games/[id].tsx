@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { GetStaticPaths, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { getGame } from "../../src/library/getGame";
 import GameSettingContextProvider from "../../src/modules/provider/GameSettingContextProvider";
 import GameContextProvider from "../../src/modules/provider/GameContextProvider";
@@ -44,7 +45,13 @@ interface IdParam extends ParsedUrlQuery {
   id: string;
 }
 
-export const getStaticProps = async ({ params }: { params: IdParam }) => {
+export const getStaticProps = async ({
+  params,
+  locale,
+}: {
+  params: IdParam;
+  locale: string;
+}) => {
   if (!params?.id) {
     return {
       notFound: true,
@@ -65,6 +72,7 @@ export const getStaticProps = async ({ params }: { params: IdParam }) => {
 
   return {
     props: {
+      ...(await serverSideTranslations(locale, ["common"])),
       game,
     },
   };

@@ -19,7 +19,7 @@
     "sourceType": "module",
     "project": "tsconfig.json"
   },
-  "ignorePatterns": ["next.config.js"],
+  "ignorePatterns": ["next.config.js", "next-i18next.config.js"],
   // "plugins": ["react-hooks"],
   "rules": {
     "import/extensions": "off",
@@ -49,7 +49,7 @@
     //   "@shopify/jsx-no-hardcoded-content": "off",
     //   // Personal preference - _sometimes_ nesting ternaries is fine
     "no-nested-ternary": "warn",
-    "id-length": "warn",
+    "id-length": "off",
     "no-warning-comments": "warn",
     // Disabled in eslint:recommended
     "jsx-a11y/control-has-associated-label": "off",

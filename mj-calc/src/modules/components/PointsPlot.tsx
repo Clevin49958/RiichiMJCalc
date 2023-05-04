@@ -142,15 +142,6 @@ export default function PointsPlot({
       legend: {
         position: "top" as const,
       },
-      title: {
-        font: {
-          family: "Helvetica",
-          size: 14,
-          weight: "bold",
-        },
-        display: true,
-        text: "Final points",
-      },
       annotation: {
         annotations: annotations as any,
       },

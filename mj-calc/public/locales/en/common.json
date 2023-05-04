@@ -1,0 +1,75 @@
+{
+  "version": "0.0.1",
+  "lang": {
+    "en": "English",
+    "zh": "中文"
+  },
+  "brand": {
+    "full": "Richii Mahjong Scorer",
+    "short": "MJ Scorer"
+  },
+  "game": {
+    "new": "New Game",
+    "history": "Game History",
+    "start": "Game Start!",
+    "goNext": "Next game!",
+    "undo": "Rewind"
+  },
+  "jargon": {
+    "riichi" : "Riichi!",
+    "fan": "Fan",
+    "fu": "fu",
+    "win": "Win",
+    "draw": "Draw",
+    "tsumo": "Tsumo",
+    "ron": "Ron",
+    "ron2": "Double Ron!",
+    "ron3": "Triple Ron!",
+    "dealIn": "Deal in",
+    "winner": "Winner",
+    "exhaust": "Exhaustive draw",
+    "kyokuTemp": "{{wind}}{{round}}  {{honba}} honba",
+    "yakuman_1": "Yakuman",
+    "yakuman_2": "Double Yakuman",
+    "yakuman_3": "Triple Yakuman",
+    "yakuman_4": "Quadraple Yakuman",
+    "yakuman_5": "Quintuple Yakuman",
+    "yakuman_6": "Sextuple Yakuman"
+  },
+  "players": {
+    "num": "Number of players:"
+  },
+  "label": {
+    "finalPoints": "Final points:",
+    "UmaPreset": "Uma preset:",
+    "OkaPreset": "Oka preset:",
+    "numbering": "#",
+    "tabletopMode": "Tabletop mode",
+    "displayMode": "Display mode",
+    "confirmation": "Confirmation"
+  },
+  "prompt": {
+    "playerName": "Please enter players' names",
+    "shuffle": "Drag names to change relative order",
+    "tenpaiEntry": "Check all players that were tenpai",
+    "nextGameConfirm": "Are you sure you want to start a new game? You won't be able to recover them if you haven't save.",
+    "nextGameConfirmed": "Go!",
+    "loadGame" : "View an exported game here"
+  },
+  "save": {
+    "exportGame": "Export results",
+    "save": "Save to database",
+    "kyoku": "Save entry"
+  },
+  "scoring": {
+    "endingScore": "Ending Score",
+    "pointDifference": "\u0394Score",
+    "finalPoints": "Final pts"
+  },
+  "util": {
+    "ranking_one": "{{count}}st",
+    "ranking_two": "{{count}}nd",
+    "ranking_few": "{{count}}rd",
+    "ranking_other": "{{count}}th"
+  }
+}

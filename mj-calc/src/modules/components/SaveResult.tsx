@@ -1,6 +1,8 @@
 import React, { useContext, useState } from "react";
 
 import { Prisma } from "@prisma/client";
+import { useTranslation } from "next-i18next";
+
 import GameContext from "../context/GameContext";
 import { GameStatus } from "../types/GameStatus";
 import GameEntity from "../types/GameEntity";
@@ -60,6 +62,7 @@ export function saveJson(result: { endTime: Date }) {
 }
 
 export function ExportResult() {
+  const { t } = useTranslation("common");
   const { gameStatus, players, records } = useContext(GameContext);
   const gameSetting = useContext(GameSettingContext);
   const [buttonColor, setButtonColor] = useState("primary");
@@ -80,7 +83,7 @@ export function ExportResult() {
           saveJson(result);
         }}
       >
-        Export results
+        {t("save.exportGame")}
       </button>
       <button
         type="button"
@@ -107,7 +110,7 @@ export function ExportResult() {
             .catch(() => setButtonColor("warning"));
         }}
       >
-        Save to database
+        {t("save.save")}
       </button>
     </>
   );
