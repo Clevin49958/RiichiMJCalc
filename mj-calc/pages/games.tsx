@@ -17,7 +17,11 @@ export default function GameListPage({
 }
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const games = await getAllGames();
+  const games = await getAllGames({
+    orderBy: {
+      endTime: "desc",
+    },
+  });
   return {
     props: {
       ...(await serverSideTranslations(locale!, ["common"])),
