@@ -129,7 +129,7 @@ export function GameEntrySelector({
             aria-selected="true"
             onClick={() => setEndingType("Win")}
           >
-            {t("jargon.ron")}
+            {t("jargon.win")}
           </button>
           <button
             className={`nav-link ${endingType === "Draw" ? "active" : ""}`}
