@@ -16,6 +16,7 @@
     "undo": "撤回上一步操作"
   },
   "jargon": {
+    "riichi" : "立直！",
     "fan": "番",
     "fu": "符",
     "win": "和了结算",
@@ -52,7 +53,8 @@
     "shuffle": "拖拽名称以更改座次",
     "tenpaiEntry": "请给所有听牌的玩家打勾",
     "nextGameConfirm": "确定要进入下一局游戏吗？未保存的数据将会被永久删除。",
-    "nextGameConfirmed": "对！"
+    "nextGameConfirmed": "对！",
+    "loadGame" : "查看导出的游戏"
   },
   "save": {
     "exportGame": "导出结果",

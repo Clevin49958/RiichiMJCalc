@@ -9,7 +9,7 @@ import { useTranslation } from "next-i18next";
 export default function LocaleSwitcher() {
   const router = useRouter();
   const { locales, locale: activeLocale } = router;
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
 
   const otherLocales = (locales || []).filter(
     (locale) => locale !== activeLocale

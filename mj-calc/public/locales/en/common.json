@@ -16,6 +16,7 @@
     "undo": "Rewind"
   },
   "jargon": {
+    "riichi" : "Riichi!",
     "fan": "Fan",
     "fu": "fu",
     "win": "Win",
@@ -52,7 +53,8 @@
     "shuffle": "Drag names to change relative order",
     "tenpaiEntry": "Check all players that were tenpai",
     "nextGameConfirm": "Are you sure you want to start a new game? You won't be able to recover them if you haven't save.",
-    "nextGameConfirmed": "Go!"
+    "nextGameConfirmed": "Go!",
+    "loadGame" : "View an exported game here"
   },
   "save": {
     "exportGame": "Export results",

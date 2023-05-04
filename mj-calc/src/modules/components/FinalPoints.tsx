@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useContext, useState } from "react";
 import Select from "react-select/";
-
+import { useTranslation } from "next-i18next";
 import GameContext from "../context/GameContext";
 import { STARTING_POINT } from "../util/Constants";
 import GameSettingContext from "../context/GameSettingContext";
@@ -45,6 +45,7 @@ const AllOkaPresets = {
 };
 
 export default function FinalPoints() {
+  const { t } = useTranslation("common");
   const { players } = useContext(GameContext);
   const { numPlayers } = useContext(GameSettingContext);
   const startingPoint = STARTING_POINT[4 - numPlayers];
@@ -73,7 +74,7 @@ export default function FinalPoints() {
   );
   return (
     <div className="card">
-      <div className="card-header">Final points: </div>
+      <div className="card-header">{t("label.finalPoints")} </div>
       <div className="card-body">
         <div className="container-fluid">
           <div className="row">
@@ -84,7 +85,7 @@ export default function FinalPoints() {
               } justify-content-around my-2`}
             >
               <label>
-                <div className="mb-1">Uma preset:</div>
+                <div className="mb-1">{t("label.UmaPreset")}</div>
                 <Select<Uma>
                   options={umaPresets}
                   defaultValue={umaOption}
@@ -93,7 +94,7 @@ export default function FinalPoints() {
               </label>
               {okaPresets.length > 1 && (
                 <label>
-                  <div className="mb-1">Oka preset:</div>
+                  <div className="mb-1">{t("label.OkaPreset")}</div>
                   <Select<Oka>
                     options={okaPresets}
                     defaultValue={okaOption}
@@ -117,19 +118,19 @@ export default function FinalPoints() {
                 </thead>
                 <tbody>
                   <tr>
-                    <th scope="row">Ending Score</th>
+                    <th scope="row">{t("scoring.endingScore")}</th>
                     {sortedPlayers.map((player) => (
                       <th key={player.seating}>{player.score}</th>
                     ))}
                   </tr>
                   <tr>
-                    <th scope="row">{"\u0394"}Score</th>
+                    <th scope="row">{t("scoring.pointDifference")}</th>
                     {rawPoints.map((pt, idx) => (
                       <th key={sortedPlayers[idx].seating}>{pt * 1000}</th>
                     ))}
                   </tr>
                   <tr>
-                    <th scope="row">Final pts</th>
+                    <th scope="row">{t("scoring.finalPoints")}</th>
                     {finalPoints.map((pts, idx) => (
                       <th key={sortedPlayers[idx].seating}>{pts.toFixed(1)}</th>
                     ))}

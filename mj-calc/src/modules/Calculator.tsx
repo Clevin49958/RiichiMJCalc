@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useMemo, useState } from "react";
 import { maxBy } from "lodash";
-
+import { useTranslation } from "next-i18next";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 import { Placement } from "react-bootstrap/esm/types";
 import PlayerTable from "./components/PlayerTable";
@@ -20,6 +20,7 @@ import useToggle from "./hooks/useToggle";
 import ResultInputContext from "./context/ResultInputContext";
 import GameSettingContext from "./context/GameSettingContext";
 import MjNavBar from "./components/MjNavBar";
+
 
 export function GameStatusCenterCell(
   gameStatus: GameStatus,
@@ -49,6 +50,7 @@ export default function Calculator({
   viewOnly: boolean;
   onNextGame: (names: string[]) => void;
 }) {
+  const { t } = useTranslation("common");
   // Game state objects
   const { gameStatus, players, records: gameRecord } = useContext(GameContext);
   const gameSetting = useContext(GameSettingContext);
@@ -153,12 +155,12 @@ export default function Calculator({
             } border-0`}
             onClick={() => togglePlayerRichii(player.seating, !hasRichii)}
           >
-            {hasRichii ? RichiiStick(StickIconSize) : <span>Richii!</span>}
+            {hasRichii ? RichiiStick(StickIconSize) : <span>{t("jargon.riichi")}</span>}
           </button>
         </div>
       );
     },
-    [gameSetting, gameStatus, orientation, tabletopMode, togglePlayerRichii]
+    [gameSetting, gameStatus, orientation, t, tabletopMode, togglePlayerRichii]
   );
 
   const rewindButton = useMemo(
@@ -170,10 +172,10 @@ export default function Calculator({
         disabled={!gameRecord.length}
         onClick={rewind}
       >
-        Rewind
+        {t("game.undo")}
       </button>
     ),
-    [gameRecord.length, rewind]
+    [gameRecord.length, rewind, t]
   );
 
   const toggleTabletopModeButton = useMemo(
@@ -184,10 +186,10 @@ export default function Calculator({
         className="btn btn-light"
         onClick={toggleTabletopMode}
       >
-        {tabletopMode ? "Tabletop mode" : "Display mode"}
+        {tabletopMode ? t("label.tabletopMode") : t("label.displayMode")}
       </button>
     ),
-    [toggleTabletopMode, tabletopMode]
+    [toggleTabletopMode, tabletopMode, t]
   );
 
   const scoreButton = ["top", "bottom"].map((position, idx) => (

@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 import Select from "react-select/";
-
+import { useTranslation } from "next-i18next";
 import { ReactSortable } from "react-sortablejs";
 import { NP, WindNumber, getWind } from "../util/Wind";
 import { ArrayType } from "../util/CustomType";
@@ -69,6 +69,7 @@ export default function NameInputGrid({
   setPlayerNames: Dispatch<SetStateAction<string[]>>;
   setNamesReady: Dispatch<SetStateAction<boolean>>;
 }) {
+  const { t } = useTranslation("common");
   const PlayerInputCenterCell = useCallback(
     () => (
       <button
@@ -78,13 +79,14 @@ export default function NameInputGrid({
           setNamesReady(true);
         }}
       >
-        Game start!
+        {t("game.start")}
       </button>
     ),
-    [setNamesReady]
+    [setNamesReady, t]
   );
-
+  
   const PlayerCell = useCallback(
+  
     (player: string, seating: WindNumber) => (
       <div className="m-3">
         <p
@@ -106,6 +108,7 @@ export default function NameInputGrid({
   );
 
   const PlayerNumInputCell = useMemo(
+    
     () => (
       <label
         style={{
@@ -115,7 +118,7 @@ export default function NameInputGrid({
           backgroundColor: "lightgrey",
         }}
       >
-        Number of players:
+        {t("players.num")}
         <Select
           options={[2, 3, 4].map(
             (count) =>
@@ -132,7 +135,7 @@ export default function NameInputGrid({
         />
       </label>
     ),
-    [numPlayers, setNumPlayers]
+    [numPlayers, setNumPlayers, t]
   );
 
   const sortableNames = useMemo(
@@ -142,7 +145,7 @@ export default function NameInputGrid({
 
   return (
     <>
-      <h1 style={{ textAlign: "center" }}>Please enter players&apos; names</h1>
+      <h1 style={{ textAlign: "center" }}>{t("prompt.playerName")}</h1>
       <div style={{ maxWidth: "510px" }}>
         <PlayerTable<string>
           playerTable={playerNames}
@@ -152,7 +155,7 @@ export default function NameInputGrid({
         />
       </div>
       <h5 className="mt-4">
-        Drag names to change relative order (
+        {t("prompt.shuffle")} (
         {(Array.from(Array(numPlayers).keys()) as WindNumber[])
           .map(getWind)
           .join(",")}
