@@ -12,7 +12,6 @@ import { bloatGameStatus, deepParseGameEntity } from "./util/Simplify";
 import Header from "./components/Header";
 import MjNavBar from "./components/MjNavBar";
 
-
 const DEFAULT_N_PLAYERS = 4;
 
 export default function Startup() {
@@ -85,8 +84,10 @@ export default function Startup() {
                 const stringContent = event.target?.result?.toString() ?? "";
                 try {
                   const miniGameStatus = deepParseGameEntity(stringContent);
+                  const bloatedGame = bloatGameStatus(miniGameStatus);
                   // TODO: Maybe verify for json content?
-                  setViewFile(bloatGameStatus(miniGameStatus));
+                  setViewFile(bloatedGame);
+                  setNumPlayers(bloatedGame.settings.numPlayers);
                   setViewOnly(true);
                   setNamesReady(true);
                   // eslint-disable-next-line no-console
