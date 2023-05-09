@@ -2,7 +2,8 @@
   "version": "0.0.1",
   "lang": {
     "en": "English",
-    "zh": "中文"
+    "zh": "中文",
+    "ja": "日本語"
   },
   "brand": {
     "full": "立直麻将点数计算器",
