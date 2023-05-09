@@ -19,6 +19,7 @@
     "next": "^13.1.6",
     "next-i18next": "^13.2.2",
     "next-superjson-plugin": "^0.5.6",
+    "per-env": "^1.0.2",
     "prisma-zod-generator": "^0.3.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.4.0",
@@ -35,7 +36,9 @@
   },
   "scripts": {
     "start": "next dev",
-    "build": "prisma migrate deploy && prisma generate && next build",
+    "build": "per-env",
+    "build:development": "prisma generate && next build",
+    "build:production": "prisma migrate deploy && prisma generate && next build",
     "test": "next test",
     "lint": "eslint src/**/*.{js,jsx,ts,tsx,json}",
     "lint:fix": "eslint --fix src/**/*.{js,jsx,ts,tsx,json}"
