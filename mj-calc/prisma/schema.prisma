@@ -19,7 +19,7 @@ model GameSetting {
   numPlayers Int
   gameMode   String
   gameId     Int    @unique
-  game       Game   @relation(fields: [gameId], references: [id])
+  game       Game   @relation(fields: [gameId], references: [id], onDelete: Cascade)
 }
 
 model Game {
@@ -35,7 +35,7 @@ model Player {
   name    String @map("playerName")
   score   Int
   gameId  Int
-  game    Game   @relation(fields: [gameId], references: [id])
+  game    Game   @relation(fields: [gameId], references: [id], onDelete: Cascade)
   seating Int
 
   @@id([gameId, name])
@@ -50,5 +50,5 @@ model Record {
   info   Json
   deltas Int[]
   gameId Int
-  game   Game      @relation(fields: [gameId], references: [id])
+  game   Game      @relation(fields: [gameId], references: [id], onDelete: Cascade)
 }
