@@ -21,7 +21,6 @@ import ResultInputContext from "./context/ResultInputContext";
 import GameSettingContext from "./context/GameSettingContext";
 import MjNavBar from "./components/MjNavBar";
 
-
 export function GameStatusCenterCell(
   gameStatus: GameStatus,
   tableTopMode: boolean
@@ -120,8 +119,17 @@ export default function Calculator({
               : undefined,
           }}
         >
-          <div
-            className="mb-2"
+          <button
+            type="button"
+            style={{
+              background: "none",
+              color: "inherit",
+              border: "none",
+              padding: 0,
+              font: "inherit",
+              cursor: "pointer",
+              outline: "inherit",
+            }}
             onMouseDown={() => setDisplayDelta(player.seating)}
             onTouchStart={() => setDisplayDelta(player.seating)}
             onMouseUp={() => setDisplayDelta(-1)}
@@ -142,25 +150,39 @@ export default function Calculator({
             <span className={`${tabletopMode ? "fs-1" : ""}`}>
               {player.score}
             </span>
-          </div>
-          <button
-            aria-label="Richii"
-            type="button"
-            style={{
-              backgroundColor: hasRichii ? "transparent" : "",
-              width: tabletopMode ? "50%" : undefined,
-            }}
-            className={`btn ${hasRichii ? "p-0" : "btn-primary"} ${
-              tabletopMode ? "" : "btn-sm"
-            } border-0`}
-            onClick={() => togglePlayerRichii(player.seating, !hasRichii)}
-          >
-            {hasRichii ? RichiiStick(StickIconSize) : <span>{t("jargon.riichi")}</span>}
           </button>
+          {!viewOnly && (
+            <button
+              aria-label="Richii"
+              type="button"
+              style={{
+                backgroundColor: hasRichii ? "transparent" : "",
+                width: tabletopMode ? "50%" : undefined,
+              }}
+              className={`btn ${hasRichii ? "p-0" : "btn-primary"} ${
+                tabletopMode ? "" : "btn-sm"
+              } border-0 mt-2`}
+              onClick={() => togglePlayerRichii(player.seating, !hasRichii)}
+            >
+              {hasRichii ? (
+                RichiiStick(StickIconSize)
+              ) : (
+                <span>{t("jargon.riichi")}</span>
+              )}
+            </button>
+          )}
         </div>
       );
     },
-    [gameSetting, gameStatus, orientation, t, tabletopMode, togglePlayerRichii]
+    [
+      gameSetting,
+      gameStatus,
+      orientation,
+      t,
+      tabletopMode,
+      togglePlayerRichii,
+      viewOnly,
+    ]
   );
 
   const rewindButton = useMemo(
