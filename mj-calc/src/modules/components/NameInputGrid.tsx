@@ -1,70 +1,63 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import Select from "react-select/";
+import React, { Dispatch, SetStateAction, useCallback, useMemo } from "react";
+import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 import { useTranslation } from "next-i18next";
 import { ReactSortable } from "react-sortablejs";
 import { NP, WindNumber, getWind } from "../util/Wind";
-import { ArrayType } from "../util/CustomType";
 
 import PlayerTable from "./PlayerTable";
+import { ArrayType } from "../util/CustomType";
 
+type Option<T> = {
+  value: T;
+  label: T;
+};
 function PlayerInputCell({
   seating,
   player,
+  playerOptions,
   setPlayers,
   numPlayers,
 }: {
   seating: WindNumber;
   player: string;
+  playerOptions: Option<string>[];
   setPlayers: Dispatch<SetStateAction<string[]>>;
   numPlayers: NP;
 }) {
-  const [playerNameInput, setPlayerNameInput] = useState(player);
-  const prevName = useRef(player);
-
-  useEffect(() => {
-    if (prevName.current !== player) {
-      setPlayerNameInput(player);
-      prevName.current = player;
-    }
-  }, [player]);
   return (
-    <input
-      aria-label="Player Name"
-      autoComplete="off"
-      className="form-control table-item-player-number"
-      key={seating}
-      onChange={(event) => {
-        setPlayerNameInput(event.target.value);
-      }}
-      disabled={seating >= numPlayers}
-      onBlur={(_event) => {
-        setPlayers((players) => {
-          const newPlayerTable = [...players] as ArrayType<4, string>;
-          newPlayerTable[seating] = playerNameInput;
-          return newPlayerTable;
-        });
-      }}
-      value={playerNameInput}
-    />
+    <div style={{ width: "150px" }}>
+      <CreatableSelect
+        options={playerOptions}
+        value={{
+          value: player,
+          label: player,
+        }}
+        className=" table-item-player-number"
+        isDisabled={seating >= numPlayers}
+        key={seating}
+        onChange={(wrapper) =>
+          setPlayers((players) => {
+            const newPlayerTable = [...players] as ArrayType<4, string>;
+            newPlayerTable[seating] = wrapper!.value;
+            return newPlayerTable;
+          })
+        }
+      />
+    </div>
   );
 }
 export default function NameInputGrid({
   numPlayers,
   playerNames,
+  playerPool,
   setNumPlayers,
   setPlayerNames,
   setNamesReady,
 }: {
   numPlayers: NP;
   playerNames: string[];
+  playerPool: string[];
   setNumPlayers: Dispatch<SetStateAction<NP>>;
   setPlayerNames: Dispatch<SetStateAction<string[]>>;
   setNamesReady: Dispatch<SetStateAction<boolean>>;
@@ -84,9 +77,20 @@ export default function NameInputGrid({
     ),
     [setNamesReady, t]
   );
-  
+
+  const playerOptions = useMemo(
+    () =>
+      playerPool.map(
+        (playerName) =>
+          ({
+            value: playerName,
+            label: playerName,
+          } as Option<string>)
+      ),
+    [playerPool]
+  );
+
   const PlayerCell = useCallback(
-  
     (player: string, seating: WindNumber) => (
       <div className="m-3">
         <p
@@ -99,16 +103,16 @@ export default function NameInputGrid({
         <PlayerInputCell
           seating={seating}
           player={player}
+          playerOptions={playerOptions}
           setPlayers={setPlayerNames}
           numPlayers={numPlayers}
         />
       </div>
     ),
-    [numPlayers, setPlayerNames]
+    [numPlayers, playerOptions, setPlayerNames]
   );
 
   const PlayerNumInputCell = useMemo(
-    
     () => (
       <label
         style={{
@@ -125,7 +129,7 @@ export default function NameInputGrid({
               ({
                 value: count,
                 label: count,
-              } as { value: NP; label: NP })
+              } as Option<NP>)
           )}
           value={{
             value: numPlayers,
@@ -146,7 +150,7 @@ export default function NameInputGrid({
   return (
     <>
       <h1 style={{ textAlign: "center" }}>{t("prompt.playerName")}</h1>
-      <div style={{ maxWidth: "510px" }}>
+      <div style={{ maxWidth: "710px" }}>
         <PlayerTable<string>
           playerTable={playerNames}
           playerCell={PlayerCell}
