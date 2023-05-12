@@ -14,7 +14,11 @@ import MjNavBar from "./components/MjNavBar";
 
 const DEFAULT_N_PLAYERS = 4;
 
-export default function Startup() {
+interface StartupProps {
+  playerPool: string[];
+}
+
+export default function Startup({ playerPool }: StartupProps) {
   const { t } = useTranslation("common");
   // 3 or 4 players
   const [numPlayers, setNumPlayers] = useState<NP>(DEFAULT_N_PLAYERS);
@@ -22,6 +26,7 @@ export default function Startup() {
   const [playerNames, setPlayerNames] = useLocalStorage<string[]>(
     "names",
     (Array.from(Array(DEFAULT_N_PLAYERS).keys()) as WindNumber[]).map(getWind)
+    // Array(DEFAULT_N_PLAYERS).fill("")
   );
 
   const [namesReady, setNamesReady] = useState(false);
@@ -62,6 +67,7 @@ export default function Startup() {
         <NameInputGrid
           numPlayers={numPlayers}
           playerNames={playerNames}
+          playerPool={playerPool}
           setNumPlayers={setNumPlayers}
           setPlayerNames={setPlayerNames}
           setNamesReady={setNamesReady}
