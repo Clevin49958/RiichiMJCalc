@@ -48,7 +48,7 @@
     //   // internationalisation into account
     //   "@shopify/jsx-no-hardcoded-content": "off",
     //   // Personal preference - _sometimes_ nesting ternaries is fine
-    "no-nested-ternary": "warn",
+    "no-nested-ternary": "off",
     "id-length": "off",
     "no-warning-comments": "warn",
     // Disabled in eslint:recommended
