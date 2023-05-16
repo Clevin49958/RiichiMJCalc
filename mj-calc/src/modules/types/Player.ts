@@ -7,3 +7,5 @@ export interface Player {
 }
 
 export type PlayerList = Player[];
+
+export const DEFAULT_N_PLAYERS = 4;

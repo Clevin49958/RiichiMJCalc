@@ -11,8 +11,7 @@ import GameSettingContextProvider from "./provider/GameSettingContextProvider";
 import { bloatGameStatus, deepParseGameEntity } from "./util/Simplify";
 import Header from "./components/Header";
 import MjNavBar from "./components/MjNavBar";
-
-const DEFAULT_N_PLAYERS = 4;
+import { DEFAULT_N_PLAYERS } from "./types/Player";
 
 interface StartupProps {
   playerPool: string[];

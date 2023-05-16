@@ -1,15 +1,9 @@
-import React, { Game, GameSetting, Player } from "@prisma/client";
+import React from "@prisma/client";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
+import { GameSummary } from "../types/Game";
 
-export default function GameList({
-  games,
-}: {
-  games: (Game & {
-    gameSetting: GameSetting | null;
-    players: Player[];
-  })[];
-}) {
+export default function GameList({ games }: { games: GameSummary[] }) {
   const { t } = useTranslation("common");
   return (
     <>
