@@ -2,8 +2,8 @@ module.exports = {
   i18n: {
     // These are all the locales you want to support in
     // your application
-    debug: process.env.NODE_ENV === "development",
-    locales: ["en", "zh","ja"],
+    // debug: process.env.NODE_ENV === "development",
+    locales: ["en", "zh", "ja"],
     // This is the default locale you want to be used when visiting
     // a non-locale prefixed path e.g. `/hello`
     defaultLocale: "en",

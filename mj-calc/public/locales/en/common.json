@@ -17,7 +17,7 @@
     "undo": "Rewind"
   },
   "jargon": {
-    "riichi" : "Riichi!",
+    "riichi": "Riichi!",
     "fan": "Han",
     "fu": "Fu",
     "win": "Win",
@@ -55,7 +55,7 @@
     "tenpaiEntry": "Check all players that were tenpai",
     "nextGameConfirm": "Are you sure you want to start a new game? You won't be able to recover them if you haven't save.",
     "nextGameConfirmed": "Go!",
-    "loadGame" : "View an exported game here"
+    "loadGame": "View an exported game here"
   },
   "save": {
     "exportGame": "Export results",
@@ -66,6 +66,20 @@
     "endingScore": "Ending Score",
     "pointDifference": "\u0394Score",
     "finalPoints": "Final pts"
+  },
+  "stats": {
+    "rankDistribution": "Rank Distribution",
+    "totalGames": "Recorded matches",
+    "totalHonba": "Recorded honba",
+    "win": "Win rate",
+    "dealIn": "Deal-in rate",
+    "tsumo": "Tsumo rate",
+    "exhaustiveDraw": "Exhaustive draw rate",
+    "tenpaiWhenExhaust": "Draw tenpai rate",
+    "riichi": "Riichi rate",
+    "winValue": "Average win score",
+    "dealInValue": "Average deal-in score",
+    "busted": "Busting rate"
   },
   "util": {
     "ranking_one": "{{count}}st",
