@@ -17,7 +17,7 @@
     "undo": "撤销"
   },
   "jargon": {
-    "riichi" : "立直！",
+    "riichi": "立直！",
     "fan": "番",
     "fu": "符",
     "win": "和了结算",
@@ -50,12 +50,13 @@
     "confirmation": "确认并继续"
   },
   "prompt": {
+    "playerSearch": "查找玩家",
     "playerName": "输入玩家名称",
     "shuffle": "拖拽名称以更改座次",
     "tenpaiEntry": "请给所有听牌的玩家打勾",
     "nextGameConfirm": "确定要进入下一局游戏吗？未保存的数据将会被永久删除。",
     "nextGameConfirmed": "对！",
-    "loadGame" : "查看导出的游戏"
+    "loadGame": "查看导出的游戏"
   },
   "save": {
     "exportGame": "导出结果",
@@ -68,6 +69,7 @@
     "finalPoints": "精算点"
   },
   "util": {
+    "name": "名字",
     "ranking_one": "{{count}}位",
     "ranking_two": "{{count}}位",
     "ranking_few": "{{count}}位",

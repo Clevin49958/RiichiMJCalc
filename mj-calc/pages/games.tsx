@@ -28,6 +28,7 @@ export default function GameListPage({
         <h2 className="text-center mt-4">{t("prompt.playerSearch")}</h2>
         <Select
           options={playerOptions}
+          placeholder={t("util.name")}
           onChange={(wrapper) =>
             router.push({ pathname: "/stats", query: { name: wrapper?.value } })
           }
