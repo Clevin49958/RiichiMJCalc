@@ -169,17 +169,17 @@ export function fractionaliseStats({
 }: PlayerStats): PlayerStats {
   return {
     totalGames,
-    placingDistributions: placingDistributions.map((freq) => freq / totalGames),
+    placingDistributions: placingDistributions.map((freq) => freq / totalGames * 100),
     totalHonba,
-    dealIn: dealIn / totalHonba,
-    win: win / totalHonba,
-    tsumo: tsumo / win,
-    exhaustiveDraw: exhaustiveDraw / totalHonba,
-    tenpaiWhenExhaust: tenpaiWhenExhaust / exhaustiveDraw,
-    riichi: riichi / totalHonba,
+    dealIn: dealIn / totalHonba * 100,
+    win: win / totalHonba * 100,
+    tsumo: tsumo / win * 100,
+    exhaustiveDraw: exhaustiveDraw / totalHonba * 100,
+    tenpaiWhenExhaust: tenpaiWhenExhaust / exhaustiveDraw * 100,
+    riichi: riichi / totalHonba * 100,
     winValue: winValue / win,
     dealInValue: dealInValue / dealIn,
-    busted: busted / totalGames,
+    busted: busted / totalGames * 100,
     player,
   };
 }
