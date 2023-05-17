@@ -7,6 +7,7 @@ export default function StatsTable({ stats }: { stats: PlayerStats }) {
   const { t } = useTranslation("common");
   const noFormat = (num: number) => num.toString();
   const percentage = (num: number) => `${num.toFixed(2)}%`;
+  const wholeNumber = (num: number) => `${num.toFixed(0)}`;
 
   const itemStats = omit(stats, "placingDistributions", "player");
 
@@ -19,8 +20,8 @@ export default function StatsTable({ stats }: { stats: PlayerStats }) {
     ["exhaustiveDraw", percentage],
     ["tenpaiWhenExhaust", percentage],
     ["riichi", percentage],
-    ["winValue", noFormat],
-    ["dealInValue", noFormat],
+    ["winValue", wholeNumber],
+    ["dealInValue", wholeNumber],
     ["busted", percentage],
   ] as [keyof typeof itemStats, (num: number) => string][];
 
@@ -30,7 +31,7 @@ export default function StatsTable({ stats }: { stats: PlayerStats }) {
       <div className="row">
         {content.map(([key, formatter]) => (
           <div key={key} className="col-12 col-md-6 col-xl-4">
-            {t(key)}: {formatter(itemStats[key])}
+            {t(`stats.${key}`)}: {formatter(itemStats[key])}
           </div>
         ))}
       </div>
