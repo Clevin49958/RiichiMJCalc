@@ -17,10 +17,6 @@ interface StartupProps {
   playerPool: string[];
 }
 
-interface StartupProps {
-  playerPool: string[];
-}
-
 export default function Startup({ playerPool }: StartupProps) {
   const { t } = useTranslation("common");
   // 3 or 4 players
