@@ -83,7 +83,7 @@ function getDeltaForRon(
   return deltas;
 }
 
-function getDeltaOneWinner(
+export function getDeltaOneWinner(
   record: WinRecord,
   gameStatus: GameStatus,
   gameSetting: GameSetting
