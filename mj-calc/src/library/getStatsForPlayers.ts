@@ -40,6 +40,9 @@ export async function getStatsForPlayers(query: ParsedUrlQuery) {
         },
       },
     },
+    orderBy: {
+      endTime: "desc",
+    },
   });
 
   const allStats = names.map((name) => summariseStats({ games, player: name }));
