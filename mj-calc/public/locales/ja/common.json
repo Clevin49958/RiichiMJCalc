@@ -68,6 +68,20 @@
     "pointDifference": "点差",
     "finalPoints": "精算点"
   },
+  "stats": {
+    "rankDistribution": "ランク分布",
+    "totalGames": "記録対戦数",
+    "totalHonba": "記録本場",
+    "win": "和了率",
+    "dealIn": "放銃率",
+    "tsumo": "ツモ率",
+    "exhaustiveDraw": "流局率",
+    "tenpaiWhenExhaust": "流局聴牌率",
+    "riichi": "リーチ率",
+    "winValue": "平均和了",
+    "dealInValue": "平均放銃",
+    "busted": "飛び率"
+  },
   "util": {
     "name": "名前",
     "ranking_one": "{{count}}位",
