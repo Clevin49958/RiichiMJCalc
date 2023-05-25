@@ -50,7 +50,7 @@ export function generateResult(
 
 export function saveJson(result: { endTime: Date }) {
   const strContent = JSON.stringify(result, null, 2);
-  const filename = `${result.endTime.toLocaleTimeString()}.json`;
+  const filename = `${result.endTime.toLocaleDateString()}_${result.endTime.toLocaleTimeString()}.json`;
   const fileContent = new Blob([strContent], { type: "json" });
 
   const link = document.createElement("a");

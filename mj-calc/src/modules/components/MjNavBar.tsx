@@ -11,9 +11,11 @@ export default function MjNavBar() {
   return (
     <Navbar bg="light">
       <Container>
-        <Navbar.Brand href="/">
-          <Image alt="icon" src={logo} width={64} height={64} />
-          {t("brand.full")}
+        <Navbar.Brand>
+          <Link className="nav-link" href="/">
+            <Image alt="icon" src={logo} width={64} height={64} />
+            {t("brand.full")}
+          </Link>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

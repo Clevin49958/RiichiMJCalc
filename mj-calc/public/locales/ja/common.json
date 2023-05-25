@@ -1,76 +1,92 @@
 {
-    "version": "0.0.1",
-    "lang": {
-      "en": "English",
-      "zh": "中文",
-      "ja": "日本語"
-    },
-    "brand": {
-      "full": "麻雀の得点計算",
-      "short": "得点計算"
-    },
-    "game": {
-      "new": "ニューゲーム",
-      "history": "過去対戦",
-      "start": "スタート！",
-      "goNext": "リスタート！",
-      "undo": "撤回"
-    },
-    "jargon": {
-      "riichi" : "リーチ！",
-      "fan": "飜",
-      "fu": "符",
-      "win": "和了",
-      "draw": "流し",
-      "tsumo": "自摸",
-      "ron": "ロン",
-      "ron2": "ダブルロン",
-      "ron3": "トリプルロン",
-      "dealIn": "放銃",
-      "winner": "ロン和了",
-      "exhaust": "流し",
-      "kyokuTemp": "{{wind}}{{round}}局 {{honba}}本場",
-      "yakuman_1": "役満",
-      "yakuman_2": "二倍役満",
-      "yakuman_3": "三倍役満",
-      "yakuman_4": "四倍役満",
-      "yakuman_5": "五倍役満",
-      "yakuman_6": "六倍役満"
-    },
-    "players": {
-      "num": "プレイヤーの人数:"
-    },
-    "label": {
-      "finalPoints": "最終得点:",
-      "UmaPreset": "ウマ:",
-      "OkaPreset": "オカ:",
-      "numbering": "#",
-      "tabletopMode": "テーブルトップモード",
-      "displayMode": "ディスプレーモード",
-      "confirmation": "確認します"
-    },
-    "prompt": {
-      "playerName": "プレイヤー名を入力",
-      "shuffle": "座席を変更するにはドラッグアンドドロップしてください",
-      "tenpaiEntry": "聴牌しているのにチェックを付けてください",
-      "nextGameConfirm": "本当に次のゲームに行くのか？ 未保存のデータは永久に削除されます。",
-      "nextGameConfirmed": "せやな！",
-      "loadGame" : "エクスポートされたゲームを表示する"
-    },
-    "save": {
-      "exportGame": "結果おエクスポート",
-      "save": "データベースに保存する",
-      "kyoku": "現在の本場を保存する"
-    },
-    "scoring": {
-      "endingScore": "最終ポイント",
-      "pointDifference": "点差",
-      "finalPoints": "精算点"
-    },
-    "util": {
-      "ranking_one": "{{count}}位",
-      "ranking_two": "{{count}}位",
-      "ranking_few": "{{count}}位",
-      "ranking_other": "{{count}}位"
-    }
+  "version": "0.0.1",
+  "lang": {
+    "en": "English",
+    "zh": "中文",
+    "ja": "日本語"
+  },
+  "brand": {
+    "full": "麻雀の得点計算",
+    "short": "得点計算"
+  },
+  "game": {
+    "new": "ニューゲーム",
+    "history": "過去対戦",
+    "start": "スタート！",
+    "goNext": "リスタート！",
+    "undo": "撤回"
+  },
+  "jargon": {
+    "riichi": "リーチ！",
+    "fan": "飜",
+    "fu": "符",
+    "win": "和了",
+    "draw": "流し",
+    "tsumo": "自摸",
+    "ron": "ロン",
+    "ron2": "ダブルロン",
+    "ron3": "トリプルロン",
+    "dealIn": "放銃",
+    "winner": "ロン和了",
+    "exhaust": "流し",
+    "kyokuTemp": "{{wind}}{{round}}局 {{honba}}本場",
+    "yakuman_1": "役満",
+    "yakuman_2": "二倍役満",
+    "yakuman_3": "三倍役満",
+    "yakuman_4": "四倍役満",
+    "yakuman_5": "五倍役満",
+    "yakuman_6": "六倍役満"
+  },
+  "players": {
+    "num": "プレイヤーの人数:"
+  },
+  "label": {
+    "finalPoints": "最終得点:",
+    "UmaPreset": "ウマ:",
+    "OkaPreset": "オカ:",
+    "numbering": "#",
+    "tabletopMode": "テーブルトップモード",
+    "displayMode": "ディスプレーモード",
+    "confirmation": "確認します"
+  },
+  "prompt": {
+    "playerSearch": "プレイヤー検索",
+    "playerName": "プレイヤー名を入力",
+    "shuffle": "座席を変更するにはドラッグアンドドロップしてください",
+    "tenpaiEntry": "聴牌しているのにチェックを付けてください",
+    "nextGameConfirm": "本当に次のゲームに行くのか？ 未保存のデータは永久に削除されます。",
+    "nextGameConfirmed": "せやな！",
+    "loadGame": "エクスポートされたゲームを表示する"
+  },
+  "save": {
+    "exportGame": "結果おエクスポート",
+    "save": "データベースに保存する",
+    "kyoku": "現在の本場を保存する"
+  },
+  "scoring": {
+    "endingScore": "最終ポイント",
+    "pointDifference": "点差",
+    "finalPoints": "精算点"
+  },
+  "stats": {
+    "rankDistribution": "ランク分布",
+    "totalGames": "記録対戦数",
+    "totalHonba": "記録本場",
+    "win": "和了率",
+    "dealIn": "放銃率",
+    "tsumo": "ツモ率",
+    "exhaustiveDraw": "流局率",
+    "tenpaiWhenExhaust": "流局聴牌率",
+    "riichi": "リーチ率",
+    "winValue": "平均和了",
+    "dealInValue": "平均放銃",
+    "busted": "飛び率"
+  },
+  "util": {
+    "name": "名前",
+    "ranking_one": "{{count}}位",
+    "ranking_two": "{{count}}位",
+    "ranking_few": "{{count}}位",
+    "ranking_other": "{{count}}位"
   }
+}

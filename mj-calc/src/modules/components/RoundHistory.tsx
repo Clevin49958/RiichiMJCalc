@@ -4,7 +4,6 @@ import { PlayerList } from "../types/Player";
 import { DrawRecord, GameRecord } from "../types/Record";
 import { getWind } from "../util/Wind";
 
-
 export default function RoundHistory({
   records,
   players,
@@ -24,7 +23,9 @@ export default function RoundHistory({
               <div className="row">
                 <div className="col col-3 win-prompt">{t("jargon.tsumo")}</div>
                 <div className="col col-3">{players[wins[0].winner].name}</div>
-                <div className="col col-3">{`${wins[0].fan}${t("jargon.fan")} ${wins[0].fu}${t("jargon.fu")}`}</div>
+                <div className="col col-3">{`${wins[0].fan}${t("jargon.fan")} ${
+                  wins[0].fu
+                }${t("jargon.fu")}`}</div>
                 <div className="col col-3">
                   +{record.deltas[wins[0].winner]}
                 </div>
@@ -34,10 +35,14 @@ export default function RoundHistory({
             content = (
               <>
                 {wins.map((win) => (
-                  <div className="row">
-                    <div className="col col-3 win-prompt">{t("jargon.ron")}</div>
+                  <div className="row" key={win.winner}>
+                    <div className="col col-3 win-prompt">
+                      {t("jargon.ron")}
+                    </div>
                     <div className="col col-3">{players[win.winner].name}</div>
-                    <div className="col col-3">{`${win.fan}${t("jargon.fan")} ${win.fu}${t("jargon.fu")}`}</div>
+                    <div className="col col-3">{`${win.fan}${t("jargon.fan")} ${
+                      win.fu
+                    }${t("jargon.fu")}`}</div>
                     <div className="col col-3">
                       +{record.deltas[win.winner]}
                     </div>
@@ -45,7 +50,9 @@ export default function RoundHistory({
                 ))}
 
                 <div className="row">
-                  <div className="col col-3 deal-in-prompt">{t("jargon.dealIn")}</div>
+                  <div className="col col-3 deal-in-prompt">
+                    {t("jargon.dealIn")}
+                  </div>
                   <div className="col col-3">
                     {players[wins[0].dealIn].name}
                   </div>
@@ -85,7 +92,11 @@ export default function RoundHistory({
           <div className="card" key={key}>
             <div className="card-body">
               <h5 className="card-header">
-                {t("jargon.kyokuTemp",{wind:getWind(record.wind),round:record.round,honba:record.honba})}
+                {t("jargon.kyokuTemp", {
+                  wind: getWind(record.wind),
+                  round: record.round,
+                  honba: record.honba,
+                })}
               </h5>
               <div className="container round-entry">{content}</div>
             </div>
