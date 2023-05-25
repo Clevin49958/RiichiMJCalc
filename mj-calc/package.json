@@ -27,6 +27,7 @@
     "react-chartjs-2": "^4.3.1",
     "react-dom": "^18.2.0",
     "react-i18next": "^12.2.2",
+    "react-loader-spinner": "^5.3.4",
     "react-select": "^5.7.3",
     "react-sortablejs": "^6.1.4",
     "sortablejs": "^1.15.0",

@@ -1,7 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import { Prisma } from "@prisma/client";
 import { useTranslation } from "next-i18next";
+import { InfinitySpin } from "react-loader-spinner";
 
 import GameContext from "../context/GameContext";
 import { GameStatus } from "../types/GameStatus";
@@ -66,6 +67,18 @@ export function ExportResult() {
   const { gameStatus, players, records } = useContext(GameContext);
   const gameSetting = useContext(GameSettingContext);
   const [buttonColor, setButtonColor] = useState("primary");
+  const [isLoading, setIsLoading] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const recordCount = useRef(records.length);
+
+  useEffect(() => {
+    // reset button color when records change
+    if (recordCount.current !== records.length) {
+      setSaved(false);
+      setButtonColor("primary");
+      recordCount.current = records.length;
+    }
+  }, [records.length]);
 
   return (
     <>
@@ -88,9 +101,7 @@ export function ExportResult() {
       <button
         type="button"
         className={`btn btn-${buttonColor}`}
-        style={{
-          transition: "all 1s ease-in",
-        }}
+        disabled={isLoading || saved}
         onClick={(_event) => {
           const result = generateResult(
             gameStatus,
@@ -99,6 +110,7 @@ export function ExportResult() {
             records,
             "database"
           );
+          setIsLoading(true);
           fetch("/api/games", {
             method: "POST",
             headers: {
@@ -106,11 +118,19 @@ export function ExportResult() {
             },
             body: JSON.stringify({ data: result }),
           })
-            .then(() => setButtonColor("success"))
+            .then((resp) => {
+              if (resp.ok) {
+                setButtonColor("success");
+                setSaved(true);
+              } else {
+                setButtonColor("danger");
+              }
+            })
             .catch(() => setButtonColor("warning"));
+          setIsLoading(false);
         }}
       >
-        {t("save.save")}
+        {isLoading ? <InfinitySpin /> : t("save.save")}
       </button>
     </>
   );
