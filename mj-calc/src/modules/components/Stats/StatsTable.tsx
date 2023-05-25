@@ -29,16 +29,6 @@ export default function StatsTable({ stats }: { stats: PlayerStats }) {
     <div className="container-fluid">
       <h2 className="text-center">{stats.player.join(", ")}</h2>
       <div className="row">
-        {stats.placingDistributions.map((value, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <div key={index} className="col-12 col-md-6 col-xl-4">{`${t(
-            "util.ranking",
-            {
-              count: index + 1,
-              ordinal: true,
-            }
-          )}: ${value.toFixed(2)}%`}</div>
-        ))}
         <div className="w-100" />
         {content.map(([key, formatter]) => (
           <div key={key} className="col-12 col-md-6 col-xl-4">

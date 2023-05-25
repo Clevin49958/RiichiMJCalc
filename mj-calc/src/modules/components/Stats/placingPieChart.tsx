@@ -1,16 +1,11 @@
 import React from "react";
 import { useTranslation } from "next-i18next";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-// import chartDataLabels from "chartjs-plugin-datalabels";
+import chartDataLabels from "chartjs-plugin-datalabels";
 import { Pie } from "react-chartjs-2";
 import { PlayerStats } from "../../../library/summariseStats";
 
-ChartJS.register(
-  ArcElement,
-  Tooltip,
-  Legend
-  // chartDataLabels
-);
+ChartJS.register(ArcElement, Tooltip, Legend, chartDataLabels);
 export default function PlacingPieChart({
   placing,
 }: {
@@ -44,23 +39,22 @@ export default function PlacingPieChart({
         }}
         options={{
           plugins: {
-            // legend: {
-            //   display: false,
-            // },
-            // datalabels: {
-            //   color: "#FFFFFF",
-            //   font: {
-            //     size: 14,
-            //     weight: "bold",
-            //   },
-            //   formatter: (value: number, context) =>
-            //     `${t("util.ranking", {
-            //       count: context.dataIndex + 1,
-            //       ordinal: true,
-            //     })}\n${value.toFixed(2)}%`,
-            //   // align: "end",
-            //   offset: -1,
-            // },
+            legend: {
+              display: false,
+            },
+            datalabels: {
+              color: "#FFFFFF",
+              font: {
+                size: 14,
+                weight: "bold",
+              },
+              formatter: (value: string, context) =>
+                `${t("util.ranking", {
+                  count: context.dataIndex + 1,
+                  ordinal: true,
+                })}\n${value}%`,
+              offset: -1,
+            },
           },
         }}
       />
