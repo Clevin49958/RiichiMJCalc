@@ -7,12 +7,12 @@ import { bloatGameStatus, deepParseGameEntity } from "../modules/util/Simplify";
 import { GameSetting } from "../modules/types/GameSetting";
 import { getDeltaOneWinner } from "../modules/util/Score";
 
-interface SummariseStatsProps {
+export interface SummariseStatsProps {
   games: FullGame[];
   player: string;
 }
 
-function getPlacing(playerScores: Player[], index: number): number {
+export function getPlacing(playerScores: Player[], index: number): number {
   // 0-indexed starting placing
   const { score } = playerScores[index];
 
@@ -169,17 +169,19 @@ export function fractionaliseStats({
 }: PlayerStats): PlayerStats {
   return {
     totalGames,
-    placingDistributions: placingDistributions.map((freq) => freq / totalGames * 100),
+    placingDistributions: placingDistributions.map(
+      (freq) => (freq / totalGames) * 100
+    ),
     totalHonba,
-    dealIn: dealIn / totalHonba * 100,
-    win: win / totalHonba * 100,
-    tsumo: tsumo / win * 100,
-    exhaustiveDraw: exhaustiveDraw / totalHonba * 100,
-    tenpaiWhenExhaust: tenpaiWhenExhaust / exhaustiveDraw * 100,
-    riichi: riichi / totalHonba * 100,
+    dealIn: (dealIn / totalHonba) * 100,
+    win: (win / totalHonba) * 100,
+    tsumo: (tsumo / win) * 100,
+    exhaustiveDraw: (exhaustiveDraw / totalHonba) * 100,
+    tenpaiWhenExhaust: (tenpaiWhenExhaust / exhaustiveDraw) * 100,
+    riichi: (riichi / totalHonba) * 100,
     winValue: winValue / win,
     dealInValue: dealInValue / dealIn,
-    busted: busted / totalGames * 100,
+    busted: (busted / totalGames) * 100,
     player,
   };
 }

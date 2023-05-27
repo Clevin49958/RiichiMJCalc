@@ -6,7 +6,7 @@ import { Player } from "../types/Player";
 import { EndingRecord, EndingType, GameRecord } from "../types/Record";
 
 import { nextGameStatus } from "./GameStatus";
-import { STARTING_POINT } from "./Constants";
+import { STARTING_HONBA, STARTING_POINT, STARTING_WIND } from "./Constants";
 import { getDeltas } from "./Score";
 import { WindNumber } from "./Wind";
 
@@ -92,10 +92,10 @@ export function bloatGameStatus(
   }));
 
   let gameStatus: GameStatus = {
-    wind: 0,
+    wind: STARTING_WIND,
     round: 1,
     honba: 0,
-    richiiStick: 0,
+    richiiStick: STARTING_HONBA,
     richii: Array(playersFinal.length).fill(false),
   };
 

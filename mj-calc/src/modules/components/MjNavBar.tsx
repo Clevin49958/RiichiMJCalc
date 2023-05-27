@@ -26,6 +26,12 @@ export default function MjNavBar() {
             <Link className="navbar-expand navbar-nav nav-link" href="/games">
               {t("game.history")}
             </Link>
+            <Link
+              className="navbar-expand navbar-nav nav-link"
+              href="/stats?name=PIGGYYO"
+            >
+              {t("game.piggyyoFanClub")}
+            </Link>
             <LocaleSwitcher />
           </Nav>
         </Navbar.Collapse>

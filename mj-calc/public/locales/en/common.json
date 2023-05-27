@@ -12,6 +12,7 @@
   "game": {
     "new": "New Game",
     "history": "Game History",
+    "piggyyoFanClub": "Piggyyo Fan Club",
     "start": "Game Start!",
     "goNext": "Next game!",
     "undo": "Rewind"
@@ -80,7 +81,11 @@
     "riichi": "Riichi rate",
     "winValue": "Average win score",
     "dealInValue": "Average deal-in score",
-    "busted": "Busting rate"
+    "busted": "Busting rate",
+    "anti": "{{name}}'s anti",
+    "mostPoints": "Cumulative deal in value",
+    "mostTimes": "Number of times deal in",
+    "mostAverage": "Average deal in value"
   },
   "util": {
     "name": "Name",
