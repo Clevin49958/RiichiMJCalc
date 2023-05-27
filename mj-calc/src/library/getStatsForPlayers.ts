@@ -21,8 +21,16 @@ export async function getStatsForPlayers(query: ParsedUrlQuery) {
   const games = await prisma.game.findMany({
     include: {
       gameSetting: true,
-      players: true,
-      records: true,
+      players: {
+        orderBy: {
+          seating: "asc",
+        },
+      },
+      records: {
+        orderBy: {
+          id: "asc",
+        },
+      },
     },
     where: {
       players: {

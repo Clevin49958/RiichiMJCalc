@@ -7,8 +7,16 @@ export async function getGame(
   const findGameInput = merge(query, {
     include: {
       gameSetting: true,
-      players: true,
-      records: true,
+      players: {
+        orderBy: {
+          seating: "asc",
+        },
+      },
+      records: {
+        orderBy: {
+          id: "asc",
+        },
+      },
     },
   });
 
