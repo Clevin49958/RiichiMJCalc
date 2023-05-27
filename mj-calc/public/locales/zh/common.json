@@ -80,7 +80,11 @@
     "riichi": "立直率",
     "winValue": "平均打点",
     "dealInValue": "平均铳点",
-    "busted": "被飞率"
+    "busted": "被飞率",
+    "anti": "{{name}}的铁Anti",
+    "mostPoints": "最高累计铳点",
+    "mostTimes": "最高累计铳次",
+    "mostAverage": "最高平均铳点"
   },
   "util": {
     "name": "名字",
